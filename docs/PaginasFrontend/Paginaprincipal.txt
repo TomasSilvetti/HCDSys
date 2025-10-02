@@ -1,0 +1,9 @@
+En esta pagina principal se explicara como se usa el sistema que tendra:
+1) Bienvenida al sistema
+2) Explicacion de para que sirve el sistema: 
+    -Busqueda de documentos
+    -gestion organizada de documentos
+    -Acceso rapido de documentos
+    -Acceso controlado y seguro
+3) 1 boton para redirigir a la pagina donde se Buscan los documentos
+4) 1 boton para redirigir a la pagina de Gestion de documentos (carga, modificacion, eliminacion) Esto solo tendra acceso algunos roles 

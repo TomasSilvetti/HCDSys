@@ -1,7 +1,10 @@
 # HCDSys - Sistema de Gestión Documental Municipal
 
 ## Descripción
-Sistema de gestión documental para la Municipalidad de Lules. Permite cargar, buscar y gestionar documentos municipales de manera eficiente.
+Sistema de gestión documental para el honorable concejo deliberante (HCD) de Lules. Permite cargar, buscar y gestionar documentos municipales de manera eficiente.
+
+## Importante 
+- Diseño responsive de toda la pagina
 
 ## Roles
 los roles van a tener diferentes permisos, estos son los diferentes roles:
