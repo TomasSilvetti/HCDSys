@@ -35,9 +35,7 @@ classDiagram
         +descripcion: String
         +fecha_creacion: DateTime
         +fecha_modificacion: DateTime
-        +estado: String
         +numero_expediente: String
-        +tags: String[]
         +path_archivo: String
         +tipo_documento: String
     }

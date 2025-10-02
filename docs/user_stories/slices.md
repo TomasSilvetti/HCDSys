@@ -1,7 +1,7 @@
 # Slices e Historias de Usuario - HCDSys
 
 ## Slice 1: Landing + Auth básica 🔴
-### HU001: Visualización de Página Principal
+### HU001: Visualización de Pág## Implementaciones Futuras 🟤incipal
 Como visitante del sistema
 Quiero ver una página de bienvenida clara y ordenada
 Para entender el propósito del sistema y sus funciones principales
@@ -29,7 +29,7 @@ Para encontrar documentos fácilmente
 
 ### HU006: Endpoint de Búsqueda Simple
 Como usuario del sistema
-Quiero poder buscar documentos por palabras clave
+Quiero poder buscar documentos por palabras clave, o entre una fecha desde y una fecha hasta
 Para encontrar la información que necesito
 
 ### HU007: Visualización de Resultados
@@ -53,18 +53,13 @@ Como gestor de documentos
 Quiero que los documentos se guarden de forma segura
 Para mantener la integridad de la información
 
-### HU011: Listado de Documentos Propios
-Como gestor de documentos
-Quiero ver un listado de los documentos que he cargado
-Para poder gestionarlos fácilmente
-
-### HU012: Edición Básica de Documentos
+### HU011: Edición Básica de Documentos
 Como gestor de documentos
 Quiero poder editar los documentos que he cargado
 Para mantener la información actualizada
 
 ## Slice 4: Roles y Permisos 🟡
-### HU013: Gestión de Roles de Usuario
+### HU012: Gestión de Roles de Usuario
 Como administrador del sistema
 Quiero poder asignar y modificar roles a los usuarios
 Para controlar los niveles de acceso al sistema
@@ -89,49 +84,117 @@ Criterios de Aceptación:
    - Gestor de Documentos
    - Usuario de Consulta
 
-### HU014: Asignación de Permisos
+### HU013: Asignación de Permisos
 Como administrador del sistema
 Quiero poder gestionar los permisos de cada rol
 Para definir exactamente qué puede hacer cada tipo de usuario
 
-### HU015: Validación de Accesos
+### HU014: Validación de Accesos
 Como desarrollador del sistema
 Quiero implementar un sistema de validación de permisos
 Para asegurar que los usuarios solo accedan a lo autorizado
 
-### HU016: UI Condicionada por Rol
+### HU015: UI Condicionada por Rol
 Como usuario del sistema
 Quiero ver solo las opciones permitidas para mi rol
 Para tener una interfaz clara y evitar intentar acciones no autorizadas
 
 ## Slice 5: Búsqueda Avanzada 🟡
-### HU017: Filtros Avanzados
+### HU016: Filtros Avanzados
 Como usuario del sistema
 Quiero poder usar filtros avanzados en la búsqueda
 Para encontrar documentos con criterios específicos
 
-### HU018: Búsqueda por Metadatos
-Como usuario del sistema
-Quiero poder buscar por metadatos específicos
-Para realizar búsquedas más precisas
-
-### HU019: Exportación de Resultados
-Como usuario del sistema
-Quiero poder exportar los resultados de búsqueda
-Para trabajar con ellos fuera del sistema
-
 ## Slice 6: Gestión Avanzada 🟢
-### HU020: Versionado de Documentos
+### HU017: Versionado de Documentos
 Como gestor de documentos
 Quiero que el sistema mantenga versiones de los documentos
 Para tener un historial de cambios
 
-### HU021: Categorización y Tags
-Como gestor de documentos
-Quiero poder categorizar y etiquetar documentos
-Para mejorar su organización y búsqueda
+## Implementaciones Futuras 🔵
 
-### HU022: Historial de Cambios
-Como gestor de documentos
-Quiero ver un historial de cambios en los documentos
-Para mantener la trazabilidad de las modificaciones
+### Sistema de Escaneo de Malware
+Implementar un sistema de escaneo de archivos para detectar malware:
+- Escaneo automático de archivos subidos
+- Integración con servicios de antivirus
+- Cuarentena para archivos sospechosos
+- Notificaciones de detecciones
+- Logs detallados de escaneos
+
+### Sistema de Backup Automático
+Implementar un sistema completo de respaldo:
+- Backups incrementales diarios
+- Backups completos semanales
+- Retención configurable de backups
+- Verificación automática de integridad
+- Sistema de restauración
+- Logs de operaciones de backup
+
+### Exportación de Resultados de Búsqueda
+Implementar un sistema para exportar resultados:
+- Exportación a diferentes formatos (CSV, PDF)
+- Selección de campos a exportar
+- Límites configurables de registros
+- Procesamiento asíncrono para grandes volúmenes
+- Notificaciones de exportación completada
+
+### Sistema de Categorización de Documentos
+Implementar un sistema de categorización para los documentos:
+- Gestión de categorías (crear, editar, listar)
+- Asignación de categorías a documentos
+- Visualización de categorías en el detalle del documento
+- Filtros de búsqueda por categoría
+- Validación y normalización de nombres
+- Gestión eficiente del número de categorías
+
+### Sistema de Estados para Documentos
+Implementar un sistema de estados para los documentos que permita seguir su ciclo de vida:
+
+1. `BORRADOR` - Documento en proceso de creación/edición
+   - Para documentos que están siendo trabajados
+   - No disponibles para consulta general
+
+2. `ACTIVO` - Documento completo y disponible
+   - Documentos finalizados
+   - Disponibles para consulta según permisos
+
+3. `ARCHIVADO` - Documento histórico
+   - Documentos que ya no están en uso activo
+   - Mantenidos por razones legales o históricas
+
+4. `ELIMINADO` - Soft delete
+   - Documentos marcados como eliminados
+   - Se mantienen en base de datos pero no son visibles
+
+Esta funcionalidad permitiría:
+- Mejor control del ciclo de vida de documentos
+- Gestión de visibilidad según estado
+- Manejo seguro de eliminación de documentos
+- Flujos de trabajo basados en estados
+
+### Log General de Cambios
+Implementar un sistema centralizado de registro de actividad:
+- Vista tabular de todos los cambios en el sistema
+- Registro de operaciones (creación, modificación, eliminación)
+- Filtros por fecha, usuario, tipo de operación y documento
+- Paginación y exportación de registros
+- Links directos a los documentos
+- Interfaz orientada a auditoría
+
+### Sistema Avanzado de Validación de Accesos
+Implementar características avanzadas de seguridad y rendimiento:
+- Sistema de caché de permisos para optimización
+- Registro detallado de auditoría de accesos
+- Sistema anti fuerza bruta
+- Timeouts en validaciones
+- Métricas de rendimiento (tiempo respuesta < 100ms)
+- 100% cobertura en validaciones
+- Sistema avanzado de logs y monitoreo
+
+### Listado de Documentos Propios
+Implementar una interfaz donde los gestores puedan ver y gestionar sus documentos:
+- Vista de todos los documentos cargados por el usuario
+- Ordenamiento por diferentes criterios (fecha, título, tipo)
+- Paginación para grandes volúmenes de documentos
+- Acceso rápido a operaciones de edición
+- Filtros y búsqueda dentro de documentos propios
