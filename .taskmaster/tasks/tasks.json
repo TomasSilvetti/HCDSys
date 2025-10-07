@@ -9,7 +9,7 @@
         "testStrategy": "Verificar que el entorno de desarrollo funciona correctamente ejecutando los scripts de inicio tanto para frontend como backend. Comprobar que la estructura de carpetas es adecuada y que las herramientas de linting funcionan correctamente.",
         "priority": "high",
         "dependencies": [],
-        "status": "pending",
+        "status": "done",
         "subtasks": [
           {
             "id": 1,
@@ -17,7 +17,7 @@
             "description": "Crear el repositorio Git y establecer la estructura de carpetas básica para el proyecto",
             "dependencies": [],
             "details": "1. Crear repositorio Git para el proyecto\n2. Configurar estructura de carpetas principal (frontend/backend/docs)\n3. Crear archivo README.md con instrucciones de instalación y descripción del proyecto\n4. Configurar .gitignore para archivos temporales y dependencias\n5. Configurar variables de entorno (.env) para desarrollo y producción\n6. Realizar commit inicial con la estructura base",
-            "status": "pending",
+            "status": "done",
             "testStrategy": ""
           },
           {
@@ -28,7 +28,7 @@
               "21.1"
             ],
             "details": "1. Inicializar proyecto frontend con React.js usando Create React App o Vite\n2. Instalar dependencias básicas para frontend (React Router, Axios, etc.)\n3. Configurar ESLint y Prettier para el código frontend\n4. Establecer estructura de carpetas para componentes, páginas, servicios y estilos\n5. Configurar scripts de inicio y construcción en package.json\n6. Realizar prueba de inicio del servidor de desarrollo",
-            "status": "pending",
+            "status": "done",
             "testStrategy": ""
           },
           {
@@ -39,7 +39,7 @@
               "21.1"
             ],
             "details": "1. Inicializar proyecto backend con Node.js/Express\n2. Instalar dependencias básicas para backend (Express, Mongoose, dotenv, etc.)\n3. Configurar ESLint y Prettier para el código backend\n4. Establecer estructura de carpetas para rutas, controladores, modelos y middleware\n5. Configurar scripts de inicio y desarrollo en package.json\n6. Crear archivo de configuración para conexión a base de datos\n7. Realizar prueba de inicio del servidor backend",
-            "status": "pending",
+            "status": "done",
             "testStrategy": ""
           }
         ]
@@ -1162,7 +1162,7 @@
     ],
     "metadata": {
       "created": "2025-10-07T16:52:07.729Z",
-      "updated": "2025-10-07T16:54:56.584Z",
+      "updated": "2025-10-07T18:09:52.998Z",
       "description": "Tasks for master context"
     }
   }
