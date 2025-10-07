@@ -54,7 +54,7 @@
         "dependencies": [
           21
         ],
-        "status": "pending",
+        "status": "done",
         "subtasks": [
           {
             "id": 1,
@@ -62,7 +62,7 @@
             "description": "Crear la estructura base y el diseño visual de la página principal siguiendo los lineamientos de la HU001",
             "dependencies": [],
             "details": "1. Crear componente React para la página principal (LandingPage)\n2. Diseñar estructura HTML con header, main y footer\n3. Implementar navbar con logo del municipio y espacio para botón de Login/Registro\n4. Diseñar sección de hero con título de bienvenida y mensaje introductorio\n5. Configurar sistema de grid responsivo para diferentes dispositivos\n6. Optimizar imágenes y recursos para carga rápida\n7. Implementar paleta de colores según identidad visual del municipio",
-            "status": "pending",
+            "status": "done",
             "testStrategy": ""
           },
           {
@@ -73,7 +73,7 @@
               "22.1"
             ],
             "details": "1. Crear componentes para cada sección informativa\n2. Diseñar tarjetas o bloques para cada funcionalidad:\n   - Búsqueda de documentos (con ícono y descripción)\n   - Gestión organizada de documentos (con ícono y descripción)\n   - Acceso rápido de documentos (con ícono y descripción)\n   - Acceso controlado y seguro (con ícono y descripción)\n3. Implementar animaciones sutiles para mejorar la experiencia de usuario\n4. Asegurar que los textos sean claros y concisos\n5. Optimizar el diseño responsivo para estas secciones",
-            "status": "pending",
+            "status": "done",
             "testStrategy": ""
           },
           {
@@ -85,7 +85,7 @@
               "22.2"
             ],
             "details": "1. Diseñar e implementar botones principales en el body:\n   - Botón de Búsqueda de Documentos con ícono y texto descriptivo\n   - Botón de Gestión de Documentos con ícono y texto descriptivo\n2. Implementar botón de Login/Registro en el navbar\n3. Configurar enrutamiento para cada botón\n4. Añadir efectos hover y focus para mejorar la interactividad\n5. Implementar comportamiento responsivo para los botones en dispositivos móviles\n6. Asegurar accesibilidad con atributos ARIA apropiados\n7. Realizar pruebas de navegación entre las diferentes secciones",
-            "status": "pending",
+            "status": "done",
             "testStrategy": ""
           }
         ]
@@ -101,7 +101,7 @@
           21,
           22
         ],
-        "status": "pending",
+        "status": "done",
         "subtasks": [
           {
             "id": 1,
@@ -109,7 +109,7 @@
             "description": "Crear la estructura y el diseño base del componente de barra de navegación que será utilizado en toda la aplicación.",
             "dependencies": [],
             "details": "1. Crear el componente Navbar.jsx con su estructura HTML básica\n2. Implementar el diseño visual según las guías de estilo del proyecto\n3. Definir la estructura de contenedores para los diferentes elementos (logo, enlaces, área de usuario)\n4. Configurar estilos CSS/SCSS para el componente\n5. Implementar posicionamiento fijo en la parte superior de la página",
-            "status": "pending",
+            "status": "done",
             "testStrategy": ""
           },
           {
@@ -120,7 +120,7 @@
               "23.1"
             ],
             "details": "1. Integrar el componente con el contexto de autenticación\n2. Implementar lógica condicional para mostrar diferentes elementos según estado de autenticación\n3. Crear componentes para estado no autenticado (enlaces a inicio, búsqueda, botones de login/registro)\n4. Crear componentes para estado autenticado (nombre de usuario, botón de logout)\n5. Implementar la lógica para el proceso de cierre de sesión\n6. Añadir indicador visual del rol actual del usuario",
-            "status": "pending",
+            "status": "done",
             "testStrategy": ""
           },
           {
@@ -131,7 +131,7 @@
               "23.2"
             ],
             "details": "1. Crear componente de menú desplegable (dropdown)\n2. Implementar lógica para mostrar diferentes opciones según el rol del usuario\n3. Configurar enlaces a funcionalidades específicas por rol\n4. Implementar estilos para destacar visualmente el rol actual\n5. Añadir iconos representativos para cada opción del menú\n6. Configurar comportamiento de apertura/cierre del menú",
-            "status": "pending",
+            "status": "done",
             "testStrategy": ""
           },
           {
@@ -144,7 +144,7 @@
               "23.3"
             ],
             "details": "1. Implementar diseño responsive utilizando media queries\n2. Crear menú hamburguesa para dispositivos móviles\n3. Configurar comportamiento de colapso/expansión en pantallas pequeñas\n4. Implementar animaciones suaves para transiciones de estado\n5. Añadir efectos de hover y focus para mejorar la interactividad\n6. Realizar pruebas en diferentes tamaños de pantalla\n7. Optimizar rendimiento de animaciones",
-            "status": "pending",
+            "status": "done",
             "testStrategy": ""
           }
         ]
@@ -1162,7 +1162,7 @@
     ],
     "metadata": {
       "created": "2025-10-07T16:52:07.729Z",
-      "updated": "2025-10-07T18:09:52.998Z",
+      "updated": "2025-10-07T18:21:14.389Z",
       "description": "Tasks for master context"
     }
   }
