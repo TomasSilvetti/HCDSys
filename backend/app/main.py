@@ -2,10 +2,12 @@ from fastapi import FastAPI, Depends, HTTPException, status
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 from fastapi.security import OAuth2PasswordBearer
+from sqlalchemy.orm import Session
 
-from .db.database import engine, Base
-from .routes import auth, documents, users
+from .db.database import engine, Base, get_db
+from .routes import auth, documents, users, roles
 from .utils.config import settings
+from .db.init_roles import init_roles_and_permissions
 
 # Crear tablas en la base de datos
 Base.metadata.create_all(bind=engine)
@@ -29,6 +31,7 @@ app.add_middleware(
 app.include_router(auth.router, prefix="/api", tags=["auth"])
 app.include_router(documents.router, prefix="/api", tags=["documents"])
 app.include_router(users.router, prefix="/api", tags=["users"])
+app.include_router(roles.router, prefix="/api", tags=["roles"])
 
 @app.get("/api/health")
 def health_check():
@@ -41,6 +44,16 @@ async def http_exception_handler(request, exc):
         status_code=exc.status_code,
         content={"detail": exc.detail},
     )
+
+# Evento de inicio para inicializar roles y permisos
+@app.on_event("startup")
+async def startup_event():
+    db = next(get_db())
+    try:
+        # Inicializar roles y permisos
+        init_roles_and_permissions(db)
+    finally:
+        db.close()
 
 if __name__ == "__main__":
     import uvicorn

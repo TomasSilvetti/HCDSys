@@ -125,3 +125,19 @@ class HistorialAcceso(Base):
     # Relaciones
     usuario = relationship("Usuario", back_populates="historial")
     documento = relationship("Documento", back_populates="historial")
+
+class HistorialRol(Base):
+    __tablename__ = "historial_rol"
+
+    id = Column(Integer, primary_key=True, index=True)
+    usuario_id = Column(Integer, ForeignKey("usuarios.id"), nullable=False)
+    rol_anterior_id = Column(Integer, ForeignKey("roles.id"), nullable=False)
+    rol_nuevo_id = Column(Integer, ForeignKey("roles.id"), nullable=False)
+    modificado_por_id = Column(Integer, ForeignKey("usuarios.id"), nullable=False)
+    fecha_cambio = Column(DateTime, default=datetime.utcnow)
+    
+    # Relaciones
+    usuario = relationship("Usuario", foreign_keys=[usuario_id])
+    rol_anterior = relationship("Rol", foreign_keys=[rol_anterior_id])
+    rol_nuevo = relationship("Rol", foreign_keys=[rol_nuevo_id])
+    modificado_por = relationship("Usuario", foreign_keys=[modificado_por_id])

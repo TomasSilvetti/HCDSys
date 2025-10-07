@@ -160,7 +160,7 @@
           21,
           23
         ],
-        "status": "pending",
+        "status": "done",
         "subtasks": [
           {
             "id": 1,
@@ -168,7 +168,7 @@
             "description": "Crear la estructura HTML y CSS del formulario de registro con todos los campos requeridos según el diseño de la aplicación.",
             "dependencies": [],
             "details": "1. Crear componente React para el formulario de registro\n2. Implementar los campos requeridos: Nombre y Apellido, Email, Contraseña, Confirmar Contraseña, DNI\n3. Diseñar la interfaz siguiendo los estándares de UI/UX del proyecto\n4. Añadir botones de 'Registrar' y 'Cancelar'\n5. Implementar la estructura responsive para diferentes dispositivos",
-            "status": "pending",
+            "status": "done",
             "testStrategy": ""
           },
           {
@@ -179,7 +179,7 @@
               "24.1"
             ],
             "details": "1. Implementar validación de formato de email\n2. Crear validación de contraseña (mínimo 8 caracteres y una mayúscula)\n3. Verificar coincidencia entre contraseña y confirmación\n4. Validar que el DNI sea un número válido\n5. Mostrar mensajes de error específicos para cada campo\n6. Implementar estado visual de campos válidos/inválidos\n7. Deshabilitar botón de registro hasta que todos los campos sean válidos",
-            "status": "pending",
+            "status": "done",
             "testStrategy": ""
           },
           {
@@ -188,7 +188,7 @@
             "description": "Crear el endpoint en el backend que procesará los datos del formulario y registrará al usuario en la base de datos.",
             "dependencies": [],
             "details": "1. Crear ruta POST /api/users/register\n2. Implementar validación de datos en el servidor\n3. Verificar si el usuario ya existe (por email o DNI)\n4. Configurar encriptación de contraseñas con bcrypt\n5. Crear modelo de usuario en la base de datos\n6. Implementar manejo de errores específicos\n7. Generar respuestas adecuadas para diferentes escenarios (éxito, error, conflicto)",
-            "status": "pending",
+            "status": "done",
             "testStrategy": ""
           },
           {
@@ -201,7 +201,7 @@
               "24.3"
             ],
             "details": "1. Implementar servicio de comunicación con el endpoint de registro\n2. Mostrar indicador de carga durante el proceso de registro\n3. Manejar y mostrar errores devueltos por el backend\n4. Implementar mensajes de éxito para registro completado\n5. Configurar redirección a la página de login tras registro exitoso\n6. Añadir opción para volver a intentar en caso de error\n7. Implementar registro de eventos para análisis y depuración",
-            "status": "pending",
+            "status": "done",
             "testStrategy": ""
           }
         ]
@@ -218,7 +218,7 @@
           23,
           24
         ],
-        "status": "pending",
+        "status": "done",
         "subtasks": [
           {
             "id": 1,
@@ -226,7 +226,7 @@
             "description": "Crear la interfaz de usuario del formulario de inicio de sesión con todos los elementos requeridos según el diseño especificado.",
             "dependencies": [],
             "details": "1. Crear componente React/Angular para el formulario de login\n2. Implementar campos de email y contraseña con validaciones básicas\n3. Añadir botón de 'Iniciar Sesión' con estados (normal, hover, loading)\n4. Implementar enlaces de 'Olvidaste tu contraseña' y 'Registrarse'\n5. Aplicar estilos según guía de diseño del proyecto\n6. Asegurar que el formulario sea responsive para diferentes dispositivos\n7. Implementar accesibilidad básica (labels, atributos aria, navegación por teclado)",
-            "status": "pending",
+            "status": "done",
             "testStrategy": ""
           },
           {
@@ -237,7 +237,7 @@
               "25.1"
             ],
             "details": "1. Crear endpoint POST /api/auth/login en el backend\n2. Implementar verificación de credenciales contra base de datos\n3. Configurar generación de tokens JWT con payload apropiado (userId, role, permissions)\n4. Establecer tiempos de expiración adecuados para los tokens\n5. Implementar actualización del campo 'último acceso' en la base de datos\n6. Añadir verificación de estado de cuenta (activa/desactivada)\n7. Documentar la API con Swagger/OpenAPI",
-            "status": "pending",
+            "status": "done",
             "testStrategy": ""
           },
           {
@@ -248,7 +248,7 @@
               "25.2"
             ],
             "details": "1. Crear servicio de autenticación en el frontend\n2. Implementar almacenamiento seguro del token JWT (localStorage/sessionStorage/cookies)\n3. Configurar interceptores HTTP para incluir el token en las peticiones\n4. Implementar decodificación del token para obtener información del usuario\n5. Crear lógica para verificar expiración del token\n6. Implementar sistema de refresh token (si aplica)\n7. Añadir funcionalidad de cierre de sesión que limpie tokens",
-            "status": "pending",
+            "status": "done",
             "testStrategy": ""
           },
           {
@@ -261,7 +261,7 @@
               "25.3"
             ],
             "details": "1. Implementar mensajes de error específicos para diferentes casos:\n   - Credenciales inválidas\n   - Cuenta desactivada\n   - Problemas de conexión\n2. Crear componente de visualización de errores en el formulario\n3. Implementar redirección a página principal tras login exitoso\n4. Añadir redirección a página de recuperación de contraseña\n5. Configurar protección de rutas para usuarios no autenticados\n6. Implementar persistencia de URL original para redireccionar después del login\n7. Añadir tests para verificar el correcto funcionamiento de errores y redirecciones",
-            "status": "pending",
+            "status": "done",
             "testStrategy": ""
           }
         ]
@@ -277,7 +277,7 @@
           21,
           22
         ],
-        "status": "pending",
+        "status": "done",
         "subtasks": [
           {
             "id": 1,
@@ -285,7 +285,7 @@
             "description": "Crear la interfaz visual del componente de búsqueda con campo de texto prominente, botón de búsqueda y validaciones básicas",
             "dependencies": [],
             "details": "1. Diseñar el componente de búsqueda con campo de texto prominente y botón de búsqueda\n2. Implementar validación para evitar búsquedas con campo vacío\n3. Añadir mensajes de ayuda y placeholder informativos\n4. Diseñar interfaz responsiva para diferentes dispositivos\n5. Añadir indicadores visuales durante la búsqueda (loading)",
-            "status": "pending",
+            "status": "done",
             "testStrategy": ""
           },
           {
@@ -296,7 +296,7 @@
               "26.1"
             ],
             "details": "1. Diseñar componente de calendario para filtrado por fechas\n2. Implementar lógica para selección de fechas desde/hasta\n3. Asegurar que el componente sea responsivo y accesible\n4. Integrar el componente de calendario con el componente principal de búsqueda\n5. Implementar validaciones para rangos de fechas inválidos",
-            "status": "pending",
+            "status": "done",
             "testStrategy": ""
           },
           {
@@ -308,7 +308,7 @@
               "26.2"
             ],
             "details": "1. Crear estado local para almacenar términos de búsqueda y filtros\n2. Implementar manejo de eventos para iniciar búsqueda con Enter o clic en botón\n3. Desarrollar la lógica para combinar términos de búsqueda con filtros de fecha\n4. Implementar la persistencia temporal de los criterios de búsqueda\n5. Añadir funcionalidad para limpiar/resetear los campos de búsqueda",
-            "status": "pending",
+            "status": "done",
             "testStrategy": ""
           }
         ]
@@ -681,7 +681,7 @@
         "dependencies": [
           25
         ],
-        "status": "pending",
+        "status": "done",
         "subtasks": [
           {
             "id": 1,
@@ -689,7 +689,7 @@
             "description": "Crear la estructura de datos para el sistema de roles de usuario, incluyendo los roles predefinidos y sus características.",
             "dependencies": [],
             "details": "1. Diseñar el esquema de base de datos para roles de usuario\n2. Implementar los roles predefinidos (Administrador, Gestor de Documentos, Usuario de Consulta)\n3. Definir los atributos y permisos asociados a cada rol\n4. Crear las relaciones entre usuarios y roles\n5. Documentar el modelo de datos",
-            "status": "pending",
+            "status": "done",
             "testStrategy": ""
           },
           {
@@ -700,7 +700,7 @@
               "33.1"
             ],
             "details": "1. Crear componente de lista de usuarios con ordenación alfabética\n2. Implementar funcionalidad de búsqueda por nombre o email\n3. Desarrollar vista de detalles de usuario\n4. Diseñar la interfaz según los estándares de la aplicación\n5. Implementar paginación para la lista de usuarios\n6. Añadir indicadores visuales para los diferentes roles",
-            "status": "pending",
+            "status": "done",
             "testStrategy": ""
           },
           {
@@ -712,7 +712,7 @@
               "33.2"
             ],
             "details": "1. Crear formulario para edición de roles\n2. Implementar validación para evitar que administradores cambien su propio rol\n3. Añadir confirmación para cambios de rol\n4. Desarrollar lógica de actualización de roles en la base de datos\n5. Implementar mensajes de éxito/error para las operaciones\n6. Crear pruebas para validar las restricciones de seguridad",
-            "status": "pending",
+            "status": "done",
             "testStrategy": ""
           },
           {
@@ -723,7 +723,7 @@
               "33.3"
             ],
             "details": "1. Crear modelo de datos para el historial de cambios de rol\n2. Implementar registro automático de modificaciones (usuario que realiza el cambio, fecha, rol anterior, nuevo rol)\n3. Desarrollar mecanismo para actualización inmediata de permisos al cambiar rol\n4. Configurar notificaciones para usuarios afectados por cambios de rol\n5. Implementar visualización del historial de cambios",
-            "status": "pending",
+            "status": "done",
             "testStrategy": ""
           }
         ]
@@ -1162,7 +1162,7 @@
     ],
     "metadata": {
       "created": "2025-10-07T16:52:07.729Z",
-      "updated": "2025-10-07T18:21:14.389Z",
+      "updated": "2025-10-07T23:39:26.624Z",
       "description": "Tasks for master context"
     }
   }

@@ -1,4 +1,5 @@
 import { createContext, useState, useContext, useEffect } from 'react';
+import { authService } from '../utils/api';
 
 // Crear el contexto de autenticación
 const AuthContext = createContext();
@@ -13,39 +14,47 @@ export const AuthProvider = ({ children }) => {
   const [currentUser, setCurrentUser] = useState(null);
   const [loading, setLoading] = useState(true);
 
-  // Simular carga inicial del usuario desde localStorage
+  // Cargar usuario desde localStorage/token al iniciar
   useEffect(() => {
-    const storedUser = localStorage.getItem('user');
-    if (storedUser) {
-      try {
-        setCurrentUser(JSON.parse(storedUser));
-      } catch (error) {
-        console.error('Error parsing stored user:', error);
-        localStorage.removeItem('user');
+    const initAuth = async () => {
+      if (authService.isAuthenticated()) {
+        const user = authService.getCurrentUser();
+        setCurrentUser(user);
       }
-    }
-    setLoading(false);
+      setLoading(false);
+    };
+    
+    initAuth();
   }, []);
 
   // Función para iniciar sesión
-  const login = (userData) => {
-    // En una aplicación real, aquí se haría la llamada a la API
-    // y se guardaría el token JWT
-    setCurrentUser(userData);
-    localStorage.setItem('user', JSON.stringify(userData));
+  const login = async (credentials) => {
+    try {
+      const data = await authService.login(credentials);
+      const user = authService.getCurrentUser();
+      setCurrentUser(user);
+      return { success: true, user };
+    } catch (error) {
+      console.error('Error de inicio de sesión:', error);
+      return { success: false, error: error.message };
+    }
   };
 
   // Función para cerrar sesión
   const logout = () => {
+    authService.logout();
     setCurrentUser(null);
-    localStorage.removeItem('user');
   };
 
   // Función para registrar un nuevo usuario
   const register = async (userData) => {
-    // En una aplicación real, aquí se haría la llamada a la API
-    // Por ahora, simulamos un registro exitoso
-    return { success: true, message: 'Usuario registrado correctamente' };
+    try {
+      const response = await authService.register(userData);
+      return { success: true, message: 'Usuario registrado correctamente', data: response };
+    } catch (error) {
+      console.error('Error de registro:', error);
+      return { success: false, error: error.message };
+    }
   };
 
   // Valores que se proporcionarán a través del contexto
@@ -55,7 +64,8 @@ export const AuthProvider = ({ children }) => {
     logout,
     register,
     isAuthenticated: !!currentUser,
-    userRole: currentUser?.role || 'guest',
+    userRole: currentUser?.role_id || 'guest',
+    loading,
   };
 
   return (

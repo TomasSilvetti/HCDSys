@@ -3,28 +3,44 @@ import { Link, useNavigate } from 'react-router-dom'
 import { useForm } from 'react-hook-form'
 import { FiUser, FiMail, FiLock, FiAlertCircle, FiCreditCard } from 'react-icons/fi'
 import { toast } from 'react-toastify'
+import { useAuth } from '../../context/AuthContext'
 
 const RegisterPage = () => {
-  const { register, handleSubmit, formState: { errors }, watch } = useForm()
+  const { register: registerUser, handleSubmit, formState: { errors }, watch } = useForm()
   const [isLoading, setIsLoading] = useState(false)
+  const [serverError, setServerError] = useState(null)
   const navigate = useNavigate()
+  const { register } = useAuth()
   
   const password = watch("password", "")
 
   const onSubmit = async (data) => {
     try {
       setIsLoading(true)
-      // Simulación de llamada a API - reemplazar con llamada real
-      console.log('Register data:', data)
+      setServerError(null)
       
-      // Simular delay de red
-      await new Promise(resolve => setTimeout(resolve, 1000))
+      // Preparar datos para el backend
+      const userData = {
+        nombre: data.fullName.split(' ')[0], // Asumimos que el primer nombre es el nombre
+        apellido: data.fullName.split(' ').slice(1).join(' '), // El resto es apellido
+        email: data.email,
+        password: data.password,
+        dni: data.dni
+      }
       
-      // Simulación de éxito
-      toast.success('Registro exitoso. Por favor inicia sesión.')
-      navigate('/login')
+      // Llamar al servicio de registro
+      const result = await register(userData)
+      
+      if (result.success) {
+        toast.success('Registro exitoso. Por favor inicia sesión.')
+        navigate('/login')
+      } else {
+        setServerError(result.error)
+        toast.error(result.error || 'Error al registrar usuario.')
+      }
     } catch (error) {
       console.error('Error de registro:', error)
+      setServerError(error.message)
       toast.error('Error al registrar usuario. Inténtelo nuevamente.')
     } finally {
       setIsLoading(false)
@@ -35,6 +51,14 @@ const RegisterPage = () => {
     <div className="max-w-md mx-auto">
       <div className="bg-white shadow-md rounded-lg p-8">
         <h1 className="text-2xl font-bold text-center mb-6">Crear Cuenta</h1>
+        
+        {serverError && (
+          <div className="mb-4 p-3 bg-red-100 border border-red-400 text-red-700 rounded">
+            <p className="flex items-center">
+              <FiAlertCircle className="mr-2" /> {serverError}
+            </p>
+          </div>
+        )}
         
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
           {/* Full Name Field */}
@@ -51,7 +75,7 @@ const RegisterPage = () => {
                 type="text"
                 className={`input pl-10 w-full ${errors.fullName ? 'border-red-500' : ''}`}
                 placeholder="Juan Pérez"
-                {...register("fullName", { 
+                {...registerUser("fullName", { 
                   required: "El nombre y apellido son obligatorios",
                   minLength: {
                     value: 3,
@@ -81,7 +105,7 @@ const RegisterPage = () => {
                 type="email"
                 className={`input pl-10 w-full ${errors.email ? 'border-red-500' : ''}`}
                 placeholder="correo@ejemplo.com"
-                {...register("email", { 
+                {...registerUser("email", { 
                   required: "El correo electrónico es obligatorio",
                   pattern: {
                     value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
@@ -111,7 +135,7 @@ const RegisterPage = () => {
                 type="text"
                 className={`input pl-10 w-full ${errors.dni ? 'border-red-500' : ''}`}
                 placeholder="12345678"
-                {...register("dni", { 
+                {...registerUser("dni", { 
                   required: "El DNI es obligatorio",
                   pattern: {
                     value: /^[0-9]{7,8}$/,
@@ -141,7 +165,7 @@ const RegisterPage = () => {
                 type="password"
                 className={`input pl-10 w-full ${errors.password ? 'border-red-500' : ''}`}
                 placeholder="••••••••"
-                {...register("password", { 
+                {...registerUser("password", { 
                   required: "La contraseña es obligatoria",
                   minLength: {
                     value: 8,
@@ -175,7 +199,7 @@ const RegisterPage = () => {
                 type="password"
                 className={`input pl-10 w-full ${errors.confirmPassword ? 'border-red-500' : ''}`}
                 placeholder="••••••••"
-                {...register("confirmPassword", { 
+                {...registerUser("confirmPassword", { 
                   required: "Debe confirmar la contraseña",
                   validate: value => value === password || "Las contraseñas no coinciden"
                 })}

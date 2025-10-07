@@ -38,7 +38,7 @@ const RoleBasedMenu = ({ userRole, userName, onLogout, isMobile = false }) => {
       { 
         icon: <FiUsers />, 
         text: 'Gestionar Usuarios', 
-        to: '/admin/usuarios',
+        to: '/admin/users',
         description: 'Administrar usuarios y roles'
       },
       { 
@@ -90,28 +90,38 @@ const RoleBasedMenu = ({ userRole, userName, onLogout, isMobile = false }) => {
     ]
   };
 
+  // Mapear los IDs de rol a las claves del objeto menuOptions
+  const roleMap = {
+    1: 'admin',    // Administrador
+    2: 'gestor',   // Gestor de Documentos
+    3: 'consulta'  // Usuario de Consulta
+  };
+  
   // Obtener las opciones según el rol (si no existe el rol, usar opciones de consulta)
-  const roleOptions = menuOptions[userRole] || menuOptions.consulta;
+  const roleKey = roleMap[userRole] || 'consulta';
+  const roleOptions = menuOptions[roleKey] || menuOptions.consulta;
   
   // Color del indicador según el rol
   const getRoleBadgeColor = () => {
-    switch (userRole) {
-      case 'admin':
-        return 'bg-red-500';
-      case 'gestor':
+    switch (Number(userRole)) {
+      case 1: // Administrador
+        return 'bg-purple-500';
+      case 2: // Gestor de Documentos
         return 'bg-green-500';
-      default:
+      default: // Usuario de Consulta
         return 'bg-blue-500';
     }
   };
 
   // Texto del rol en español
   const getRoleText = () => {
-    switch (userRole) {
-      case 'admin':
+    switch (Number(userRole)) {
+      case 1:
         return 'Administrador';
-      case 'gestor':
-        return 'Gestor';
+      case 2:
+        return 'Gestor de Documentos';
+      case 3:
+        return 'Usuario de Consulta';
       default:
         return 'Usuario';
     }

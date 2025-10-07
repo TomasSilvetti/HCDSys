@@ -1,267 +1,203 @@
-import { useState } from 'react'
-import { FiSearch, FiFilter, FiX, FiCalendar } from 'react-icons/fi'
-
-// Datos de ejemplo para simular resultados de búsqueda
-const mockResults = [
-  {
-    id: 1,
-    titulo: 'Ordenanza Municipal 123/2023',
-    numero_expediente: 'EXP-2023-00123',
-    fecha_creacion: '2023-05-15',
-    categoria: 'Ordenanzas',
-    descripcion: 'Ordenanza que regula el uso de espacios públicos en el municipio de Lules.'
-  },
-  {
-    id: 2,
-    titulo: 'Resolución 45/2023 - Presupuesto anual',
-    numero_expediente: 'EXP-2023-00045',
-    fecha_creacion: '2023-02-10',
-    categoria: 'Resoluciones',
-    descripcion: 'Resolución que aprueba el presupuesto anual para el ejercicio 2023.'
-  },
-  {
-    id: 3,
-    titulo: 'Acta de Sesión Ordinaria 15/2023',
-    numero_expediente: 'ACTA-2023-00015',
-    fecha_creacion: '2023-07-22',
-    categoria: 'Actas',
-    descripcion: 'Acta de la sesión ordinaria número 15 del Honorable Concejo Deliberante.'
-  }
-]
+import { useState, useEffect } from 'react';
+import { useSearchParams } from 'react-router-dom';
+import SearchBar from '../../components/search/SearchBar';
+import DateRangePicker from '../../components/search/DateRangePicker';
+import { FiFilter } from 'react-icons/fi';
 
 const SearchPage = () => {
-  const [searchTerm, setSearchTerm] = useState('')
-  const [dateFrom, setDateFrom] = useState('')
-  const [dateTo, setDateTo] = useState('')
-  const [showFilters, setShowFilters] = useState(false)
-  const [results, setResults] = useState([])
-  const [isLoading, setIsLoading] = useState(false)
-  const [hasSearched, setHasSearched] = useState(false)
+  // Estado para manejar los parámetros de búsqueda
+  const [searchParams, setSearchParams] = useSearchParams();
+  const [isLoading, setIsLoading] = useState(false);
+  const [showFilters, setShowFilters] = useState(false);
+  const [results, setResults] = useState([]);
+  const [dateRange, setDateRange] = useState({ startDate: '', endDate: '' });
   
-  // Filtros avanzados
-  const [documentType, setDocumentType] = useState('')
-  const [expedientNumber, setExpedientNumber] = useState('')
-  const [category, setCategory] = useState('')
+  // Obtener parámetros de búsqueda de la URL
+  const query = searchParams.get('q') || '';
+  const startDate = searchParams.get('startDate') || '';
+  const endDate = searchParams.get('endDate') || '';
   
-  const handleSearch = async (e) => {
-    e.preventDefault()
+  // Función para manejar la búsqueda
+  const handleSearch = (searchQuery) => {
+    // Crear objeto con los parámetros actuales
+    const params = { q: searchQuery };
     
-    if (!searchTerm.trim()) {
-      alert('Ingrese un término de búsqueda')
-      return
+    // Añadir fechas si están presentes
+    if (dateRange.startDate) params.startDate = dateRange.startDate;
+    if (dateRange.endDate) params.endDate = dateRange.endDate;
+    
+    // Actualizar los parámetros de URL
+    setSearchParams(params);
+    
+    // Simular una búsqueda
+    setIsLoading(true);
+    
+    // Aquí se realizaría la llamada a la API
+    setTimeout(() => {
+      // Simulación de resultados
+      setResults([
+        { id: 1, title: 'Documento de ejemplo 1', expediente: 'EXP-2023-001', fecha: '2023-10-15' },
+        { id: 2, title: 'Documento de ejemplo 2', expediente: 'EXP-2023-002', fecha: '2023-09-22' },
+        { id: 3, title: 'Documento de ejemplo 3', expediente: 'EXP-2023-003', fecha: '2023-08-10' },
+      ]);
+      setIsLoading(false);
+    }, 1000);
+  };
+  
+  // Función para manejar cambios en el rango de fechas
+  const handleDateRangeChange = (range) => {
+    setDateRange(range);
+  };
+  
+  // Inicializar el estado del rango de fechas desde la URL
+  useEffect(() => {
+    if (startDate || endDate) {
+      setDateRange({
+        startDate: startDate || '',
+        endDate: endDate || ''
+      });
     }
-    
-    setIsLoading(true)
-    setHasSearched(true)
-    
-    try {
-      // Simulación de llamada a API - reemplazar con llamada real
-      await new Promise(resolve => setTimeout(resolve, 800))
-      
-      // Filtrar resultados de ejemplo según el término de búsqueda
-      const filteredResults = mockResults.filter(doc => 
-        doc.titulo.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        doc.numero_expediente.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        doc.descripcion.toLowerCase().includes(searchTerm.toLowerCase())
-      )
-      
-      setResults(filteredResults)
-    } catch (error) {
-      console.error('Error en la búsqueda:', error)
-    } finally {
-      setIsLoading(false)
-    }
-  }
+  }, [startDate, endDate]);
   
-  const clearFilters = () => {
-    setDateFrom('')
-    setDateTo('')
-    setDocumentType('')
-    setExpedientNumber('')
-    setCategory('')
-  }
-
+  // Realizar búsqueda inicial si hay un término en la URL
+  useEffect(() => {
+    if (query) {
+      // No llamamos a handleSearch para evitar un ciclo infinito
+      // ya que handleSearch actualiza los searchParams
+      setIsLoading(true);
+      
+      // Simular búsqueda inicial
+      setTimeout(() => {
+        setResults([
+          { id: 1, title: 'Documento de ejemplo 1', expediente: 'EXP-2023-001', fecha: '2023-10-15' },
+          { id: 2, title: 'Documento de ejemplo 2', expediente: 'EXP-2023-002', fecha: '2023-09-22' },
+          { id: 3, title: 'Documento de ejemplo 3', expediente: 'EXP-2023-003', fecha: '2023-08-10' },
+        ]);
+        setIsLoading(false);
+      }, 1000);
+    }
+  }, []);
+  
+  // Función para alternar la visibilidad de los filtros
+  const toggleFilters = () => {
+    setShowFilters(!showFilters);
+  };
+  
   return (
-    <div>
-      <h1 className="text-2xl font-bold mb-6">Búsqueda de Documentos</h1>
+    <div className="container mx-auto px-4 py-8">
+      <h1 className="text-3xl font-bold text-center mb-8">Búsqueda de Documentos</h1>
       
-      {/* Formulario de búsqueda */}
-      <div className="bg-white p-6 rounded-lg shadow-md mb-8">
-        <form onSubmit={handleSearch}>
-          <div className="flex flex-col md:flex-row gap-4">
-            {/* Campo de búsqueda */}
-            <div className="flex-grow relative">
-              <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                <FiSearch className="text-secondary-400" />
-              </div>
-              <input
-                type="text"
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-                className="input pl-10 w-full"
-                placeholder="Buscar por título o número de expediente"
+      {/* Barra de búsqueda */}
+      <div className="mb-6">
+        <SearchBar 
+          onSearch={handleSearch} 
+          isLoading={isLoading} 
+          initialQuery={query}
+        />
+      </div>
+      
+      {/* Botón para mostrar/ocultar filtros */}
+      <div className="flex justify-end mb-4">
+        <button
+          onClick={toggleFilters}
+          className="flex items-center px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50"
+        >
+          <FiFilter className="mr-2" /> 
+          {showFilters ? 'Ocultar filtros' : 'Mostrar filtros'}
+        </button>
+      </div>
+      
+      {/* Sección de filtros */}
+      {showFilters && (
+        <div className="bg-gray-50 p-4 rounded-lg mb-6 border border-gray-200">
+          <h2 className="text-lg font-medium mb-4">Filtros</h2>
+          
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            {/* Componente de selección de rango de fechas */}
+            <div className="space-y-2">
+              <label className="block text-sm font-medium text-gray-700">Rango de fechas</label>
+              <DateRangePicker
+                onRangeChange={handleDateRangeChange}
+                initialStartDate={dateRange.startDate}
+                initialEndDate={dateRange.endDate}
               />
             </div>
             
-            {/* Botón de búsqueda */}
-            <button 
-              type="submit" 
-              className="btn btn-primary flex items-center justify-center gap-2"
-              disabled={isLoading}
-            >
-              {isLoading ? (
-                <div className="animate-spin rounded-full h-5 w-5 border-t-2 border-b-2 border-white"></div>
-              ) : (
-                <>
-                  <FiSearch /> Buscar
-                </>
-              )}
-            </button>
-            
-            {/* Botón de filtros */}
-            <button 
-              type="button" 
-              className="btn btn-secondary flex items-center justify-center gap-2"
-              onClick={() => setShowFilters(!showFilters)}
-            >
-              {showFilters ? <FiX /> : <FiFilter />}
-              {showFilters ? 'Ocultar Filtros' : 'Más Filtros'}
-            </button>
+            {/* Espacio para futuros filtros */}
+            <div className="space-y-2">
+              <label className="block text-sm font-medium text-gray-700">Tipo de documento</label>
+              <select className="block w-full pl-3 pr-10 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-primary-500 focus:border-primary-500">
+                <option value="">Todos</option>
+                <option value="1">Resolución</option>
+                <option value="2">Expediente</option>
+                <option value="3">Informe</option>
+              </select>
+            </div>
           </div>
           
-          {/* Filtros avanzados */}
-          {showFilters && (
-            <div className="mt-4 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-              {/* Filtro por fechas */}
-              <div>
-                <label className="label">Fecha desde</label>
-                <div className="relative">
-                  <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                    <FiCalendar className="text-secondary-400" />
-                  </div>
-                  <input
-                    type="date"
-                    value={dateFrom}
-                    onChange={(e) => setDateFrom(e.target.value)}
-                    className="input pl-10 w-full"
-                  />
-                </div>
-              </div>
-              
-              <div>
-                <label className="label">Fecha hasta</label>
-                <div className="relative">
-                  <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                    <FiCalendar className="text-secondary-400" />
-                  </div>
-                  <input
-                    type="date"
-                    value={dateTo}
-                    onChange={(e) => setDateTo(e.target.value)}
-                    className="input pl-10 w-full"
-                  />
-                </div>
-              </div>
-              
-              {/* Filtro por tipo de documento */}
-              <div>
-                <label className="label">Tipo de documento</label>
-                <select
-                  value={documentType}
-                  onChange={(e) => setDocumentType(e.target.value)}
-                  className="input w-full"
-                >
-                  <option value="">Todos los tipos</option>
-                  <option value="ordenanza">Ordenanza</option>
-                  <option value="resolucion">Resolución</option>
-                  <option value="acta">Acta</option>
-                  <option value="decreto">Decreto</option>
-                </select>
-              </div>
-              
-              {/* Filtro por número de expediente */}
-              <div>
-                <label className="label">Número de expediente</label>
-                <input
-                  type="text"
-                  value={expedientNumber}
-                  onChange={(e) => setExpedientNumber(e.target.value)}
-                  className="input w-full"
-                  placeholder="Ej: EXP-2023-00123"
-                />
-              </div>
-              
-              {/* Filtro por categoría */}
-              <div>
-                <label className="label">Categoría</label>
-                <select
-                  value={category}
-                  onChange={(e) => setCategory(e.target.value)}
-                  className="input w-full"
-                >
-                  <option value="">Todas las categorías</option>
-                  <option value="ordenanzas">Ordenanzas</option>
-                  <option value="resoluciones">Resoluciones</option>
-                  <option value="actas">Actas</option>
-                  <option value="decretos">Decretos</option>
-                </select>
-              </div>
-              
-              {/* Botón para limpiar filtros */}
-              <div className="flex items-end">
-                <button
-                  type="button"
-                  onClick={clearFilters}
-                  className="btn btn-secondary w-full"
-                >
-                  Limpiar Filtros
-                </button>
-              </div>
-            </div>
-          )}
-        </form>
-      </div>
-      
-      {/* Resultados de búsqueda */}
-      {hasSearched && (
-        <div>
-          <h2 className="text-xl font-semibold mb-4">
-            Resultados de la búsqueda
-            {results.length > 0 && <span className="text-secondary-500 ml-2">({results.length} encontrados)</span>}
-          </h2>
-          
-          {results.length > 0 ? (
-            <div className="space-y-4">
-              {results.map((doc) => (
-                <div 
-                  key={doc.id} 
-                  className="bg-white p-4 rounded-lg shadow-sm border border-secondary-200 hover:shadow-md transition-shadow"
-                >
-                  <h3 className="text-lg font-semibold text-primary-700">{doc.titulo}</h3>
-                  <div className="flex flex-wrap gap-x-6 gap-y-2 mt-2 text-sm text-secondary-600">
-                    <p><span className="font-medium">Expediente:</span> {doc.numero_expediente}</p>
-                    <p><span className="font-medium">Fecha:</span> {new Date(doc.fecha_creacion).toLocaleDateString('es-AR')}</p>
-                    <p><span className="font-medium">Categoría:</span> {doc.categoria}</p>
-                  </div>
-                  <p className="mt-2 text-secondary-700">{doc.descripcion}</p>
-                  <div className="mt-3">
-                    <button className="text-primary-600 hover:text-primary-800 text-sm font-medium">
-                      Ver detalle
-                    </button>
-                  </div>
-                </div>
-              ))}
-            </div>
-          ) : (
-            <div className="bg-secondary-50 border border-secondary-200 rounded-lg p-8 text-center">
-              <p className="text-secondary-600">No se encontraron documentos que coincidan con tu búsqueda.</p>
-              <p className="text-secondary-500 mt-2">Intenta con otros términos o ajusta los filtros.</p>
-            </div>
-          )}
+          <div className="mt-4 flex justify-end space-x-2">
+            <button 
+              className="px-4 py-2 border border-gray-300 rounded-md text-sm font-medium text-gray-700 hover:bg-gray-50"
+              onClick={() => {
+                setDateRange({ startDate: '', endDate: '' });
+                // Limpiar otros filtros aquí
+              }}
+            >
+              Limpiar filtros
+            </button>
+            <button 
+              className="px-4 py-2 bg-primary-600 border border-transparent rounded-md text-sm font-medium text-white hover:bg-primary-700"
+              onClick={() => {
+                if (query) {
+                  handleSearch(query);
+                }
+              }}
+            >
+              Aplicar filtros
+            </button>
+          </div>
         </div>
       )}
+      
+      {/* Resultados de búsqueda */}
+      <div className="mt-6">
+        {isLoading ? (
+          <div className="flex justify-center items-center py-12">
+            <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-primary-600"></div>
+          </div>
+        ) : results.length > 0 ? (
+          <div className="bg-white shadow overflow-hidden sm:rounded-md">
+            <ul className="divide-y divide-gray-200">
+              {results.map((doc) => (
+                <li key={doc.id} className="px-6 py-4 hover:bg-gray-50">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <h3 className="text-lg font-medium text-primary-600">{doc.title}</h3>
+                      <p className="mt-1 text-sm text-gray-500">
+                        Expediente: {doc.expediente} | Fecha: {doc.fecha}
+                      </p>
+                    </div>
+                    <button className="px-3 py-1 bg-primary-100 text-primary-800 rounded-full text-sm">
+                      Ver detalles
+                    </button>
+                  </div>
+                </li>
+              ))}
+            </ul>
+          </div>
+        ) : query ? (
+          <div className="text-center py-12">
+            <p className="text-gray-500">No se encontraron resultados para "{query}"</p>
+            <p className="mt-2 text-sm text-gray-400">Intente con otros términos de búsqueda o filtros</p>
+          </div>
+        ) : (
+          <div className="text-center py-12">
+            <p className="text-gray-500">Ingrese un término de búsqueda para encontrar documentos</p>
+          </div>
+        )}
+      </div>
     </div>
-  )
-}
+  );
+};
 
-export default SearchPage
+export default SearchPage;

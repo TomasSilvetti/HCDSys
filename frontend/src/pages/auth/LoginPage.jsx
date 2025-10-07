@@ -1,28 +1,43 @@
 import { useState } from 'react'
-import { Link, useNavigate } from 'react-router-dom'
+import { Link, useNavigate, useLocation } from 'react-router-dom'
 import { useForm } from 'react-hook-form'
 import { FiMail, FiLock, FiAlertCircle } from 'react-icons/fi'
 import { toast } from 'react-toastify'
+import { useAuth } from '../../context/AuthContext'
 
 const LoginPage = () => {
   const { register, handleSubmit, formState: { errors } } = useForm()
   const [isLoading, setIsLoading] = useState(false)
+  const [serverError, setServerError] = useState(null)
   const navigate = useNavigate()
+  const location = useLocation()
+  const { login } = useAuth()
+  
+  // Obtener la URL a la que redirigir después del login (si existe)
+  const from = location.state?.from?.pathname || '/'
 
   const onSubmit = async (data) => {
     try {
       setIsLoading(true)
-      // Simulación de llamada a API - reemplazar con llamada real
-      console.log('Login data:', data)
+      setServerError(null)
       
-      // Simular delay de red
-      await new Promise(resolve => setTimeout(resolve, 1000))
+      // Llamar al servicio de login
+      const result = await login({
+        email: data.email,
+        password: data.password
+      })
       
-      // Simulación de éxito
-      toast.success('Inicio de sesión exitoso')
-      navigate('/')
+      if (result.success) {
+        toast.success('Inicio de sesión exitoso')
+        // Redirigir al usuario a la página que intentaba acceder o a la página principal
+        navigate(from, { replace: true })
+      } else {
+        setServerError(result.error)
+        toast.error(result.error || 'Error al iniciar sesión. Verifique sus credenciales.')
+      }
     } catch (error) {
       console.error('Error de inicio de sesión:', error)
+      setServerError(error.message || 'Error al iniciar sesión. Verifique sus credenciales.')
       toast.error('Error al iniciar sesión. Verifique sus credenciales.')
     } finally {
       setIsLoading(false)
@@ -33,6 +48,14 @@ const LoginPage = () => {
     <div className="max-w-md mx-auto">
       <div className="bg-white shadow-md rounded-lg p-8">
         <h1 className="text-2xl font-bold text-center mb-6">Iniciar Sesión</h1>
+        
+        {serverError && (
+          <div className="mb-4 p-3 bg-red-100 border border-red-400 text-red-700 rounded">
+            <p className="flex items-center">
+              <FiAlertCircle className="mr-2" /> {serverError}
+            </p>
+          </div>
+        )}
         
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
           {/* Email Field */}

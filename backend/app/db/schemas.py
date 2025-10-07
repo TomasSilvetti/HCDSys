@@ -71,6 +71,7 @@ class RolCreate(RolBase):
 class RolUpdate(BaseModel):
     nombre: Optional[str] = None
     descripcion: Optional[str] = None
+    role_id: Optional[int] = None
 
 class RolInDB(RolBase):
     id: int
@@ -224,6 +225,29 @@ class HistorialAccesoInDB(HistorialAccesoBase):
 class HistorialAcceso(HistorialAccesoInDB):
     documento: Documento
     usuario: Usuario
+
+# Esquemas de Historial de Cambios de Rol
+class HistorialRolBase(BaseModel):
+    usuario_id: int
+    rol_anterior_id: int
+    rol_nuevo_id: int
+    modificado_por_id: int
+
+class HistorialRolCreate(HistorialRolBase):
+    pass
+
+class HistorialRolInDB(HistorialRolBase):
+    id: int
+    fecha_cambio: datetime
+
+    class Config:
+        orm_mode = True
+
+class HistorialRol(HistorialRolInDB):
+    usuario: Usuario
+    rol_anterior: Rol
+    rol_nuevo: Rol
+    modificado_por: Usuario
 
 # Esquema de búsqueda de documentos
 class DocumentoSearchParams(BaseModel):
