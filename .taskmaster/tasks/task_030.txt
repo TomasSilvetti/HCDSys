@@ -1,0 +1,73 @@
+# Task ID: 30
+# Title: Implementación del formulario de carga de documentos
+# Status: pending
+# Dependencies: 25
+# Priority: medium
+# Description: Desarrollar el formulario para cargar nuevos documentos según los criterios de la HU009
+# Details:
+1. Crear componente de formulario con los campos requeridos:
+   - Título del documento (obligatorio)
+   - Número de expediente (obligatorio)
+   - Descripción
+   - Categoría (selector)
+   - Tipo de documento (selector, obligatorio)
+2. Implementar área de carga de archivos con:
+   - Funcionalidad de arrastrar y soltar (drag & drop)
+   - Botón para seleccionar archivo del dispositivo
+   - Vista previa del archivo seleccionado
+3. Configurar validación de tipos de archivo permitidos (.pdf, .doc, .docx, .xls, .xlsx, .txt)
+4. Implementar validación de tamaño máximo (10MB)
+5. Crear barra de progreso para la carga
+6. Implementar validaciones de campos obligatorios
+7. Configurar redirección a vista detalle tras carga exitosa
+8. Añadir manejo de errores durante la carga
+
+# Test Strategy:
+Probar la carga de diferentes tipos de archivos, tanto permitidos como no permitidos. Verificar el funcionamiento del drag & drop. Comprobar las validaciones de campos obligatorios y tamaño máximo. Verificar que la barra de progreso funciona correctamente. Probar el manejo de errores durante la carga.
+
+# Subtasks:
+## 1. Diseño y maquetación del formulario de carga [pending]
+### Dependencies: None
+### Description: Implementar la estructura HTML y CSS del formulario con todos los campos requeridos según las especificaciones.
+### Details:
+1. Crear componente React para el formulario
+2. Implementar campos obligatorios (título, número de expediente, tipo de documento)
+3. Implementar campos opcionales (descripción, categoría)
+4. Diseñar selectores para categoría y tipo de documento
+5. Aplicar estilos según guía de diseño del proyecto
+6. Implementar mensajes de validación visual para campos obligatorios
+
+## 2. Implementación del área de carga de archivos [pending]
+### Dependencies: 30.1
+### Description: Desarrollar la funcionalidad de carga de archivos con soporte para drag & drop y vista previa.
+### Details:
+1. Implementar componente de drag & drop para archivos
+2. Crear botón alternativo para seleccionar archivos del dispositivo
+3. Desarrollar la lógica para capturar el archivo seleccionado
+4. Implementar vista previa del documento según su tipo
+5. Mostrar nombre y tamaño del archivo seleccionado
+6. Permitir eliminar el archivo seleccionado antes de enviar
+
+## 3. Desarrollo de validaciones de archivos [pending]
+### Dependencies: 30.2
+### Description: Implementar las validaciones de tipo y tamaño de archivo según los requisitos especificados.
+### Details:
+1. Crear función para validar tipos de archivo permitidos (.pdf, .doc, .docx, .xls, .xlsx, .txt)
+2. Implementar validación de tamaño máximo (10MB)
+3. Mostrar mensajes de error específicos para cada tipo de validación fallida
+4. Bloquear envío del formulario si las validaciones fallan
+5. Implementar validaciones de campos obligatorios del formulario
+6. Crear función para verificar formato de número de expediente
+
+## 4. Implementación de barra de progreso y manejo de errores [pending]
+### Dependencies: 30.1, 30.2, 30.3
+### Description: Desarrollar la barra de progreso para la carga de archivos y el sistema de manejo de errores.
+### Details:
+1. Crear componente de barra de progreso visual
+2. Implementar lógica para actualizar el progreso durante la carga
+3. Desarrollar sistema de manejo de errores durante el proceso de carga
+4. Mostrar mensajes de error específicos según el tipo de fallo
+5. Implementar redirección a vista detalle tras carga exitosa
+6. Añadir opción para cancelar la carga en proceso
+7. Crear mensaje de confirmación de carga exitosa
+

@@ -1,0 +1,173 @@
+{
+	"meta": {
+		"generatedAt": "2025-10-07T16:58:34.046Z",
+		"tasksAnalyzed": 20,
+		"totalTasks": 20,
+		"analysisCount": 20,
+		"thresholdScore": 5,
+		"projectName": "Taskmaster",
+		"usedResearch": false
+	},
+	"complexityAnalysis": [
+		{
+			"taskId": 21,
+			"taskTitle": "Configuración inicial del proyecto",
+			"complexityScore": 5,
+			"recommendedSubtasks": 3,
+			"expansionPrompt": "Divide la configuración inicial del proyecto en tres fases: 1) Configuración del repositorio y estructura base, 2) Configuración del entorno frontend, y 3) Configuración del entorno backend. Detalla los pasos específicos para cada fase.",
+			"reasoning": "Esta tarea tiene complejidad media ya que implica configurar tanto el entorno frontend como backend, con múltiples herramientas y configuraciones. Aunque técnicamente no es muy compleja, requiere atención a detalles en múltiples sistemas."
+		},
+		{
+			"taskId": 22,
+			"taskTitle": "Diseño e implementación de la página principal",
+			"complexityScore": 4,
+			"recommendedSubtasks": 3,
+			"expansionPrompt": "Divide la implementación de la página principal en tres subtareas: 1) Diseño y maquetación del layout principal, 2) Implementación de las secciones informativas, y 3) Desarrollo de los componentes de navegación. Detalla los elementos específicos para cada subtarea.",
+			"reasoning": "La complejidad es moderada ya que implica principalmente desarrollo frontend con componentes React y diseño responsivo. No requiere lógica de negocio compleja, pero sí atención al diseño y experiencia de usuario."
+		},
+		{
+			"taskId": 23,
+			"taskTitle": "Implementación de la barra de navegación con estado de autenticación",
+			"complexityScore": 6,
+			"recommendedSubtasks": 4,
+			"expansionPrompt": "Divide la implementación de la barra de navegación en cuatro subtareas: 1) Diseño base del componente Navbar, 2) Implementación de la lógica de autenticación y visualización condicional, 3) Desarrollo del menú desplegable y opciones por rol, y 4) Implementación de la responsividad y animaciones.",
+			"reasoning": "La complejidad es moderada-alta porque implica lógica condicional basada en el estado de autenticación, manejo de roles de usuario y diseño responsivo. Requiere integración con el sistema de autenticación y adaptación a diferentes dispositivos."
+		},
+		{
+			"taskId": 24,
+			"taskTitle": "Implementación del formulario de registro de usuarios",
+			"complexityScore": 7,
+			"recommendedSubtasks": 4,
+			"expansionPrompt": "Divide la implementación del formulario de registro en cuatro subtareas: 1) Diseño y maquetación del formulario con todos los campos requeridos, 2) Implementación de las validaciones en tiempo real, 3) Desarrollo del endpoint backend para registro, y 4) Integración frontend-backend con manejo de errores.",
+			"reasoning": "La complejidad es alta porque implica validaciones complejas en tiempo real, seguridad para el manejo de contraseñas, integración frontend-backend, y manejo de errores específicos. Requiere atención a la seguridad y experiencia de usuario."
+		},
+		{
+			"taskId": 25,
+			"taskTitle": "Implementación del formulario de inicio de sesión",
+			"complexityScore": 7,
+			"recommendedSubtasks": 4,
+			"expansionPrompt": "Divide la implementación del formulario de inicio de sesión en cuatro subtareas: 1) Diseño y maquetación del formulario de login, 2) Implementación del endpoint de autenticación con JWT, 3) Desarrollo de la lógica de almacenamiento y gestión de tokens, y 4) Implementación del manejo de errores y redirecciones.",
+			"reasoning": "La complejidad es alta debido a la implementación de JWT para sesiones, verificación de credenciales, almacenamiento seguro de tokens, y manejo de estados de cuenta. Requiere atención especial a la seguridad y experiencia de usuario."
+		},
+		{
+			"taskId": 26,
+			"taskTitle": "Implementación de la interfaz de búsqueda básica",
+			"complexityScore": 5,
+			"recommendedSubtasks": 3,
+			"expansionPrompt": "Divide la implementación de la interfaz de búsqueda básica en tres subtareas: 1) Diseño y maquetación del componente de búsqueda con campo y botón, 2) Implementación del componente de calendario para filtrado por fechas, y 3) Desarrollo de la lógica de estado local y manejo de eventos.",
+			"reasoning": "La complejidad es media porque implica componentes interactivos como el calendario para selección de fechas, validaciones, y manejo de estados. Requiere atención a la experiencia de usuario pero no involucra lógica de negocio muy compleja."
+		},
+		{
+			"taskId": 27,
+			"taskTitle": "Implementación del endpoint de búsqueda simple",
+			"complexityScore": 8,
+			"recommendedSubtasks": 4,
+			"expansionPrompt": "Divide la implementación del endpoint de búsqueda en cuatro subtareas: 1) Diseño de la API REST para búsqueda con parámetros, 2) Implementación de filtros por título, expediente y fechas, 3) Desarrollo del sistema de validación de permisos para documentos, y 4) Implementación de la paginación y optimización de consultas.",
+			"reasoning": "La complejidad es alta porque implica consultas a base de datos optimizadas, filtrado complejo, validación de permisos de acceso, y paginación. Requiere atención a la seguridad y al rendimiento con grandes volúmenes de datos."
+		},
+		{
+			"taskId": 28,
+			"taskTitle": "Implementación de la visualización de resultados de búsqueda",
+			"complexityScore": 6,
+			"recommendedSubtasks": 3,
+			"expansionPrompt": "Divide la implementación de la visualización de resultados en tres subtareas: 1) Diseño y maquetación del componente de lista de resultados, 2) Implementación del sistema de paginación y ordenamiento, y 3) Desarrollo de tooltips y comportamiento interactivo.",
+			"reasoning": "La complejidad es moderada-alta porque implica manejo de listas potencialmente grandes, paginación, ordenamiento y elementos interactivos como tooltips. Requiere optimización para el renderizado eficiente de resultados."
+		},
+		{
+			"taskId": 29,
+			"taskTitle": "Implementación de la vista detalle de documento",
+			"complexityScore": 7,
+			"recommendedSubtasks": 4,
+			"expansionPrompt": "Divide la implementación de la vista detalle en cuatro subtareas: 1) Diseño y maquetación del componente principal con información básica, 2) Implementación del componente de historial de versiones, 3) Desarrollo de la funcionalidad de descarga de documentos, y 4) Implementación de la verificación de permisos y diseño responsivo.",
+			"reasoning": "La complejidad es alta porque implica mostrar información detallada, historial de versiones, funcionalidad de descarga y verificación de permisos. Requiere integración con múltiples partes del sistema y atención a la experiencia de usuario."
+		},
+		{
+			"taskId": 30,
+			"taskTitle": "Implementación del formulario de carga de documentos",
+			"complexityScore": 8,
+			"recommendedSubtasks": 4,
+			"expansionPrompt": "Divide la implementación del formulario de carga en cuatro subtareas: 1) Diseño y maquetación del formulario con todos los campos requeridos, 2) Implementación del área de carga con drag & drop y vista previa, 3) Desarrollo de las validaciones de tipo y tamaño de archivo, y 4) Implementación de la barra de progreso y manejo de errores.",
+			"reasoning": "La complejidad es alta porque implica manejo de archivos, funcionalidad de drag & drop, validaciones complejas, y feedback visual durante la carga. Requiere atención a la experiencia de usuario y manejo de errores durante el proceso de carga."
+		},
+		{
+			"taskId": 31,
+			"taskTitle": "Implementación del sistema de almacenamiento de documentos",
+			"complexityScore": 9,
+			"recommendedSubtasks": 5,
+			"expansionPrompt": "Divide la implementación del sistema de almacenamiento en cinco subtareas: 1) Diseño del modelo de datos para documentos, 2) Implementación del servicio de almacenamiento físico de archivos, 3) Desarrollo del sistema de verificación de unicidad e integridad, 4) Implementación del registro de historial, y 5) Desarrollo del sistema de rollback y manejo de errores.",
+			"reasoning": "La complejidad es muy alta porque implica almacenamiento seguro de archivos, integridad de datos, sistema de rollback para errores, y registro de historial. Requiere robustez ante fallos y atención especial a la seguridad y consistencia de datos."
+		},
+		{
+			"taskId": 32,
+			"taskTitle": "Implementación de la edición básica de documentos",
+			"complexityScore": 7,
+			"recommendedSubtasks": 4,
+			"expansionPrompt": "Divide la implementación de la edición de documentos en cuatro subtareas: 1) Diseño y maquetación del formulario de edición, 2) Implementación de las validaciones y verificación de unicidad, 3) Desarrollo del sistema de registro de cambios en historial, y 4) Implementación de la verificación de permisos y confirmaciones.",
+			"reasoning": "La complejidad es alta porque implica validaciones, verificación de permisos, registro de historial y manejo de cambios no guardados. Requiere integración con el sistema de permisos y atención a la experiencia de usuario."
+		},
+		{
+			"taskId": 33,
+			"taskTitle": "Implementación del sistema de roles de usuario",
+			"complexityScore": 8,
+			"recommendedSubtasks": 4,
+			"expansionPrompt": "Divide la implementación del sistema de roles en cuatro subtareas: 1) Diseño del modelo de datos para roles, 2) Implementación de la interfaz de gestión de usuarios, 3) Desarrollo de la funcionalidad de edición de roles con validaciones, y 4) Implementación del registro de cambios y actualización de permisos.",
+			"reasoning": "La complejidad es alta porque implica diseño de un sistema de roles flexible, interfaz de administración, validaciones de seguridad y actualización en tiempo real de permisos. Requiere atención especial a la seguridad y consistencia del sistema."
+		},
+		{
+			"taskId": 34,
+			"taskTitle": "Implementación del sistema de permisos",
+			"complexityScore": 9,
+			"recommendedSubtasks": 5,
+			"expansionPrompt": "Divide la implementación del sistema de permisos en cinco subtareas: 1) Diseño del modelo de datos para permisos, 2) Implementación de las categorías de permisos y su relación con roles, 3) Desarrollo de la interfaz de gestión de permisos, 4) Implementación de la protección de permisos críticos, y 5) Desarrollo de la actualización en tiempo real de permisos.",
+			"reasoning": "La complejidad es muy alta porque implica diseñar un sistema de permisos granular, protección de permisos críticos, actualización en tiempo real y registro de cambios. Es un componente fundamental para la seguridad de todo el sistema."
+		},
+		{
+			"taskId": 35,
+			"taskTitle": "Implementación del sistema de validación de accesos",
+			"complexityScore": 9,
+			"recommendedSubtasks": 5,
+			"expansionPrompt": "Divide la implementación del sistema de validación de accesos en cinco subtareas: 1) Desarrollo del middleware de autenticación con JWT, 2) Implementación del middleware de autorización basado en permisos, 3) Desarrollo del sistema de registro de intentos de acceso, 4) Implementación del manejo de errores para accesos no autorizados, y 5) Desarrollo de la actualización en tiempo real de permisos.",
+			"reasoning": "La complejidad es muy alta porque implica seguridad crítica del sistema, verificación de tokens, validación de permisos, registro de intentos de acceso y manejo de errores. Es fundamental para la seguridad de toda la aplicación."
+		},
+		{
+			"taskId": 36,
+			"taskTitle": "Implementación de UI condicionada por rol",
+			"complexityScore": 7,
+			"recommendedSubtasks": 4,
+			"expansionPrompt": "Divide la implementación de UI condicionada por rol en cuatro subtareas: 1) Desarrollo del sistema de renderizado condicional basado en permisos, 2) Implementación del HOC para protección de rutas, 3) Desarrollo de la visualización de elementos según rol, y 4) Implementación del sistema de redirección para accesos no permitidos.",
+			"reasoning": "La complejidad es alta porque implica integración con el sistema de permisos, renderizado condicional en múltiples componentes, protección de rutas y redirecciones. Requiere consistencia en toda la aplicación y atención a la experiencia de usuario."
+		},
+		{
+			"taskId": 37,
+			"taskTitle": "Implementación de filtros avanzados de búsqueda",
+			"complexityScore": 6,
+			"recommendedSubtasks": 3,
+			"expansionPrompt": "Divide la implementación de filtros avanzados en tres subtareas: 1) Ampliación de la interfaz de búsqueda con sección de filtros adicionales, 2) Implementación de la lógica para combinar múltiples filtros, y 3) Desarrollo de la visualización y gestión de filtros activos.",
+			"reasoning": "La complejidad es moderada-alta porque implica múltiples tipos de filtros, lógica para combinarlos, persistencia entre búsquedas y visualización clara de filtros activos. Requiere buena experiencia de usuario para facilitar búsquedas complejas."
+		},
+		{
+			"taskId": 38,
+			"taskTitle": "Implementación del sistema de versionado de documentos",
+			"complexityScore": 8,
+			"recommendedSubtasks": 4,
+			"expansionPrompt": "Divide la implementación del sistema de versionado en cuatro subtareas: 1) Diseño del modelo de datos para versiones de documentos, 2) Implementación del sistema de almacenamiento de versiones, 3) Desarrollo de la visualización de historial y descarga de versiones, y 4) Implementación de la comparación y restauración de versiones.",
+			"reasoning": "La complejidad es alta porque implica almacenamiento de múltiples versiones, referencias entre versiones, comparación visual y funcionalidad de restauración. Requiere atención a la integridad de datos y experiencia de usuario."
+		},
+		{
+			"taskId": 39,
+			"taskTitle": "Implementación de pruebas automatizadas",
+			"complexityScore": 8,
+			"recommendedSubtasks": 4,
+			"expansionPrompt": "Divide la implementación de pruebas automatizadas en cuatro subtareas: 1) Configuración de entornos de prueba para frontend y backend, 2) Implementación de pruebas unitarias para componentes críticos, 3) Desarrollo de pruebas de integración para flujos completos, y 4) Implementación de pruebas end-to-end y configuración de CI/CD.",
+			"reasoning": "La complejidad es alta porque implica configurar múltiples entornos de prueba, cubrir componentes críticos del sistema, implementar diferentes tipos de pruebas y configurar integración continua. Requiere conocimiento profundo de todo el sistema."
+		},
+		{
+			"taskId": 40,
+			"taskTitle": "Despliegue y documentación final",
+			"complexityScore": 7,
+			"recommendedSubtasks": 4,
+			"expansionPrompt": "Divide el despliegue y documentación en cuatro subtareas: 1) Configuración del entorno de producción y optimizaciones, 2) Implementación de pruebas de carga y estrés, 3) Desarrollo de la documentación técnica y manual de usuario, y 4) Configuración del sistema de logs, monitoreo y copias de seguridad.",
+			"reasoning": "La complejidad es alta porque implica preparar el sistema para producción, optimizar rendimiento, crear documentación completa y configurar sistemas de monitoreo y respaldo. Requiere atención a múltiples aspectos para garantizar un despliegue exitoso."
+		}
+	]
+}

@@ -1,0 +1,1169 @@
+{
+  "master": {
+    "tasks": [
+      {
+        "id": 21,
+        "title": "Configuración inicial del proyecto",
+        "description": "Establecer la estructura base del proyecto y configurar el entorno de desarrollo",
+        "details": "1. Crear repositorio Git para el proyecto\n2. Configurar estructura de carpetas (frontend/backend)\n3. Inicializar proyecto frontend con React.js\n4. Inicializar proyecto backend con Node.js/Express\n5. Configurar ESLint y Prettier para mantener consistencia de código\n6. Crear archivo README.md con instrucciones de instalación\n7. Configurar variables de entorno (.env) para desarrollo y producción\n8. Instalar dependencias básicas para frontend y backend\n9. Configurar scripts de inicio y construcción\n10. Realizar commit inicial",
+        "testStrategy": "Verificar que el entorno de desarrollo funciona correctamente ejecutando los scripts de inicio tanto para frontend como backend. Comprobar que la estructura de carpetas es adecuada y que las herramientas de linting funcionan correctamente.",
+        "priority": "high",
+        "dependencies": [],
+        "status": "pending",
+        "subtasks": [
+          {
+            "id": 1,
+            "title": "Configuración del repositorio y estructura base",
+            "description": "Crear el repositorio Git y establecer la estructura de carpetas básica para el proyecto",
+            "dependencies": [],
+            "details": "1. Crear repositorio Git para el proyecto\n2. Configurar estructura de carpetas principal (frontend/backend/docs)\n3. Crear archivo README.md con instrucciones de instalación y descripción del proyecto\n4. Configurar .gitignore para archivos temporales y dependencias\n5. Configurar variables de entorno (.env) para desarrollo y producción\n6. Realizar commit inicial con la estructura base",
+            "status": "pending",
+            "testStrategy": ""
+          },
+          {
+            "id": 2,
+            "title": "Configuración del entorno frontend",
+            "description": "Inicializar y configurar el proyecto frontend con React.js y herramientas de desarrollo",
+            "dependencies": [
+              "21.1"
+            ],
+            "details": "1. Inicializar proyecto frontend con React.js usando Create React App o Vite\n2. Instalar dependencias básicas para frontend (React Router, Axios, etc.)\n3. Configurar ESLint y Prettier para el código frontend\n4. Establecer estructura de carpetas para componentes, páginas, servicios y estilos\n5. Configurar scripts de inicio y construcción en package.json\n6. Realizar prueba de inicio del servidor de desarrollo",
+            "status": "pending",
+            "testStrategy": ""
+          },
+          {
+            "id": 3,
+            "title": "Configuración del entorno backend",
+            "description": "Inicializar y configurar el proyecto backend con Node.js/Express y herramientas de desarrollo",
+            "dependencies": [
+              "21.1"
+            ],
+            "details": "1. Inicializar proyecto backend con Node.js/Express\n2. Instalar dependencias básicas para backend (Express, Mongoose, dotenv, etc.)\n3. Configurar ESLint y Prettier para el código backend\n4. Establecer estructura de carpetas para rutas, controladores, modelos y middleware\n5. Configurar scripts de inicio y desarrollo en package.json\n6. Crear archivo de configuración para conexión a base de datos\n7. Realizar prueba de inicio del servidor backend",
+            "status": "pending",
+            "testStrategy": ""
+          }
+        ]
+      },
+      {
+        "id": 22,
+        "title": "Diseño e implementación de la página principal",
+        "description": "Desarrollar la página de bienvenida según los criterios de la HU001",
+        "details": "1. Crear componente de página principal (LandingPage)\n2. Diseñar layout con logo del municipio y título de bienvenida\n3. Implementar secciones informativas sobre las funcionalidades del sistema:\n   - Búsqueda de documentos\n   - Gestión organizada de documentos\n   - Acceso rápido de documentos\n   - Acceso controlado y seguro\n4. Crear botones de navegación principales:\n   - Botón de Búsqueda de Documentos en el body\n   - Botón de Gestión de Documentos en el body\n   - Botón de Login/Registro en el navbar\n5. Implementar estilos responsivos para diferentes dispositivos\n6. Optimizar imágenes y recursos para carga rápida",
+        "testStrategy": "Realizar pruebas de visualización en diferentes navegadores y dispositivos. Verificar que todos los elementos especificados en los criterios de aceptación están presentes y son visualmente claros. Comprobar que los botones de navegación funcionan correctamente.",
+        "priority": "high",
+        "dependencies": [
+          21
+        ],
+        "status": "pending",
+        "subtasks": [
+          {
+            "id": 1,
+            "title": "Diseño y maquetación del layout principal",
+            "description": "Crear la estructura base y el diseño visual de la página principal siguiendo los lineamientos de la HU001",
+            "dependencies": [],
+            "details": "1. Crear componente React para la página principal (LandingPage)\n2. Diseñar estructura HTML con header, main y footer\n3. Implementar navbar con logo del municipio y espacio para botón de Login/Registro\n4. Diseñar sección de hero con título de bienvenida y mensaje introductorio\n5. Configurar sistema de grid responsivo para diferentes dispositivos\n6. Optimizar imágenes y recursos para carga rápida\n7. Implementar paleta de colores según identidad visual del municipio",
+            "status": "pending",
+            "testStrategy": ""
+          },
+          {
+            "id": 2,
+            "title": "Implementación de secciones informativas",
+            "description": "Desarrollar las secciones que presentan las funcionalidades principales del sistema a los usuarios",
+            "dependencies": [
+              "22.1"
+            ],
+            "details": "1. Crear componentes para cada sección informativa\n2. Diseñar tarjetas o bloques para cada funcionalidad:\n   - Búsqueda de documentos (con ícono y descripción)\n   - Gestión organizada de documentos (con ícono y descripción)\n   - Acceso rápido de documentos (con ícono y descripción)\n   - Acceso controlado y seguro (con ícono y descripción)\n3. Implementar animaciones sutiles para mejorar la experiencia de usuario\n4. Asegurar que los textos sean claros y concisos\n5. Optimizar el diseño responsivo para estas secciones",
+            "status": "pending",
+            "testStrategy": ""
+          },
+          {
+            "id": 3,
+            "title": "Desarrollo de componentes de navegación",
+            "description": "Implementar los botones y elementos de navegación que permitirán a los usuarios acceder a las diferentes funcionalidades del sistema",
+            "dependencies": [
+              "22.1",
+              "22.2"
+            ],
+            "details": "1. Diseñar e implementar botones principales en el body:\n   - Botón de Búsqueda de Documentos con ícono y texto descriptivo\n   - Botón de Gestión de Documentos con ícono y texto descriptivo\n2. Implementar botón de Login/Registro en el navbar\n3. Configurar enrutamiento para cada botón\n4. Añadir efectos hover y focus para mejorar la interactividad\n5. Implementar comportamiento responsivo para los botones en dispositivos móviles\n6. Asegurar accesibilidad con atributos ARIA apropiados\n7. Realizar pruebas de navegación entre las diferentes secciones",
+            "status": "pending",
+            "testStrategy": ""
+          }
+        ]
+      },
+      {
+        "id": 23,
+        "title": "Implementación de la barra de navegación con estado de autenticación",
+        "description": "Desarrollar la barra de navegación que muestre el estado de autenticación del usuario según HU004",
+        "details": "1. Crear componente Navbar reutilizable\n2. Implementar lógica para mostrar diferentes opciones según estado de autenticación:\n   - Usuario no autenticado: mostrar enlaces a inicio, búsqueda y botón de login/registro\n   - Usuario autenticado: mostrar nombre de usuario, enlaces a funcionalidades según rol y botón de logout\n3. Implementar dropdown para opciones de usuario autenticado\n4. Añadir indicador visual del rol actual del usuario\n5. Implementar lógica para cerrar sesión\n6. Asegurar que la barra sea responsive para dispositivos móviles\n7. Implementar animaciones suaves para transiciones de estado",
+        "testStrategy": "Verificar que la barra de navegación muestra correctamente el estado de autenticación. Probar el cambio de estado al iniciar y cerrar sesión. Comprobar que las opciones mostradas corresponden al rol del usuario. Realizar pruebas en diferentes tamaños de pantalla para verificar responsividad.",
+        "priority": "high",
+        "dependencies": [
+          21,
+          22
+        ],
+        "status": "pending",
+        "subtasks": [
+          {
+            "id": 1,
+            "title": "Diseño base del componente Navbar",
+            "description": "Crear la estructura y el diseño base del componente de barra de navegación que será utilizado en toda la aplicación.",
+            "dependencies": [],
+            "details": "1. Crear el componente Navbar.jsx con su estructura HTML básica\n2. Implementar el diseño visual según las guías de estilo del proyecto\n3. Definir la estructura de contenedores para los diferentes elementos (logo, enlaces, área de usuario)\n4. Configurar estilos CSS/SCSS para el componente\n5. Implementar posicionamiento fijo en la parte superior de la página",
+            "status": "pending",
+            "testStrategy": ""
+          },
+          {
+            "id": 2,
+            "title": "Implementación de la lógica de autenticación y visualización condicional",
+            "description": "Desarrollar la lógica que permita mostrar diferentes opciones en la barra de navegación según el estado de autenticación del usuario.",
+            "dependencies": [
+              "23.1"
+            ],
+            "details": "1. Integrar el componente con el contexto de autenticación\n2. Implementar lógica condicional para mostrar diferentes elementos según estado de autenticación\n3. Crear componentes para estado no autenticado (enlaces a inicio, búsqueda, botones de login/registro)\n4. Crear componentes para estado autenticado (nombre de usuario, botón de logout)\n5. Implementar la lógica para el proceso de cierre de sesión\n6. Añadir indicador visual del rol actual del usuario",
+            "status": "pending",
+            "testStrategy": ""
+          },
+          {
+            "id": 3,
+            "title": "Desarrollo del menú desplegable y opciones por rol",
+            "description": "Implementar el menú desplegable para usuarios autenticados con opciones específicas según el rol del usuario.",
+            "dependencies": [
+              "23.2"
+            ],
+            "details": "1. Crear componente de menú desplegable (dropdown)\n2. Implementar lógica para mostrar diferentes opciones según el rol del usuario\n3. Configurar enlaces a funcionalidades específicas por rol\n4. Implementar estilos para destacar visualmente el rol actual\n5. Añadir iconos representativos para cada opción del menú\n6. Configurar comportamiento de apertura/cierre del menú",
+            "status": "pending",
+            "testStrategy": ""
+          },
+          {
+            "id": 4,
+            "title": "Implementación de la responsividad y animaciones",
+            "description": "Adaptar la barra de navegación para dispositivos móviles e implementar animaciones para mejorar la experiencia de usuario.",
+            "dependencies": [
+              "23.1",
+              "23.2",
+              "23.3"
+            ],
+            "details": "1. Implementar diseño responsive utilizando media queries\n2. Crear menú hamburguesa para dispositivos móviles\n3. Configurar comportamiento de colapso/expansión en pantallas pequeñas\n4. Implementar animaciones suaves para transiciones de estado\n5. Añadir efectos de hover y focus para mejorar la interactividad\n6. Realizar pruebas en diferentes tamaños de pantalla\n7. Optimizar rendimiento de animaciones",
+            "status": "pending",
+            "testStrategy": ""
+          }
+        ]
+      },
+      {
+        "id": 24,
+        "title": "Implementación del formulario de registro de usuarios",
+        "description": "Desarrollar el formulario de registro de usuarios según los criterios de la HU002",
+        "details": "1. Crear componente de formulario de registro con los campos requeridos:\n   - Nombre y Apellido\n   - Email (será el usuario)\n   - Contraseña\n   - Confirmar Contraseña\n   - DNI\n2. Implementar validaciones en tiempo real para todos los campos:\n   - Email con formato válido\n   - Contraseña con mínimo 8 caracteres y una mayúscula\n   - Coincidencia de contraseñas\n   - DNI como número válido\n3. Crear endpoint en el backend para procesar el registro\n4. Implementar verificación de usuario existente (email o DNI)\n5. Configurar encriptación de contraseñas con bcrypt\n6. Implementar manejo de errores y mensajes informativos\n7. Añadir redirección a la página de login tras registro exitoso",
+        "testStrategy": "Realizar pruebas unitarias para las validaciones de campos. Probar casos de éxito y error en el registro. Verificar que las contraseñas se almacenan encriptadas. Comprobar que los mensajes de error son específicos y claros. Verificar la redirección tras registro exitoso.",
+        "priority": "high",
+        "dependencies": [
+          21,
+          23
+        ],
+        "status": "pending",
+        "subtasks": [
+          {
+            "id": 1,
+            "title": "Diseño y maquetación del formulario de registro",
+            "description": "Crear la estructura HTML y CSS del formulario de registro con todos los campos requeridos según el diseño de la aplicación.",
+            "dependencies": [],
+            "details": "1. Crear componente React para el formulario de registro\n2. Implementar los campos requeridos: Nombre y Apellido, Email, Contraseña, Confirmar Contraseña, DNI\n3. Diseñar la interfaz siguiendo los estándares de UI/UX del proyecto\n4. Añadir botones de 'Registrar' y 'Cancelar'\n5. Implementar la estructura responsive para diferentes dispositivos",
+            "status": "pending",
+            "testStrategy": ""
+          },
+          {
+            "id": 2,
+            "title": "Implementación de validaciones en tiempo real",
+            "description": "Desarrollar todas las validaciones de los campos del formulario que se ejecuten en tiempo real mientras el usuario completa la información.",
+            "dependencies": [
+              "24.1"
+            ],
+            "details": "1. Implementar validación de formato de email\n2. Crear validación de contraseña (mínimo 8 caracteres y una mayúscula)\n3. Verificar coincidencia entre contraseña y confirmación\n4. Validar que el DNI sea un número válido\n5. Mostrar mensajes de error específicos para cada campo\n6. Implementar estado visual de campos válidos/inválidos\n7. Deshabilitar botón de registro hasta que todos los campos sean válidos",
+            "status": "pending",
+            "testStrategy": ""
+          },
+          {
+            "id": 3,
+            "title": "Desarrollo del endpoint backend para registro",
+            "description": "Crear el endpoint en el backend que procesará los datos del formulario y registrará al usuario en la base de datos.",
+            "dependencies": [],
+            "details": "1. Crear ruta POST /api/users/register\n2. Implementar validación de datos en el servidor\n3. Verificar si el usuario ya existe (por email o DNI)\n4. Configurar encriptación de contraseñas con bcrypt\n5. Crear modelo de usuario en la base de datos\n6. Implementar manejo de errores específicos\n7. Generar respuestas adecuadas para diferentes escenarios (éxito, error, conflicto)",
+            "status": "pending",
+            "testStrategy": ""
+          },
+          {
+            "id": 4,
+            "title": "Integración frontend-backend y manejo de errores",
+            "description": "Conectar el formulario frontend con el endpoint backend e implementar el manejo de respuestas y errores.",
+            "dependencies": [
+              "24.1",
+              "24.2",
+              "24.3"
+            ],
+            "details": "1. Implementar servicio de comunicación con el endpoint de registro\n2. Mostrar indicador de carga durante el proceso de registro\n3. Manejar y mostrar errores devueltos por el backend\n4. Implementar mensajes de éxito para registro completado\n5. Configurar redirección a la página de login tras registro exitoso\n6. Añadir opción para volver a intentar en caso de error\n7. Implementar registro de eventos para análisis y depuración",
+            "status": "pending",
+            "testStrategy": ""
+          }
+        ]
+      },
+      {
+        "id": 25,
+        "title": "Implementación del formulario de inicio de sesión",
+        "description": "Desarrollar el formulario de login según los criterios de la HU003",
+        "details": "1. Crear componente de formulario de login con:\n   - Campo para email\n   - Campo para contraseña\n   - Botón \"Iniciar Sesión\"\n   - Enlace \"¿Olvidaste tu contraseña?\"\n   - Enlace \"Registrarse\"\n2. Implementar endpoint en el backend para autenticación\n3. Configurar JWT para manejo de sesiones\n4. Implementar verificación de credenciales contra base de datos\n5. Crear lógica para actualizar último acceso en la base de datos\n6. Implementar manejo de errores para credenciales inválidas\n7. Añadir verificación de estado de cuenta (activa/desactivada)\n8. Configurar almacenamiento seguro del token JWT\n9. Implementar redirección a página principal tras login exitoso",
+        "testStrategy": "Probar inicio de sesión con credenciales válidas e inválidas. Verificar que el token JWT se genera y almacena correctamente. Comprobar que se actualiza el último acceso. Verificar que los mensajes de error son claros. Probar el comportamiento con cuentas desactivadas.",
+        "priority": "high",
+        "dependencies": [
+          21,
+          23,
+          24
+        ],
+        "status": "pending",
+        "subtasks": [
+          {
+            "id": 1,
+            "title": "Diseño y maquetación del formulario de login",
+            "description": "Crear la interfaz de usuario del formulario de inicio de sesión con todos los elementos requeridos según el diseño especificado.",
+            "dependencies": [],
+            "details": "1. Crear componente React/Angular para el formulario de login\n2. Implementar campos de email y contraseña con validaciones básicas\n3. Añadir botón de 'Iniciar Sesión' con estados (normal, hover, loading)\n4. Implementar enlaces de 'Olvidaste tu contraseña' y 'Registrarse'\n5. Aplicar estilos según guía de diseño del proyecto\n6. Asegurar que el formulario sea responsive para diferentes dispositivos\n7. Implementar accesibilidad básica (labels, atributos aria, navegación por teclado)",
+            "status": "pending",
+            "testStrategy": ""
+          },
+          {
+            "id": 2,
+            "title": "Implementación del endpoint de autenticación con JWT",
+            "description": "Desarrollar la API de autenticación en el backend y configurar el sistema JWT para manejo de sesiones.",
+            "dependencies": [
+              "25.1"
+            ],
+            "details": "1. Crear endpoint POST /api/auth/login en el backend\n2. Implementar verificación de credenciales contra base de datos\n3. Configurar generación de tokens JWT con payload apropiado (userId, role, permissions)\n4. Establecer tiempos de expiración adecuados para los tokens\n5. Implementar actualización del campo 'último acceso' en la base de datos\n6. Añadir verificación de estado de cuenta (activa/desactivada)\n7. Documentar la API con Swagger/OpenAPI",
+            "status": "pending",
+            "testStrategy": ""
+          },
+          {
+            "id": 3,
+            "title": "Desarrollo de la lógica de almacenamiento y gestión de tokens",
+            "description": "Implementar el manejo seguro de tokens JWT en el frontend y la lógica para mantener la sesión del usuario.",
+            "dependencies": [
+              "25.2"
+            ],
+            "details": "1. Crear servicio de autenticación en el frontend\n2. Implementar almacenamiento seguro del token JWT (localStorage/sessionStorage/cookies)\n3. Configurar interceptores HTTP para incluir el token en las peticiones\n4. Implementar decodificación del token para obtener información del usuario\n5. Crear lógica para verificar expiración del token\n6. Implementar sistema de refresh token (si aplica)\n7. Añadir funcionalidad de cierre de sesión que limpie tokens",
+            "status": "pending",
+            "testStrategy": ""
+          },
+          {
+            "id": 4,
+            "title": "Implementación del manejo de errores y redirecciones",
+            "description": "Desarrollar la lógica para manejar errores de autenticación y redireccionar al usuario según el resultado del inicio de sesión.",
+            "dependencies": [
+              "25.1",
+              "25.2",
+              "25.3"
+            ],
+            "details": "1. Implementar mensajes de error específicos para diferentes casos:\n   - Credenciales inválidas\n   - Cuenta desactivada\n   - Problemas de conexión\n2. Crear componente de visualización de errores en el formulario\n3. Implementar redirección a página principal tras login exitoso\n4. Añadir redirección a página de recuperación de contraseña\n5. Configurar protección de rutas para usuarios no autenticados\n6. Implementar persistencia de URL original para redireccionar después del login\n7. Añadir tests para verificar el correcto funcionamiento de errores y redirecciones",
+            "status": "pending",
+            "testStrategy": ""
+          }
+        ]
+      },
+      {
+        "id": 26,
+        "title": "Implementación de la interfaz de búsqueda básica",
+        "description": "Desarrollar la interfaz de búsqueda simple según los criterios de la HU005",
+        "details": "1. Crear componente de búsqueda con campo prominente y botón de búsqueda\n2. Implementar validación para evitar búsquedas con campo vacío\n3. Diseñar componente de calendario para filtrado por fechas\n4. Implementar lógica para selección de fechas desde/hasta\n5. Crear estado local para almacenar términos de búsqueda y filtros\n6. Implementar manejo de eventos para iniciar búsqueda con Enter o clic en botón\n7. Diseñar interfaz responsiva para diferentes dispositivos\n8. Añadir indicadores visuales durante la búsqueda (loading)\n9. Implementar mensajes de ayuda y placeholder informativos",
+        "testStrategy": "Verificar que la interfaz muestra todos los elementos requeridos. Probar búsquedas con campo vacío y verificar mensajes de error. Comprobar que el calendario funciona correctamente para selección de fechas. Verificar que la búsqueda se inicia tanto con Enter como con el botón.",
+        "priority": "high",
+        "dependencies": [
+          21,
+          22
+        ],
+        "status": "pending",
+        "subtasks": [
+          {
+            "id": 1,
+            "title": "Diseño y maquetación del componente de búsqueda",
+            "description": "Crear la interfaz visual del componente de búsqueda con campo de texto prominente, botón de búsqueda y validaciones básicas",
+            "dependencies": [],
+            "details": "1. Diseñar el componente de búsqueda con campo de texto prominente y botón de búsqueda\n2. Implementar validación para evitar búsquedas con campo vacío\n3. Añadir mensajes de ayuda y placeholder informativos\n4. Diseñar interfaz responsiva para diferentes dispositivos\n5. Añadir indicadores visuales durante la búsqueda (loading)",
+            "status": "pending",
+            "testStrategy": ""
+          },
+          {
+            "id": 2,
+            "title": "Implementación del componente de calendario para filtrado",
+            "description": "Desarrollar el componente de calendario que permitirá filtrar los resultados de búsqueda por fechas",
+            "dependencies": [
+              "26.1"
+            ],
+            "details": "1. Diseñar componente de calendario para filtrado por fechas\n2. Implementar lógica para selección de fechas desde/hasta\n3. Asegurar que el componente sea responsivo y accesible\n4. Integrar el componente de calendario con el componente principal de búsqueda\n5. Implementar validaciones para rangos de fechas inválidos",
+            "status": "pending",
+            "testStrategy": ""
+          },
+          {
+            "id": 3,
+            "title": "Desarrollo de la lógica de estado y manejo de eventos",
+            "description": "Implementar la gestión del estado local y los manejadores de eventos para el funcionamiento de la búsqueda",
+            "dependencies": [
+              "26.1",
+              "26.2"
+            ],
+            "details": "1. Crear estado local para almacenar términos de búsqueda y filtros\n2. Implementar manejo de eventos para iniciar búsqueda con Enter o clic en botón\n3. Desarrollar la lógica para combinar términos de búsqueda con filtros de fecha\n4. Implementar la persistencia temporal de los criterios de búsqueda\n5. Añadir funcionalidad para limpiar/resetear los campos de búsqueda",
+            "status": "pending",
+            "testStrategy": ""
+          }
+        ]
+      },
+      {
+        "id": 27,
+        "title": "Implementación del endpoint de búsqueda simple",
+        "description": "Desarrollar el endpoint para búsqueda de documentos según los criterios de la HU006",
+        "details": "1. Crear endpoint REST para búsqueda de documentos\n2. Implementar filtrado por título o número de expediente\n3. Añadir filtrado por rango de fechas\n4. Implementar validación de permisos de acceso a documentos\n5. Configurar exclusión de documentos clasificados/restringidos según permisos\n6. Implementar validación de parámetros de búsqueda\n7. Crear respuestas de error para términos vacíos (400)\n8. Configurar manejo de errores del servidor (500)\n9. Optimizar consultas a base de datos para mejor rendimiento\n10. Implementar paginación de resultados",
+        "testStrategy": "Realizar pruebas unitarias para validar el funcionamiento del endpoint. Probar búsquedas con diferentes parámetros. Verificar que los documentos restringidos no aparecen para usuarios sin permisos. Comprobar los códigos de error en diferentes escenarios. Realizar pruebas de rendimiento con grandes volúmenes de datos.",
+        "priority": "high",
+        "dependencies": [
+          21,
+          25,
+          26
+        ],
+        "status": "pending",
+        "subtasks": [
+          {
+            "id": 1,
+            "title": "Diseño de la API REST para búsqueda",
+            "description": "Crear la estructura del endpoint REST para búsqueda de documentos con todos los parámetros necesarios y manejo de errores",
+            "dependencies": [],
+            "details": "1. Definir la ruta del endpoint (ej: /api/documentos/buscar)\n2. Diseñar estructura de parámetros de búsqueda (query params)\n3. Implementar validación de parámetros de búsqueda\n4. Crear respuestas de error para términos vacíos (400)\n5. Configurar manejo de errores del servidor (500)\n6. Documentar la API con Swagger/OpenAPI",
+            "status": "pending",
+            "testStrategy": ""
+          },
+          {
+            "id": 2,
+            "title": "Implementación de filtros básicos",
+            "description": "Desarrollar la lógica de filtrado por título, número de expediente y rango de fechas",
+            "dependencies": [
+              "27.1"
+            ],
+            "details": "1. Implementar filtrado por título (búsqueda parcial)\n2. Implementar filtrado por número de expediente (búsqueda exacta)\n3. Añadir filtrado por rango de fechas (desde/hasta)\n4. Crear consultas SQL/ORM optimizadas para estos filtros\n5. Implementar combinación de múltiples criterios de filtrado\n6. Realizar pruebas unitarias de cada filtro",
+            "status": "pending",
+            "testStrategy": ""
+          },
+          {
+            "id": 3,
+            "title": "Sistema de validación de permisos",
+            "description": "Implementar la validación de permisos de acceso a documentos y exclusión de documentos restringidos",
+            "dependencies": [
+              "27.1",
+              "27.2"
+            ],
+            "details": "1. Integrar con el sistema de autenticación existente\n2. Implementar validación de permisos de acceso a documentos\n3. Configurar exclusión de documentos clasificados/restringidos según permisos\n4. Añadir filtrado automático basado en nivel de acceso del usuario\n5. Implementar registro de intentos de acceso a documentos restringidos\n6. Realizar pruebas de seguridad para verificar el correcto funcionamiento",
+            "status": "pending",
+            "testStrategy": ""
+          },
+          {
+            "id": 4,
+            "title": "Paginación y optimización de rendimiento",
+            "description": "Implementar la paginación de resultados y optimizar las consultas para mejorar el rendimiento",
+            "dependencies": [
+              "27.2",
+              "27.3"
+            ],
+            "details": "1. Implementar paginación de resultados con parámetros page y pageSize\n2. Añadir metadatos de paginación en la respuesta (total, páginas, etc.)\n3. Optimizar consultas a base de datos para mejor rendimiento\n4. Implementar índices en la base de datos si es necesario\n5. Realizar pruebas de carga para verificar rendimiento con grandes volúmenes\n6. Configurar caché para búsquedas frecuentes",
+            "status": "pending",
+            "testStrategy": ""
+          }
+        ]
+      },
+      {
+        "id": 28,
+        "title": "Implementación de la visualización de resultados de búsqueda",
+        "description": "Desarrollar la interfaz para mostrar resultados de búsqueda según los criterios de la HU007",
+        "details": "1. Crear componente para mostrar lista de resultados\n2. Implementar visualización de datos por documento:\n   - Título del documento\n   - Número de expediente\n   - Fecha de creación\n   - Categoría\n3. Diseñar sistema de paginación para más de 10 resultados\n4. Implementar mensaje para búsquedas sin resultados\n5. Crear tooltip o resumen al pasar el mouse sobre un documento\n6. Configurar redirección a vista detalle al hacer clic en un documento\n7. Implementar ordenamiento de resultados\n8. Añadir indicadores visuales para documentos recientes o importantes\n9. Optimizar renderizado para listas grandes",
+        "testStrategy": "Verificar que todos los datos requeridos se muestran correctamente. Probar la paginación con diferentes cantidades de resultados. Comprobar que el tooltip muestra la descripción al pasar el mouse. Verificar la redirección a la vista detalle. Probar el comportamiento cuando no hay resultados.",
+        "priority": "medium",
+        "dependencies": [
+          26,
+          27
+        ],
+        "status": "pending",
+        "subtasks": [
+          {
+            "id": 1,
+            "title": "Diseño y maquetación del componente de lista de resultados",
+            "description": "Crear la estructura visual y el diseño del componente que mostrará los resultados de búsqueda, incluyendo la visualización de datos por documento y mensajes para búsquedas sin resultados.",
+            "dependencies": [],
+            "details": "1. Diseñar la estructura HTML del componente de lista de resultados\n2. Implementar estilos CSS para la visualización adecuada de los resultados\n3. Crear la visualización de datos por documento (título, número de expediente, fecha, categoría)\n4. Implementar indicadores visuales para documentos recientes o importantes\n5. Diseñar y programar el mensaje para búsquedas sin resultados\n6. Optimizar el renderizado para listas grandes de resultados",
+            "status": "pending",
+            "testStrategy": ""
+          },
+          {
+            "id": 2,
+            "title": "Implementación del sistema de paginación y ordenamiento",
+            "description": "Desarrollar la funcionalidad de paginación para mostrar resultados por lotes y el sistema de ordenamiento para clasificar los resultados según diferentes criterios.",
+            "dependencies": [
+              "28.1"
+            ],
+            "details": "1. Diseñar la interfaz de paginación (botones anterior/siguiente, selector de página)\n2. Implementar la lógica para mostrar máximo 10 resultados por página\n3. Crear controles para navegar entre páginas de resultados\n4. Desarrollar la funcionalidad de ordenamiento por diferentes campos (título, fecha, etc.)\n5. Implementar indicadores visuales del criterio de ordenamiento activo\n6. Asegurar que la paginación y el ordenamiento funcionen correctamente juntos",
+            "status": "pending",
+            "testStrategy": ""
+          },
+          {
+            "id": 3,
+            "title": "Desarrollo de tooltips y comportamiento interactivo",
+            "description": "Implementar las funcionalidades interactivas como tooltips al pasar el mouse sobre documentos y la redirección a la vista detalle al hacer clic en un resultado.",
+            "dependencies": [
+              "28.1",
+              "28.2"
+            ],
+            "details": "1. Crear el componente de tooltip para mostrar resumen del documento\n2. Implementar la lógica para mostrar/ocultar el tooltip al pasar el mouse\n3. Diseñar la apariencia visual del tooltip con información relevante\n4. Configurar la redirección a la vista detalle al hacer clic en un documento\n5. Implementar efectos visuales de hover para mejorar la experiencia de usuario\n6. Asegurar que todas las interacciones sean accesibles y funcionen en diferentes dispositivos",
+            "status": "pending",
+            "testStrategy": ""
+          }
+        ]
+      },
+      {
+        "id": 29,
+        "title": "Implementación de la vista detalle de documento",
+        "description": "Desarrollar la vista detalle completa de un documento según los criterios de la HU008",
+        "details": "1. Crear componente de vista detalle que muestre:\n   - Título del documento\n   - Número de expediente\n   - Descripción completa\n   - Fecha de creación\n   - Fecha de última modificación\n   - Categoría\n   - Usuario que lo creó\n   - Tipo de documento\n   - Botón de descarga\n2. Implementar sección de información de categoría\n3. Crear componente para mostrar historial de versiones:\n   - Número de versión\n   - Fecha del cambio\n   - Comentarios de la versión\n   - Link para descargar versión específica\n4. Implementar lógica de descarga de documentos\n5. Añadir botón para volver a resultados de búsqueda\n6. Implementar verificación de permisos para acceso y descarga\n7. Diseñar interfaz responsiva para diferentes dispositivos",
+        "testStrategy": "Verificar que todos los datos del documento se muestran correctamente. Comprobar que el historial de versiones funciona adecuadamente. Probar la descarga de documentos y versiones específicas. Verificar que el botón de regreso funciona correctamente. Probar la visualización en diferentes dispositivos.",
+        "priority": "medium",
+        "dependencies": [
+          27,
+          28
+        ],
+        "status": "pending",
+        "subtasks": [
+          {
+            "id": 1,
+            "title": "Diseño y maquetación del componente principal",
+            "description": "Crear el componente de vista detalle con la información básica del documento y la sección de información de categoría",
+            "dependencies": [],
+            "details": "1. Desarrollar el componente React para la vista detalle\n2. Implementar la visualización de los datos básicos: título, número de expediente, descripción, fechas, categoría, usuario creador y tipo de documento\n3. Diseñar la sección de información de categoría\n4. Añadir el botón para volver a resultados de búsqueda\n5. Crear la estructura HTML/CSS base para toda la vista\n6. Implementar la conexión con la API para obtener los datos del documento",
+            "status": "pending",
+            "testStrategy": ""
+          },
+          {
+            "id": 2,
+            "title": "Implementación del componente de historial de versiones",
+            "description": "Desarrollar el componente que muestra el historial completo de versiones del documento",
+            "dependencies": [
+              "29.1"
+            ],
+            "details": "1. Crear el componente para mostrar el listado de versiones\n2. Implementar la visualización de: número de versión, fecha del cambio y comentarios\n3. Añadir links para descargar versiones específicas\n4. Diseñar la interfaz para mostrar las versiones de forma clara y ordenada\n5. Implementar la conexión con la API para obtener el historial de versiones\n6. Añadir paginación si el historial es extenso",
+            "status": "pending",
+            "testStrategy": ""
+          },
+          {
+            "id": 3,
+            "title": "Desarrollo de la funcionalidad de descarga de documentos",
+            "description": "Implementar la lógica completa para la descarga del documento actual y versiones anteriores",
+            "dependencies": [
+              "29.1",
+              "29.2"
+            ],
+            "details": "1. Implementar el botón de descarga del documento actual\n2. Desarrollar la lógica para solicitar el archivo al servidor\n3. Manejar el proceso de descarga (progreso, errores, etc.)\n4. Implementar la funcionalidad para descargar versiones específicas desde el historial\n5. Añadir indicadores visuales durante el proceso de descarga\n6. Gestionar los diferentes tipos de documentos y sus formatos",
+            "status": "pending",
+            "testStrategy": ""
+          },
+          {
+            "id": 4,
+            "title": "Implementación de verificación de permisos y diseño responsivo",
+            "description": "Desarrollar la verificación de permisos para acceso y descarga, y asegurar que la interfaz sea responsiva",
+            "dependencies": [
+              "29.1",
+              "29.2",
+              "29.3"
+            ],
+            "details": "1. Implementar la verificación de permisos para acceder a la vista detalle\n2. Añadir validación de permisos para la descarga de documentos\n3. Ocultar o deshabilitar funcionalidades según los permisos del usuario\n4. Diseñar la interfaz para que sea responsiva en diferentes dispositivos\n5. Probar y ajustar la visualización en móviles, tablets y escritorio\n6. Implementar mensajes informativos cuando el usuario no tenga permisos suficientes",
+            "status": "pending",
+            "testStrategy": ""
+          }
+        ]
+      },
+      {
+        "id": 30,
+        "title": "Implementación del formulario de carga de documentos",
+        "description": "Desarrollar el formulario para cargar nuevos documentos según los criterios de la HU009",
+        "details": "1. Crear componente de formulario con los campos requeridos:\n   - Título del documento (obligatorio)\n   - Número de expediente (obligatorio)\n   - Descripción\n   - Categoría (selector)\n   - Tipo de documento (selector, obligatorio)\n2. Implementar área de carga de archivos con:\n   - Funcionalidad de arrastrar y soltar (drag & drop)\n   - Botón para seleccionar archivo del dispositivo\n   - Vista previa del archivo seleccionado\n3. Configurar validación de tipos de archivo permitidos (.pdf, .doc, .docx, .xls, .xlsx, .txt)\n4. Implementar validación de tamaño máximo (10MB)\n5. Crear barra de progreso para la carga\n6. Implementar validaciones de campos obligatorios\n7. Configurar redirección a vista detalle tras carga exitosa\n8. Añadir manejo de errores durante la carga",
+        "testStrategy": "Probar la carga de diferentes tipos de archivos, tanto permitidos como no permitidos. Verificar el funcionamiento del drag & drop. Comprobar las validaciones de campos obligatorios y tamaño máximo. Verificar que la barra de progreso funciona correctamente. Probar el manejo de errores durante la carga.",
+        "priority": "medium",
+        "dependencies": [
+          25
+        ],
+        "status": "pending",
+        "subtasks": [
+          {
+            "id": 1,
+            "title": "Diseño y maquetación del formulario de carga",
+            "description": "Implementar la estructura HTML y CSS del formulario con todos los campos requeridos según las especificaciones.",
+            "dependencies": [],
+            "details": "1. Crear componente React para el formulario\n2. Implementar campos obligatorios (título, número de expediente, tipo de documento)\n3. Implementar campos opcionales (descripción, categoría)\n4. Diseñar selectores para categoría y tipo de documento\n5. Aplicar estilos según guía de diseño del proyecto\n6. Implementar mensajes de validación visual para campos obligatorios",
+            "status": "pending",
+            "testStrategy": ""
+          },
+          {
+            "id": 2,
+            "title": "Implementación del área de carga de archivos",
+            "description": "Desarrollar la funcionalidad de carga de archivos con soporte para drag & drop y vista previa.",
+            "dependencies": [
+              "30.1"
+            ],
+            "details": "1. Implementar componente de drag & drop para archivos\n2. Crear botón alternativo para seleccionar archivos del dispositivo\n3. Desarrollar la lógica para capturar el archivo seleccionado\n4. Implementar vista previa del documento según su tipo\n5. Mostrar nombre y tamaño del archivo seleccionado\n6. Permitir eliminar el archivo seleccionado antes de enviar",
+            "status": "pending",
+            "testStrategy": ""
+          },
+          {
+            "id": 3,
+            "title": "Desarrollo de validaciones de archivos",
+            "description": "Implementar las validaciones de tipo y tamaño de archivo según los requisitos especificados.",
+            "dependencies": [
+              "30.2"
+            ],
+            "details": "1. Crear función para validar tipos de archivo permitidos (.pdf, .doc, .docx, .xls, .xlsx, .txt)\n2. Implementar validación de tamaño máximo (10MB)\n3. Mostrar mensajes de error específicos para cada tipo de validación fallida\n4. Bloquear envío del formulario si las validaciones fallan\n5. Implementar validaciones de campos obligatorios del formulario\n6. Crear función para verificar formato de número de expediente",
+            "status": "pending",
+            "testStrategy": ""
+          },
+          {
+            "id": 4,
+            "title": "Implementación de barra de progreso y manejo de errores",
+            "description": "Desarrollar la barra de progreso para la carga de archivos y el sistema de manejo de errores.",
+            "dependencies": [
+              "30.1",
+              "30.2",
+              "30.3"
+            ],
+            "details": "1. Crear componente de barra de progreso visual\n2. Implementar lógica para actualizar el progreso durante la carga\n3. Desarrollar sistema de manejo de errores durante el proceso de carga\n4. Mostrar mensajes de error específicos según el tipo de fallo\n5. Implementar redirección a vista detalle tras carga exitosa\n6. Añadir opción para cancelar la carga en proceso\n7. Crear mensaje de confirmación de carga exitosa",
+            "status": "pending",
+            "testStrategy": ""
+          }
+        ]
+      },
+      {
+        "id": 31,
+        "title": "Implementación del sistema de almacenamiento de documentos",
+        "description": "Desarrollar el sistema para guardar documentos de forma segura según los criterios de la HU010",
+        "details": "1. Crear servicio para gestión de almacenamiento de archivos\n2. Implementar verificación de unicidad de títulos\n3. Configurar proceso de guardado en base de datos y sistema de archivos:\n   - Guardar registro en BD para obtener ID\n   - Guardar archivo físico usando ID como nombre\n   - Actualizar campo path_archivo con la ruta generada\n4. Implementar registro de acciones en historial\n5. Crear sistema de manejo de errores y rollback:\n   - Eliminar archivos parcialmente guardados\n   - Revertir cambios en base de datos\n   - Notificar errores al usuario\n6. Configurar verificación de integridad de archivos\n7. Implementar sistema de respaldo y recuperación",
+        "testStrategy": "Realizar pruebas unitarias para verificar el correcto almacenamiento. Probar casos de error y verificar que el rollback funciona correctamente. Comprobar que se detectan documentos con títulos duplicados. Verificar que los archivos se guardan con el nombre correcto y en la ubicación adecuada. Probar la integridad de los archivos guardados.",
+        "priority": "high",
+        "dependencies": [
+          30
+        ],
+        "status": "pending",
+        "subtasks": [
+          {
+            "id": 1,
+            "title": "Diseño del modelo de datos para documentos",
+            "description": "Crear la estructura de datos necesaria para almacenar documentos de forma segura en la base de datos",
+            "dependencies": [],
+            "details": "1. Definir esquema de tabla para documentos con campos: id, título, descripción, tipo, categoría, fecha_creación, usuario_creador, path_archivo, hash_verificación\n2. Crear relaciones con otras entidades del sistema\n3. Implementar índices para búsqueda eficiente\n4. Diseñar estructura para almacenar metadatos adicionales\n5. Documentar el modelo de datos y sus restricciones",
+            "status": "pending",
+            "testStrategy": ""
+          },
+          {
+            "id": 2,
+            "title": "Implementación del servicio de almacenamiento físico de archivos",
+            "description": "Desarrollar el servicio encargado de guardar los archivos en el sistema de archivos utilizando el ID como nombre",
+            "dependencies": [
+              "31.1"
+            ],
+            "details": "1. Crear servicio para gestión de almacenamiento de archivos\n2. Implementar proceso de guardado en sistema de archivos usando ID como nombre\n3. Configurar estructura de directorios para organizar archivos\n4. Implementar manejo de permisos a nivel de sistema de archivos\n5. Desarrollar función para actualizar campo path_archivo con la ruta generada\n6. Crear sistema de respaldo automático de archivos",
+            "status": "pending",
+            "testStrategy": ""
+          },
+          {
+            "id": 3,
+            "title": "Desarrollo del sistema de verificación de unicidad e integridad",
+            "description": "Implementar mecanismos para garantizar que no existan títulos duplicados y verificar la integridad de los archivos",
+            "dependencies": [
+              "31.1",
+              "31.2"
+            ],
+            "details": "1. Implementar verificación de unicidad de títulos en la base de datos\n2. Crear función para generar hash de verificación de archivos\n3. Desarrollar sistema de validación periódica de integridad\n4. Implementar alertas para archivos corruptos o modificados\n5. Configurar verificación de integridad durante la carga y descarga\n6. Documentar el proceso de verificación",
+            "status": "pending",
+            "testStrategy": ""
+          },
+          {
+            "id": 4,
+            "title": "Implementación del registro de historial",
+            "description": "Desarrollar el sistema para registrar todas las acciones realizadas sobre los documentos",
+            "dependencies": [
+              "31.1",
+              "31.2",
+              "31.3"
+            ],
+            "details": "1. Crear tabla de historial para registrar acciones sobre documentos\n2. Implementar registro de eventos: creación, modificación, visualización y eliminación\n3. Almacenar información detallada: usuario, fecha/hora, acción, IP\n4. Desarrollar interfaz para consulta de historial por documento\n5. Configurar retención de registros históricos según políticas\n6. Implementar exportación de historial a formatos estándar",
+            "status": "pending",
+            "testStrategy": ""
+          },
+          {
+            "id": 5,
+            "title": "Desarrollo del sistema de rollback y manejo de errores",
+            "description": "Implementar mecanismos para revertir cambios en caso de errores durante el proceso de almacenamiento",
+            "dependencies": [
+              "31.1",
+              "31.2",
+              "31.3",
+              "31.4"
+            ],
+            "details": "1. Crear sistema de manejo de errores durante el proceso de guardado\n2. Implementar eliminación de archivos parcialmente guardados\n3. Desarrollar funcionalidad para revertir cambios en base de datos\n4. Configurar sistema de notificación de errores al usuario\n5. Implementar registro detallado de errores para análisis técnico\n6. Crear pruebas automatizadas para verificar el correcto funcionamiento del rollback",
+            "status": "pending",
+            "testStrategy": ""
+          }
+        ]
+      },
+      {
+        "id": 32,
+        "title": "Implementación de la edición básica de documentos",
+        "description": "Desarrollar la funcionalidad para editar documentos existentes según los criterios de la HU011",
+        "details": "1. Crear formulario de edición que permita modificar:\n   - Título del documento\n   - Descripción\n   - Número de expediente\n   - Tipo de documento\n2. Implementar validación de unicidad de título\n3. Configurar actualización de fecha de modificación\n4. Implementar registro de acciones en historial\n5. Crear verificación de permisos de edición\n6. Añadir validación de campos obligatorios\n7. Implementar confirmación para cancelar cambios no guardados\n8. Configurar redirección tras edición exitosa",
+        "testStrategy": "Probar la edición de documentos con diferentes cambios. Verificar que se valida la unicidad del título. Comprobar que se actualiza la fecha de modificación. Verificar que los usuarios sin permisos no pueden editar. Probar la confirmación al cancelar cambios no guardados. Verificar que todos los campos se validan correctamente.",
+        "priority": "medium",
+        "dependencies": [
+          29,
+          30,
+          31
+        ],
+        "status": "pending",
+        "subtasks": [
+          {
+            "id": 1,
+            "title": "Diseño y maquetación del formulario de edición",
+            "description": "Crear la interfaz de usuario para el formulario de edición de documentos con todos los campos necesarios",
+            "dependencies": [],
+            "details": "1. Diseñar la estructura del formulario de edición\n2. Implementar campos para modificar título, descripción, número de expediente y tipo de documento\n3. Añadir botones de guardar y cancelar\n4. Implementar la carga de datos existentes del documento\n5. Crear estilos CSS para el formulario\n6. Asegurar que el diseño sea responsive",
+            "status": "pending",
+            "testStrategy": ""
+          },
+          {
+            "id": 2,
+            "title": "Implementación de validaciones y verificación de unicidad",
+            "description": "Desarrollar todas las validaciones necesarias para el formulario de edición de documentos",
+            "dependencies": [
+              "32.1"
+            ],
+            "details": "1. Implementar validación de campos obligatorios\n2. Desarrollar verificación de unicidad de título\n3. Crear validaciones de formato para cada campo\n4. Implementar mensajes de error para cada validación\n5. Configurar actualización automática de fecha de modificación\n6. Añadir validación del tamaño máximo de los campos",
+            "status": "pending",
+            "testStrategy": ""
+          },
+          {
+            "id": 3,
+            "title": "Desarrollo del sistema de registro de cambios en historial",
+            "description": "Implementar la funcionalidad para registrar todas las modificaciones realizadas a los documentos",
+            "dependencies": [
+              "32.2"
+            ],
+            "details": "1. Crear modelo de datos para el historial de cambios\n2. Implementar función para comparar documento original con versión editada\n3. Desarrollar registro de usuario, fecha y hora de modificación\n4. Configurar almacenamiento de valores anteriores y nuevos\n5. Implementar visualización del historial de cambios\n6. Añadir filtros para consultar el historial",
+            "status": "pending",
+            "testStrategy": ""
+          },
+          {
+            "id": 4,
+            "title": "Implementación de verificación de permisos y confirmaciones",
+            "description": "Desarrollar los sistemas de seguridad y confirmación para la edición de documentos",
+            "dependencies": [
+              "32.1",
+              "32.2",
+              "32.3"
+            ],
+            "details": "1. Implementar verificación de permisos de edición\n2. Crear diálogo de confirmación para cancelar cambios no guardados\n3. Desarrollar sistema de bloqueo para ediciones simultáneas\n4. Configurar redirección tras edición exitosa\n5. Implementar notificaciones de éxito o error\n6. Añadir registro de intentos de edición no autorizados",
+            "status": "pending",
+            "testStrategy": ""
+          }
+        ]
+      },
+      {
+        "id": 33,
+        "title": "Implementación del sistema de roles de usuario",
+        "description": "Desarrollar el sistema de roles y la interfaz de gestión según los criterios de la HU012",
+        "details": "1. Crear modelo de datos para roles de usuario\n2. Implementar roles predefinidos:\n   - Administrador\n   - Gestor de Documentos\n   - Usuario de Consulta\n3. Desarrollar interfaz de gestión de usuarios con:\n   - Lista de usuarios ordenada alfabéticamente\n   - Búsqueda por nombre o email\n   - Visualización de detalles de usuario\n   - Edición de roles\n4. Implementar registro de cambios de rol en historial\n5. Crear validación para evitar que administradores cambien su propio rol\n6. Configurar actualización inmediata de permisos al cambiar rol\n7. Añadir mensajes de confirmación para cambios",
+        "testStrategy": "Verificar que la lista de usuarios se muestra correctamente. Probar la búsqueda de usuarios. Comprobar que se pueden cambiar roles correctamente. Verificar que se registran los cambios en el historial. Probar que un administrador no puede cambiar su propio rol. Comprobar que los permisos se actualizan inmediatamente al cambiar un rol.",
+        "priority": "high",
+        "dependencies": [
+          25
+        ],
+        "status": "pending",
+        "subtasks": [
+          {
+            "id": 1,
+            "title": "Diseño del modelo de datos para roles",
+            "description": "Crear la estructura de datos para el sistema de roles de usuario, incluyendo los roles predefinidos y sus características.",
+            "dependencies": [],
+            "details": "1. Diseñar el esquema de base de datos para roles de usuario\n2. Implementar los roles predefinidos (Administrador, Gestor de Documentos, Usuario de Consulta)\n3. Definir los atributos y permisos asociados a cada rol\n4. Crear las relaciones entre usuarios y roles\n5. Documentar el modelo de datos",
+            "status": "pending",
+            "testStrategy": ""
+          },
+          {
+            "id": 2,
+            "title": "Implementación de la interfaz de gestión de usuarios",
+            "description": "Desarrollar la interfaz gráfica para la administración de usuarios, incluyendo listado, búsqueda y visualización de detalles.",
+            "dependencies": [
+              "33.1"
+            ],
+            "details": "1. Crear componente de lista de usuarios con ordenación alfabética\n2. Implementar funcionalidad de búsqueda por nombre o email\n3. Desarrollar vista de detalles de usuario\n4. Diseñar la interfaz según los estándares de la aplicación\n5. Implementar paginación para la lista de usuarios\n6. Añadir indicadores visuales para los diferentes roles",
+            "status": "pending",
+            "testStrategy": ""
+          },
+          {
+            "id": 3,
+            "title": "Desarrollo de la funcionalidad de edición de roles con validaciones",
+            "description": "Implementar la lógica para modificar roles de usuario con las validaciones de seguridad necesarias.",
+            "dependencies": [
+              "33.1",
+              "33.2"
+            ],
+            "details": "1. Crear formulario para edición de roles\n2. Implementar validación para evitar que administradores cambien su propio rol\n3. Añadir confirmación para cambios de rol\n4. Desarrollar lógica de actualización de roles en la base de datos\n5. Implementar mensajes de éxito/error para las operaciones\n6. Crear pruebas para validar las restricciones de seguridad",
+            "status": "pending",
+            "testStrategy": ""
+          },
+          {
+            "id": 4,
+            "title": "Implementación del registro de cambios y actualización de permisos",
+            "description": "Desarrollar el sistema de registro histórico de cambios de rol y la actualización inmediata de permisos.",
+            "dependencies": [
+              "33.3"
+            ],
+            "details": "1. Crear modelo de datos para el historial de cambios de rol\n2. Implementar registro automático de modificaciones (usuario que realiza el cambio, fecha, rol anterior, nuevo rol)\n3. Desarrollar mecanismo para actualización inmediata de permisos al cambiar rol\n4. Configurar notificaciones para usuarios afectados por cambios de rol\n5. Implementar visualización del historial de cambios",
+            "status": "pending",
+            "testStrategy": ""
+          }
+        ]
+      },
+      {
+        "id": 34,
+        "title": "Implementación del sistema de permisos",
+        "description": "Desarrollar el sistema de asignación de permisos según los criterios de la HU013",
+        "details": "1. Crear modelo de datos para permisos\n2. Implementar categorías de permisos:\n   - Gestión de Documentos\n   - Gestión de Usuarios\n   - Administración del Sistema\n   - Búsqueda y Consulta\n3. Desarrollar interfaz de gestión de roles y permisos\n4. Implementar visualización de permisos por rol\n5. Crear funcionalidad para activar/desactivar permisos\n6. Configurar protección de permisos críticos para rol Administrador\n7. Implementar actualización en tiempo real para sesiones activas\n8. Añadir registro de cambios en historial",
+        "testStrategy": "Verificar que se muestran correctamente todos los permisos disponibles. Probar la activación y desactivación de permisos. Comprobar que los permisos críticos del administrador están protegidos. Verificar que los cambios se aplican en tiempo real. Probar que se registran los cambios en el historial.",
+        "priority": "high",
+        "dependencies": [
+          33
+        ],
+        "status": "pending",
+        "subtasks": [
+          {
+            "id": 1,
+            "title": "Diseño del modelo de datos para permisos",
+            "description": "Crear la estructura de datos necesaria para almacenar y gestionar los permisos en el sistema",
+            "dependencies": [],
+            "details": "1. Definir entidades para permisos, roles y usuarios\n2. Diseñar relaciones entre permisos y roles\n3. Crear esquemas de base de datos para permisos\n4. Implementar métodos CRUD para gestión de permisos\n5. Documentar el modelo de datos y sus relaciones",
+            "status": "pending",
+            "testStrategy": ""
+          },
+          {
+            "id": 2,
+            "title": "Implementación de categorías de permisos",
+            "description": "Desarrollar las diferentes categorías de permisos y su relación con los roles del sistema",
+            "dependencies": [
+              "34.1"
+            ],
+            "details": "1. Implementar categoría de Gestión de Documentos\n2. Implementar categoría de Gestión de Usuarios\n3. Implementar categoría de Administración del Sistema\n4. Implementar categoría de Búsqueda y Consulta\n5. Crear relaciones entre categorías y roles existentes\n6. Configurar permisos predeterminados por rol",
+            "status": "pending",
+            "testStrategy": ""
+          },
+          {
+            "id": 3,
+            "title": "Desarrollo de la interfaz de gestión de permisos",
+            "description": "Crear la interfaz gráfica para administrar roles y permisos en el sistema",
+            "dependencies": [
+              "34.2"
+            ],
+            "details": "1. Diseñar pantalla de gestión de roles y permisos\n2. Implementar visualización de permisos por rol\n3. Crear funcionalidad para activar/desactivar permisos\n4. Desarrollar componentes para asignación de permisos\n5. Implementar registro de cambios en historial\n6. Añadir validaciones de interfaz",
+            "status": "pending",
+            "testStrategy": ""
+          },
+          {
+            "id": 4,
+            "title": "Implementación de protección de permisos críticos",
+            "description": "Configurar mecanismos de seguridad para proteger permisos críticos del sistema",
+            "dependencies": [
+              "34.2"
+            ],
+            "details": "1. Identificar permisos críticos del sistema\n2. Configurar protección especial para permisos del rol Administrador\n3. Implementar confirmaciones adicionales para cambios en permisos críticos\n4. Crear sistema de alertas para modificaciones sensibles\n5. Desarrollar mecanismo de reversión de cambios críticos",
+            "status": "pending",
+            "testStrategy": ""
+          },
+          {
+            "id": 5,
+            "title": "Desarrollo de actualización en tiempo real de permisos",
+            "description": "Implementar la funcionalidad para que los cambios en permisos se apliquen inmediatamente a las sesiones activas",
+            "dependencies": [
+              "34.3",
+              "34.4"
+            ],
+            "details": "1. Diseñar mecanismo de notificación de cambios de permisos\n2. Implementar actualización en tiempo real para sesiones activas\n3. Crear sistema de revalidación de permisos en acciones críticas\n4. Desarrollar manejo de conflictos por cambios simultáneos\n5. Implementar registro de aplicación de cambios en tiempo real",
+            "status": "pending",
+            "testStrategy": ""
+          }
+        ]
+      },
+      {
+        "id": 35,
+        "title": "Implementación del sistema de validación de accesos",
+        "description": "Desarrollar el middleware de validación de permisos según los criterios de la HU014",
+        "details": "1. Crear middleware de autenticación para verificar tokens JWT\n2. Implementar middleware de autorización para validar permisos\n3. Configurar verificación de estado activo de usuario\n4. Implementar registro de intentos de acceso\n5. Crear manejo de errores para accesos no autorizados (403)\n6. Configurar validación de múltiples permisos para acciones sensibles\n7. Implementar principio de menor privilegio\n8. Añadir sistema de notificación de errores al equipo técnico\n9. Configurar actualización en tiempo real de permisos",
+        "testStrategy": "Realizar pruebas unitarias para verificar el funcionamiento del middleware. Probar accesos con diferentes roles y permisos. Verificar que se registran los intentos de acceso. Comprobar que se devuelve el código 403 para accesos no autorizados. Probar la validación de múltiples permisos. Verificar que los permisos se actualizan en tiempo real.",
+        "priority": "high",
+        "dependencies": [
+          34
+        ],
+        "status": "pending",
+        "subtasks": [
+          {
+            "id": 1,
+            "title": "Desarrollo del middleware de autenticación con JWT",
+            "description": "Implementar el middleware para verificar tokens JWT y validar la identidad del usuario antes de permitir el acceso a recursos protegidos.",
+            "dependencies": [],
+            "details": "1. Crear función para extraer token de los headers de la petición\n2. Implementar verificación de firma del token JWT\n3. Validar tiempo de expiración del token\n4. Extraer información del usuario del payload\n5. Configurar manejo de errores para tokens inválidos o expirados\n6. Implementar verificación de estado activo del usuario",
+            "status": "pending",
+            "testStrategy": ""
+          },
+          {
+            "id": 2,
+            "title": "Implementación del middleware de autorización basado en permisos",
+            "description": "Desarrollar el middleware que valida si el usuario autenticado tiene los permisos necesarios para acceder a un recurso específico.",
+            "dependencies": [
+              "35.1"
+            ],
+            "details": "1. Crear función para verificar permisos requeridos para cada ruta\n2. Implementar validación de permisos individuales\n3. Configurar validación de múltiples permisos para acciones sensibles\n4. Implementar principio de menor privilegio\n5. Crear sistema de caché de permisos para optimizar rendimiento\n6. Desarrollar mecanismo para verificar permisos jerárquicos",
+            "status": "pending",
+            "testStrategy": ""
+          },
+          {
+            "id": 3,
+            "title": "Desarrollo del sistema de registro de intentos de acceso",
+            "description": "Implementar un sistema que registre todos los intentos de acceso, tanto exitosos como fallidos, para auditoría y seguridad.",
+            "dependencies": [
+              "35.1",
+              "35.2"
+            ],
+            "details": "1. Crear modelo de datos para almacenar registros de acceso\n2. Implementar registro de accesos exitosos con información del usuario\n3. Configurar registro de intentos fallidos con motivo del fallo\n4. Desarrollar sistema de alertas para múltiples intentos fallidos\n5. Implementar rotación de logs para optimizar almacenamiento\n6. Crear interfaz para consulta de registros de acceso",
+            "status": "pending",
+            "testStrategy": ""
+          },
+          {
+            "id": 4,
+            "title": "Implementación del manejo de errores para accesos no autorizados",
+            "description": "Desarrollar un sistema robusto para manejar y responder adecuadamente a los intentos de acceso no autorizados.",
+            "dependencies": [
+              "35.2"
+            ],
+            "details": "1. Crear respuestas estandarizadas para errores 403 (Forbidden)\n2. Implementar mensajes de error claros pero sin revelar información sensible\n3. Configurar sistema de notificación de errores al equipo técnico\n4. Desarrollar mecanismo para detectar posibles ataques de fuerza bruta\n5. Implementar bloqueo temporal de IP tras múltiples intentos fallidos\n6. Crear documentación para usuarios sobre errores de acceso",
+            "status": "pending",
+            "testStrategy": ""
+          },
+          {
+            "id": 5,
+            "title": "Desarrollo de la actualización en tiempo real de permisos",
+            "description": "Implementar un sistema que permita actualizar los permisos de los usuarios en tiempo real sin necesidad de cerrar sesión.",
+            "dependencies": [
+              "35.2"
+            ],
+            "details": "1. Configurar sistema de websockets para notificaciones de cambios de permisos\n2. Implementar verificación periódica de permisos en segundo plano\n3. Desarrollar mecanismo para invalidar caché de permisos tras actualizaciones\n4. Crear sistema de notificación al usuario sobre cambios en sus permisos\n5. Implementar revalidación automática de permisos en rutas críticas\n6. Configurar sincronización entre múltiples instancias del servidor",
+            "status": "pending",
+            "testStrategy": ""
+          }
+        ]
+      },
+      {
+        "id": 36,
+        "title": "Implementación de UI condicionada por rol",
+        "description": "Desarrollar la interfaz de usuario condicionada por roles según los criterios de la HU015",
+        "details": "1. Crear sistema de renderizado condicional basado en permisos\n2. Implementar componente HOC para protección de rutas\n3. Configurar visualización de elementos según rol:\n   - Usuario de Consulta: opciones de búsqueda y visualización\n   - Gestor de Documentos: opciones anteriores + carga y edición\n   - Administrador: todas las opciones + administración\n4. Implementar ocultamiento de elementos no autorizados\n5. Crear sistema de redirección para accesos no permitidos\n6. Configurar actualización de UI al cambiar de página\n7. Implementar consistencia visual entre diferentes vistas",
+        "testStrategy": "Verificar que los elementos se muestran correctamente según el rol del usuario. Probar la navegación entre páginas y comprobar que la UI se actualiza adecuadamente. Verificar que los elementos no autorizados están ocultos. Probar la redirección para accesos no permitidos. Comprobar la consistencia visual en diferentes secciones.",
+        "priority": "medium",
+        "dependencies": [
+          23,
+          35
+        ],
+        "status": "pending",
+        "subtasks": [
+          {
+            "id": 1,
+            "title": "Desarrollo del sistema de renderizado condicional basado en permisos",
+            "description": "Crear un sistema que permita mostrar u ocultar elementos de la interfaz según los permisos del usuario actual",
+            "dependencies": [],
+            "details": "1. Diseñar la estructura de datos para mapear permisos a elementos UI\n2. Crear componente utilitario para verificar permisos\n3. Implementar hook personalizado (usePermission) para facilitar verificaciones\n4. Desarrollar directivas condicionales para elementos visuales\n5. Integrar con el contexto de autenticación existente\n6. Documentar el uso del sistema para otros desarrolladores",
+            "status": "pending",
+            "testStrategy": ""
+          },
+          {
+            "id": 2,
+            "title": "Implementación del HOC para protección de rutas",
+            "description": "Desarrollar un componente de orden superior (HOC) que proteja las rutas según los permisos del usuario",
+            "dependencies": [
+              "36.1"
+            ],
+            "details": "1. Crear componente ProtectedRoute que verifique permisos antes de renderizar\n2. Implementar lógica de verificación de múltiples permisos\n3. Configurar redirección a página de acceso denegado\n4. Integrar con el router de la aplicación\n5. Añadir soporte para rutas anidadas\n6. Implementar caché de verificaciones para optimizar rendimiento\n7. Crear tests unitarios para el componente",
+            "status": "pending",
+            "testStrategy": ""
+          },
+          {
+            "id": 3,
+            "title": "Desarrollo de la visualización de elementos según rol",
+            "description": "Configurar la visualización condicional de elementos de interfaz según el rol del usuario",
+            "dependencies": [
+              "36.1",
+              "36.2"
+            ],
+            "details": "1. Implementar menús dinámicos según rol del usuario\n2. Configurar botones y acciones específicas por rol:\n   - Usuario de Consulta: opciones de búsqueda y visualización\n   - Gestor de Documentos: opciones anteriores + carga y edición\n   - Administrador: todas las opciones + administración\n3. Desarrollar componentes que se adapten según permisos\n4. Implementar ocultamiento de elementos no autorizados\n5. Asegurar consistencia visual entre diferentes vistas",
+            "status": "pending",
+            "testStrategy": ""
+          },
+          {
+            "id": 4,
+            "title": "Implementación del sistema de redirección para accesos no permitidos",
+            "description": "Crear un sistema que redirija a los usuarios cuando intentan acceder a funcionalidades no permitidas",
+            "dependencies": [
+              "36.2",
+              "36.3"
+            ],
+            "details": "1. Desarrollar página de acceso denegado (403)\n2. Implementar interceptor de respuestas HTTP para capturar errores de autorización\n3. Crear sistema de notificaciones para informar al usuario\n4. Configurar redirección inteligente a la última página válida\n5. Implementar registro de intentos de acceso no permitidos\n6. Configurar actualización de UI al cambiar de página\n7. Añadir opciones de contacto con administrador en página de acceso denegado",
+            "status": "pending",
+            "testStrategy": ""
+          }
+        ]
+      },
+      {
+        "id": 37,
+        "title": "Implementación de filtros avanzados de búsqueda",
+        "description": "Desarrollar la funcionalidad de filtros adicionales según los criterios de la HU016",
+        "details": "1. Ampliar interfaz de búsqueda con sección \"Más Filtros\"\n2. Implementar filtros adicionales:\n   - Tipo de documento (desplegable)\n   - Usuario que lo cargó (autocompletado)\n   - Número de expediente (campo de texto)\n   - Categoría (desplegable)\n3. Crear lógica para combinar múltiples filtros con operador AND\n4. Implementar visualización de filtros activos\n5. Añadir funcionalidad para eliminar filtros individualmente\n6. Configurar persistencia de filtros entre búsquedas\n7. Implementar mensajes para resultados vacíos con sugerencias\n8. Crear función para limpiar todos los filtros",
+        "testStrategy": "Verificar que todos los filtros adicionales funcionan correctamente. Probar la combinación de múltiples filtros. Comprobar que se muestran claramente los filtros activos. Verificar que se pueden eliminar filtros individualmente. Probar la función de limpiar todos los filtros. Comprobar que aparecen sugerencias cuando no hay resultados.",
+        "priority": "medium",
+        "dependencies": [
+          27,
+          28
+        ],
+        "status": "pending",
+        "subtasks": [
+          {
+            "id": 1,
+            "title": "Ampliación de la interfaz de búsqueda con sección de filtros adicionales",
+            "description": "Desarrollar la interfaz de usuario para la sección 'Más Filtros' que incluya todos los filtros adicionales especificados en la HU016.",
+            "dependencies": [],
+            "details": "1. Diseñar y crear el componente desplegable 'Más Filtros'\n2. Implementar los siguientes controles de filtro:\n   - Tipo de documento (desplegable)\n   - Usuario que lo cargó (campo con autocompletado)\n   - Número de expediente (campo de texto)\n   - Categoría (desplegable)\n3. Asegurar que la interfaz sea responsive y accesible\n4. Añadir botones para aplicar y limpiar filtros",
+            "status": "pending",
+            "testStrategy": ""
+          },
+          {
+            "id": 2,
+            "title": "Implementación de la lógica para combinar múltiples filtros",
+            "description": "Desarrollar la lógica de backend y frontend necesaria para aplicar múltiples filtros simultáneamente con operador AND y mantener su persistencia.",
+            "dependencies": [
+              "37.1"
+            ],
+            "details": "1. Crear estructura de datos para almacenar múltiples criterios de filtro\n2. Implementar lógica para combinar filtros con operador AND\n3. Desarrollar endpoint en la API para procesar consultas con múltiples filtros\n4. Configurar persistencia de filtros entre búsquedas\n5. Implementar mensajes para resultados vacíos con sugerencias\n6. Optimizar rendimiento para consultas complejas",
+            "status": "pending",
+            "testStrategy": ""
+          },
+          {
+            "id": 3,
+            "title": "Desarrollo de la visualización y gestión de filtros activos",
+            "description": "Implementar la funcionalidad para mostrar, gestionar y eliminar los filtros que están actualmente aplicados a la búsqueda.",
+            "dependencies": [
+              "37.1",
+              "37.2"
+            ],
+            "details": "1. Crear componente para visualizar los filtros activos\n2. Implementar funcionalidad para eliminar filtros individualmente\n3. Desarrollar función para limpiar todos los filtros a la vez\n4. Asegurar que la interfaz actualiza los resultados inmediatamente al eliminar filtros\n5. Implementar indicadores visuales claros para los filtros activos\n6. Añadir tooltips explicativos para cada filtro aplicado",
+            "status": "pending",
+            "testStrategy": ""
+          }
+        ]
+      },
+      {
+        "id": 38,
+        "title": "Implementación del sistema de versionado de documentos",
+        "description": "Desarrollar el sistema para mantener versiones de documentos según los criterios de la HU017",
+        "details": "1. Diseñar modelo de datos para versionado de documentos\n2. Implementar sistema de almacenamiento de versiones:\n   - Guardar archivo original\n   - Mantener metadatos actualizados\n   - Crear referencias a versiones anterior y siguiente\n3. Desarrollar lógica para crear nueva versión al editar documento\n4. Implementar visualización de historial de versiones\n5. Crear funcionalidad para descargar versiones específicas\n6. Configurar sistema de comentarios para cada versión\n7. Implementar comparación visual entre versiones\n8. Añadir opción para restaurar versiones anteriores",
+        "testStrategy": "Verificar que se crea una nueva versión al editar un documento. Comprobar que se mantienen correctamente las referencias entre versiones. Probar la descarga de versiones específicas. Verificar que el historial de versiones se muestra correctamente. Probar la funcionalidad de restaurar versiones anteriores. Comprobar la comparación visual entre versiones.",
+        "priority": "medium",
+        "dependencies": [
+          31,
+          32
+        ],
+        "status": "pending",
+        "subtasks": [
+          {
+            "id": 1,
+            "title": "Diseño del modelo de datos para versiones de documentos",
+            "description": "Crear la estructura de datos necesaria para almacenar y gestionar las diferentes versiones de los documentos en el sistema.",
+            "dependencies": [],
+            "details": "- Definir entidades y relaciones para el versionado\n- Diseñar esquema de base de datos con campos para metadatos de versión\n- Establecer estructura para referencias entre versiones (anterior/siguiente)\n- Documentar el modelo de datos\n- Validar el diseño con el equipo técnico\n- Preparar scripts de migración de base de datos",
+            "status": "pending",
+            "testStrategy": ""
+          },
+          {
+            "id": 2,
+            "title": "Implementación del sistema de almacenamiento de versiones",
+            "description": "Desarrollar la lógica para guardar y gestionar las diferentes versiones de un documento, incluyendo el archivo original y sus metadatos.",
+            "dependencies": [
+              "38.1"
+            ],
+            "details": "- Implementar guardado del archivo original\n- Desarrollar sistema de metadatos para cada versión\n- Crear lógica para referencias entre versiones\n- Implementar mecanismo para crear nueva versión al editar documento\n- Configurar sistema de comentarios por versión\n- Desarrollar pruebas unitarias para el sistema de almacenamiento",
+            "status": "pending",
+            "testStrategy": ""
+          },
+          {
+            "id": 3,
+            "title": "Desarrollo de la visualización de historial y descarga de versiones",
+            "description": "Implementar la interfaz y funcionalidad para visualizar el historial de versiones de un documento y permitir la descarga de versiones específicas.",
+            "dependencies": [
+              "38.2"
+            ],
+            "details": "- Diseñar interfaz para mostrar historial de versiones\n- Implementar visualización cronológica de cambios\n- Desarrollar funcionalidad para descargar versiones específicas\n- Mostrar metadatos relevantes de cada versión\n- Implementar paginación para documentos con muchas versiones\n- Crear pruebas de integración para la visualización",
+            "status": "pending",
+            "testStrategy": ""
+          },
+          {
+            "id": 4,
+            "title": "Implementación de la comparación y restauración de versiones",
+            "description": "Desarrollar la funcionalidad para comparar visualmente diferentes versiones de un documento y permitir la restauración de versiones anteriores.",
+            "dependencies": [
+              "38.3"
+            ],
+            "details": "- Implementar herramienta de comparación visual entre versiones\n- Desarrollar funcionalidad para resaltar cambios entre versiones\n- Crear mecanismo para restaurar versiones anteriores\n- Implementar confirmación de restauración\n- Añadir registro de actividad para restauraciones\n- Desarrollar pruebas para la comparación y restauración",
+            "status": "pending",
+            "testStrategy": ""
+          }
+        ]
+      },
+      {
+        "id": 39,
+        "title": "Implementación de pruebas automatizadas",
+        "description": "Desarrollar suite de pruebas automatizadas para garantizar la calidad del sistema",
+        "details": "1. Configurar entorno de pruebas unitarias para frontend (Jest)\n2. Configurar entorno de pruebas unitarias para backend (Mocha/Chai)\n3. Implementar pruebas para componentes críticos:\n   - Autenticación y autorización\n   - Búsqueda y filtrado\n   - Carga y edición de documentos\n   - Gestión de roles y permisos\n4. Crear pruebas de integración para flujos completos\n5. Implementar pruebas end-to-end con Cypress\n6. Configurar CI/CD para ejecución automática de pruebas\n7. Crear documentación de pruebas\n8. Implementar métricas de cobertura de código",
+        "testStrategy": "Verificar que todas las pruebas pasan correctamente. Comprobar que la cobertura de código es adecuada. Probar la ejecución automática de pruebas en el pipeline de CI/CD. Verificar que las pruebas end-to-end cubren los flujos principales del sistema.",
+        "priority": "medium",
+        "dependencies": [
+          21,
+          22,
+          23,
+          24,
+          25,
+          26,
+          27,
+          28,
+          29,
+          30,
+          31,
+          32,
+          33,
+          34,
+          35,
+          36,
+          37,
+          38
+        ],
+        "status": "pending",
+        "subtasks": [
+          {
+            "id": 1,
+            "title": "Configuración de entornos de prueba",
+            "description": "Configurar los entornos de pruebas unitarias para frontend con Jest y backend con Mocha/Chai",
+            "dependencies": [],
+            "details": "1. Instalar y configurar Jest para pruebas de frontend\n2. Configurar la estructura de directorios para pruebas de frontend\n3. Instalar y configurar Mocha/Chai para pruebas de backend\n4. Configurar la estructura de directorios para pruebas de backend\n5. Implementar mocks y stubs básicos para servicios externos\n6. Configurar herramientas de cobertura de código (Istanbul/NYC)\n7. Crear scripts en package.json para ejecutar pruebas",
+            "status": "pending",
+            "testStrategy": ""
+          },
+          {
+            "id": 2,
+            "title": "Implementación de pruebas unitarias para componentes críticos",
+            "description": "Desarrollar pruebas unitarias para los componentes críticos del sistema como autenticación, búsqueda y gestión de permisos",
+            "dependencies": [
+              "39.1"
+            ],
+            "details": "1. Implementar pruebas para el módulo de autenticación y autorización\n2. Desarrollar pruebas para el sistema de búsqueda y filtrado\n3. Crear pruebas para la funcionalidad de carga y edición de documentos\n4. Implementar pruebas para el sistema de gestión de roles y permisos\n5. Configurar datos de prueba (fixtures) para cada componente\n6. Implementar pruebas para validar el manejo de errores\n7. Verificar la cobertura de código para cada componente",
+            "status": "pending",
+            "testStrategy": ""
+          },
+          {
+            "id": 3,
+            "title": "Desarrollo de pruebas de integración",
+            "description": "Crear pruebas de integración para validar el funcionamiento de flujos completos del sistema",
+            "dependencies": [
+              "39.1",
+              "39.2"
+            ],
+            "details": "1. Identificar los flujos principales a probar (carga de documentos, búsqueda, gestión de usuarios)\n2. Configurar base de datos de prueba para integración\n3. Implementar pruebas para el flujo completo de gestión documental\n4. Desarrollar pruebas para el flujo de administración de usuarios y permisos\n5. Crear pruebas para el flujo de búsqueda avanzada y filtrado\n6. Implementar pruebas para validar la integración entre frontend y backend\n7. Configurar limpieza de datos entre pruebas",
+            "status": "pending",
+            "testStrategy": ""
+          },
+          {
+            "id": 4,
+            "title": "Implementación de pruebas end-to-end y CI/CD",
+            "description": "Desarrollar pruebas end-to-end con Cypress y configurar la integración continua para la ejecución automática de pruebas",
+            "dependencies": [
+              "39.1",
+              "39.2",
+              "39.3"
+            ],
+            "details": "1. Instalar y configurar Cypress para pruebas end-to-end\n2. Implementar pruebas para los flujos críticos del usuario final\n3. Crear pruebas para validar la experiencia de usuario completa\n4. Configurar pipeline de CI/CD para ejecución automática de pruebas\n5. Implementar generación de informes de pruebas\n6. Configurar notificaciones de fallos en las pruebas\n7. Crear documentación detallada de la suite de pruebas\n8. Implementar métricas de cobertura de código en el pipeline",
+            "status": "pending",
+            "testStrategy": ""
+          }
+        ]
+      },
+      {
+        "id": 40,
+        "title": "Despliegue y documentación final",
+        "description": "Preparar el sistema para producción y crear documentación completa",
+        "details": "1. Configurar entorno de producción\n2. Implementar optimizaciones de rendimiento:\n   - Minificación de código\n   - Compresión de recursos\n   - Caching adecuado\n3. Realizar pruebas de carga y estrés\n4. Crear documentación técnica completa:\n   - Arquitectura del sistema\n   - Modelos de datos\n   - APIs y endpoints\n   - Guía de despliegue\n5. Desarrollar manual de usuario\n6. Implementar sistema de logs y monitoreo\n7. Configurar copias de seguridad automáticas\n8. Realizar despliegue inicial en producción",
+        "testStrategy": "Verificar que el sistema funciona correctamente en el entorno de producción. Comprobar el rendimiento bajo carga. Verificar que la documentación es completa y clara. Probar el sistema de logs y monitoreo. Comprobar que las copias de seguridad funcionan correctamente.",
+        "priority": "medium",
+        "dependencies": [
+          39
+        ],
+        "status": "pending",
+        "subtasks": [
+          {
+            "id": 1,
+            "title": "Configuración del entorno de producción y optimizaciones",
+            "description": "Preparar el entorno de producción e implementar optimizaciones de rendimiento para el sistema",
+            "dependencies": [],
+            "details": "1. Configurar el servidor de producción\n2. Implementar minificación de código JavaScript y CSS\n3. Configurar compresión de recursos (gzip/brotli)\n4. Implementar estrategias de caching adecuadas\n5. Optimizar carga de recursos estáticos\n6. Configurar balanceo de carga si es necesario\n7. Realizar despliegue inicial en entorno de producción",
+            "status": "pending",
+            "testStrategy": ""
+          },
+          {
+            "id": 2,
+            "title": "Implementación de pruebas de carga y estrés",
+            "description": "Desarrollar y ejecutar pruebas de carga y estrés para verificar el rendimiento del sistema en producción",
+            "dependencies": [
+              "40.1"
+            ],
+            "details": "1. Seleccionar herramientas para pruebas de carga (JMeter, Locust, etc.)\n2. Diseñar escenarios de prueba para diferentes cargas de usuarios\n3. Implementar pruebas para operaciones críticas del sistema\n4. Ejecutar pruebas incrementales de carga\n5. Realizar pruebas de estrés para identificar puntos de fallo\n6. Documentar resultados y métricas de rendimiento\n7. Implementar mejoras basadas en los resultados",
+            "status": "pending",
+            "testStrategy": ""
+          },
+          {
+            "id": 3,
+            "title": "Desarrollo de documentación técnica y manual de usuario",
+            "description": "Crear documentación completa del sistema incluyendo aspectos técnicos y guía para usuarios finales",
+            "dependencies": [
+              "40.1"
+            ],
+            "details": "1. Documentar la arquitectura completa del sistema\n2. Crear diagramas de los modelos de datos\n3. Documentar todas las APIs y endpoints disponibles\n4. Desarrollar guía detallada de despliegue\n5. Crear manual de usuario con capturas de pantalla\n6. Documentar flujos de trabajo principales\n7. Incluir sección de preguntas frecuentes\n8. Preparar documentación en formato digital e imprimible",
+            "status": "pending",
+            "testStrategy": ""
+          },
+          {
+            "id": 4,
+            "title": "Configuración de logs, monitoreo y copias de seguridad",
+            "description": "Implementar sistemas de logs, monitoreo y respaldo para garantizar la operación continua y segura",
+            "dependencies": [
+              "40.1"
+            ],
+            "details": "1. Configurar sistema centralizado de logs\n2. Implementar alertas para eventos críticos\n3. Configurar dashboard de monitoreo en tiempo real\n4. Implementar métricas de rendimiento y disponibilidad\n5. Configurar sistema de copias de seguridad automáticas\n6. Establecer política de retención de backups\n7. Documentar procedimientos de recuperación\n8. Realizar pruebas de restauración de backups",
+            "status": "pending",
+            "testStrategy": ""
+          }
+        ]
+      }
+    ],
+    "metadata": {
+      "created": "2025-10-07T16:52:07.729Z",
+      "updated": "2025-10-07T16:54:56.584Z",
+      "description": "Tasks for master context"
+    }
+  }
+}

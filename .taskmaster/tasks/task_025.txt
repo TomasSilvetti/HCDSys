@@ -1,0 +1,77 @@
+# Task ID: 25
+# Title: Implementación del formulario de inicio de sesión
+# Status: pending
+# Dependencies: 21, 23, 24
+# Priority: high
+# Description: Desarrollar el formulario de login según los criterios de la HU003
+# Details:
+1. Crear componente de formulario de login con:
+   - Campo para email
+   - Campo para contraseña
+   - Botón "Iniciar Sesión"
+   - Enlace "¿Olvidaste tu contraseña?"
+   - Enlace "Registrarse"
+2. Implementar endpoint en el backend para autenticación
+3. Configurar JWT para manejo de sesiones
+4. Implementar verificación de credenciales contra base de datos
+5. Crear lógica para actualizar último acceso en la base de datos
+6. Implementar manejo de errores para credenciales inválidas
+7. Añadir verificación de estado de cuenta (activa/desactivada)
+8. Configurar almacenamiento seguro del token JWT
+9. Implementar redirección a página principal tras login exitoso
+
+# Test Strategy:
+Probar inicio de sesión con credenciales válidas e inválidas. Verificar que el token JWT se genera y almacena correctamente. Comprobar que se actualiza el último acceso. Verificar que los mensajes de error son claros. Probar el comportamiento con cuentas desactivadas.
+
+# Subtasks:
+## 1. Diseño y maquetación del formulario de login [pending]
+### Dependencies: None
+### Description: Crear la interfaz de usuario del formulario de inicio de sesión con todos los elementos requeridos según el diseño especificado.
+### Details:
+1. Crear componente React/Angular para el formulario de login
+2. Implementar campos de email y contraseña con validaciones básicas
+3. Añadir botón de 'Iniciar Sesión' con estados (normal, hover, loading)
+4. Implementar enlaces de 'Olvidaste tu contraseña' y 'Registrarse'
+5. Aplicar estilos según guía de diseño del proyecto
+6. Asegurar que el formulario sea responsive para diferentes dispositivos
+7. Implementar accesibilidad básica (labels, atributos aria, navegación por teclado)
+
+## 2. Implementación del endpoint de autenticación con JWT [pending]
+### Dependencies: 25.1
+### Description: Desarrollar la API de autenticación en el backend y configurar el sistema JWT para manejo de sesiones.
+### Details:
+1. Crear endpoint POST /api/auth/login en el backend
+2. Implementar verificación de credenciales contra base de datos
+3. Configurar generación de tokens JWT con payload apropiado (userId, role, permissions)
+4. Establecer tiempos de expiración adecuados para los tokens
+5. Implementar actualización del campo 'último acceso' en la base de datos
+6. Añadir verificación de estado de cuenta (activa/desactivada)
+7. Documentar la API con Swagger/OpenAPI
+
+## 3. Desarrollo de la lógica de almacenamiento y gestión de tokens [pending]
+### Dependencies: 25.2
+### Description: Implementar el manejo seguro de tokens JWT en el frontend y la lógica para mantener la sesión del usuario.
+### Details:
+1. Crear servicio de autenticación en el frontend
+2. Implementar almacenamiento seguro del token JWT (localStorage/sessionStorage/cookies)
+3. Configurar interceptores HTTP para incluir el token en las peticiones
+4. Implementar decodificación del token para obtener información del usuario
+5. Crear lógica para verificar expiración del token
+6. Implementar sistema de refresh token (si aplica)
+7. Añadir funcionalidad de cierre de sesión que limpie tokens
+
+## 4. Implementación del manejo de errores y redirecciones [pending]
+### Dependencies: 25.1, 25.2, 25.3
+### Description: Desarrollar la lógica para manejar errores de autenticación y redireccionar al usuario según el resultado del inicio de sesión.
+### Details:
+1. Implementar mensajes de error específicos para diferentes casos:
+   - Credenciales inválidas
+   - Cuenta desactivada
+   - Problemas de conexión
+2. Crear componente de visualización de errores en el formulario
+3. Implementar redirección a página principal tras login exitoso
+4. Añadir redirección a página de recuperación de contraseña
+5. Configurar protección de rutas para usuarios no autenticados
+6. Implementar persistencia de URL original para redireccionar después del login
+7. Añadir tests para verificar el correcto funcionamiento de errores y redirecciones
+

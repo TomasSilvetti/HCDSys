@@ -1,0 +1,68 @@
+# Task ID: 33
+# Title: Implementación del sistema de roles de usuario
+# Status: pending
+# Dependencies: 25
+# Priority: high
+# Description: Desarrollar el sistema de roles y la interfaz de gestión según los criterios de la HU012
+# Details:
+1. Crear modelo de datos para roles de usuario
+2. Implementar roles predefinidos:
+   - Administrador
+   - Gestor de Documentos
+   - Usuario de Consulta
+3. Desarrollar interfaz de gestión de usuarios con:
+   - Lista de usuarios ordenada alfabéticamente
+   - Búsqueda por nombre o email
+   - Visualización de detalles de usuario
+   - Edición de roles
+4. Implementar registro de cambios de rol en historial
+5. Crear validación para evitar que administradores cambien su propio rol
+6. Configurar actualización inmediata de permisos al cambiar rol
+7. Añadir mensajes de confirmación para cambios
+
+# Test Strategy:
+Verificar que la lista de usuarios se muestra correctamente. Probar la búsqueda de usuarios. Comprobar que se pueden cambiar roles correctamente. Verificar que se registran los cambios en el historial. Probar que un administrador no puede cambiar su propio rol. Comprobar que los permisos se actualizan inmediatamente al cambiar un rol.
+
+# Subtasks:
+## 1. Diseño del modelo de datos para roles [pending]
+### Dependencies: None
+### Description: Crear la estructura de datos para el sistema de roles de usuario, incluyendo los roles predefinidos y sus características.
+### Details:
+1. Diseñar el esquema de base de datos para roles de usuario
+2. Implementar los roles predefinidos (Administrador, Gestor de Documentos, Usuario de Consulta)
+3. Definir los atributos y permisos asociados a cada rol
+4. Crear las relaciones entre usuarios y roles
+5. Documentar el modelo de datos
+
+## 2. Implementación de la interfaz de gestión de usuarios [pending]
+### Dependencies: 33.1
+### Description: Desarrollar la interfaz gráfica para la administración de usuarios, incluyendo listado, búsqueda y visualización de detalles.
+### Details:
+1. Crear componente de lista de usuarios con ordenación alfabética
+2. Implementar funcionalidad de búsqueda por nombre o email
+3. Desarrollar vista de detalles de usuario
+4. Diseñar la interfaz según los estándares de la aplicación
+5. Implementar paginación para la lista de usuarios
+6. Añadir indicadores visuales para los diferentes roles
+
+## 3. Desarrollo de la funcionalidad de edición de roles con validaciones [pending]
+### Dependencies: 33.1, 33.2
+### Description: Implementar la lógica para modificar roles de usuario con las validaciones de seguridad necesarias.
+### Details:
+1. Crear formulario para edición de roles
+2. Implementar validación para evitar que administradores cambien su propio rol
+3. Añadir confirmación para cambios de rol
+4. Desarrollar lógica de actualización de roles en la base de datos
+5. Implementar mensajes de éxito/error para las operaciones
+6. Crear pruebas para validar las restricciones de seguridad
+
+## 4. Implementación del registro de cambios y actualización de permisos [pending]
+### Dependencies: 33.3
+### Description: Desarrollar el sistema de registro histórico de cambios de rol y la actualización inmediata de permisos.
+### Details:
+1. Crear modelo de datos para el historial de cambios de rol
+2. Implementar registro automático de modificaciones (usuario que realiza el cambio, fecha, rol anterior, nuevo rol)
+3. Desarrollar mecanismo para actualización inmediata de permisos al cambiar rol
+4. Configurar notificaciones para usuarios afectados por cambios de rol
+5. Implementar visualización del historial de cambios
+

@@ -1,0 +1,76 @@
+# Task ID: 34
+# Title: Implementación del sistema de permisos
+# Status: pending
+# Dependencies: 33
+# Priority: high
+# Description: Desarrollar el sistema de asignación de permisos según los criterios de la HU013
+# Details:
+1. Crear modelo de datos para permisos
+2. Implementar categorías de permisos:
+   - Gestión de Documentos
+   - Gestión de Usuarios
+   - Administración del Sistema
+   - Búsqueda y Consulta
+3. Desarrollar interfaz de gestión de roles y permisos
+4. Implementar visualización de permisos por rol
+5. Crear funcionalidad para activar/desactivar permisos
+6. Configurar protección de permisos críticos para rol Administrador
+7. Implementar actualización en tiempo real para sesiones activas
+8. Añadir registro de cambios en historial
+
+# Test Strategy:
+Verificar que se muestran correctamente todos los permisos disponibles. Probar la activación y desactivación de permisos. Comprobar que los permisos críticos del administrador están protegidos. Verificar que los cambios se aplican en tiempo real. Probar que se registran los cambios en el historial.
+
+# Subtasks:
+## 1. Diseño del modelo de datos para permisos [pending]
+### Dependencies: None
+### Description: Crear la estructura de datos necesaria para almacenar y gestionar los permisos en el sistema
+### Details:
+1. Definir entidades para permisos, roles y usuarios
+2. Diseñar relaciones entre permisos y roles
+3. Crear esquemas de base de datos para permisos
+4. Implementar métodos CRUD para gestión de permisos
+5. Documentar el modelo de datos y sus relaciones
+
+## 2. Implementación de categorías de permisos [pending]
+### Dependencies: 34.1
+### Description: Desarrollar las diferentes categorías de permisos y su relación con los roles del sistema
+### Details:
+1. Implementar categoría de Gestión de Documentos
+2. Implementar categoría de Gestión de Usuarios
+3. Implementar categoría de Administración del Sistema
+4. Implementar categoría de Búsqueda y Consulta
+5. Crear relaciones entre categorías y roles existentes
+6. Configurar permisos predeterminados por rol
+
+## 3. Desarrollo de la interfaz de gestión de permisos [pending]
+### Dependencies: 34.2
+### Description: Crear la interfaz gráfica para administrar roles y permisos en el sistema
+### Details:
+1. Diseñar pantalla de gestión de roles y permisos
+2. Implementar visualización de permisos por rol
+3. Crear funcionalidad para activar/desactivar permisos
+4. Desarrollar componentes para asignación de permisos
+5. Implementar registro de cambios en historial
+6. Añadir validaciones de interfaz
+
+## 4. Implementación de protección de permisos críticos [pending]
+### Dependencies: 34.2
+### Description: Configurar mecanismos de seguridad para proteger permisos críticos del sistema
+### Details:
+1. Identificar permisos críticos del sistema
+2. Configurar protección especial para permisos del rol Administrador
+3. Implementar confirmaciones adicionales para cambios en permisos críticos
+4. Crear sistema de alertas para modificaciones sensibles
+5. Desarrollar mecanismo de reversión de cambios críticos
+
+## 5. Desarrollo de actualización en tiempo real de permisos [pending]
+### Dependencies: 34.3, 34.4
+### Description: Implementar la funcionalidad para que los cambios en permisos se apliquen inmediatamente a las sesiones activas
+### Details:
+1. Diseñar mecanismo de notificación de cambios de permisos
+2. Implementar actualización en tiempo real para sesiones activas
+3. Crear sistema de revalidación de permisos en acciones críticas
+4. Desarrollar manejo de conflictos por cambios simultáneos
+5. Implementar registro de aplicación de cambios en tiempo real
+

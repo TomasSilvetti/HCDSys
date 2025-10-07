@@ -1,0 +1,67 @@
+# Task ID: 38
+# Title: Implementación del sistema de versionado de documentos
+# Status: pending
+# Dependencies: 31, 32
+# Priority: medium
+# Description: Desarrollar el sistema para mantener versiones de documentos según los criterios de la HU017
+# Details:
+1. Diseñar modelo de datos para versionado de documentos
+2. Implementar sistema de almacenamiento de versiones:
+   - Guardar archivo original
+   - Mantener metadatos actualizados
+   - Crear referencias a versiones anterior y siguiente
+3. Desarrollar lógica para crear nueva versión al editar documento
+4. Implementar visualización de historial de versiones
+5. Crear funcionalidad para descargar versiones específicas
+6. Configurar sistema de comentarios para cada versión
+7. Implementar comparación visual entre versiones
+8. Añadir opción para restaurar versiones anteriores
+
+# Test Strategy:
+Verificar que se crea una nueva versión al editar un documento. Comprobar que se mantienen correctamente las referencias entre versiones. Probar la descarga de versiones específicas. Verificar que el historial de versiones se muestra correctamente. Probar la funcionalidad de restaurar versiones anteriores. Comprobar la comparación visual entre versiones.
+
+# Subtasks:
+## 1. Diseño del modelo de datos para versiones de documentos [pending]
+### Dependencies: None
+### Description: Crear la estructura de datos necesaria para almacenar y gestionar las diferentes versiones de los documentos en el sistema.
+### Details:
+- Definir entidades y relaciones para el versionado
+- Diseñar esquema de base de datos con campos para metadatos de versión
+- Establecer estructura para referencias entre versiones (anterior/siguiente)
+- Documentar el modelo de datos
+- Validar el diseño con el equipo técnico
+- Preparar scripts de migración de base de datos
+
+## 2. Implementación del sistema de almacenamiento de versiones [pending]
+### Dependencies: 38.1
+### Description: Desarrollar la lógica para guardar y gestionar las diferentes versiones de un documento, incluyendo el archivo original y sus metadatos.
+### Details:
+- Implementar guardado del archivo original
+- Desarrollar sistema de metadatos para cada versión
+- Crear lógica para referencias entre versiones
+- Implementar mecanismo para crear nueva versión al editar documento
+- Configurar sistema de comentarios por versión
+- Desarrollar pruebas unitarias para el sistema de almacenamiento
+
+## 3. Desarrollo de la visualización de historial y descarga de versiones [pending]
+### Dependencies: 38.2
+### Description: Implementar la interfaz y funcionalidad para visualizar el historial de versiones de un documento y permitir la descarga de versiones específicas.
+### Details:
+- Diseñar interfaz para mostrar historial de versiones
+- Implementar visualización cronológica de cambios
+- Desarrollar funcionalidad para descargar versiones específicas
+- Mostrar metadatos relevantes de cada versión
+- Implementar paginación para documentos con muchas versiones
+- Crear pruebas de integración para la visualización
+
+## 4. Implementación de la comparación y restauración de versiones [pending]
+### Dependencies: 38.3
+### Description: Desarrollar la funcionalidad para comparar visualmente diferentes versiones de un documento y permitir la restauración de versiones anteriores.
+### Details:
+- Implementar herramienta de comparación visual entre versiones
+- Desarrollar funcionalidad para resaltar cambios entre versiones
+- Crear mecanismo para restaurar versiones anteriores
+- Implementar confirmación de restauración
+- Añadir registro de actividad para restauraciones
+- Desarrollar pruebas para la comparación y restauración
+

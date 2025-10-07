@@ -1,0 +1,70 @@
+# Task ID: 36
+# Title: Implementación de UI condicionada por rol
+# Status: pending
+# Dependencies: 23, 35
+# Priority: medium
+# Description: Desarrollar la interfaz de usuario condicionada por roles según los criterios de la HU015
+# Details:
+1. Crear sistema de renderizado condicional basado en permisos
+2. Implementar componente HOC para protección de rutas
+3. Configurar visualización de elementos según rol:
+   - Usuario de Consulta: opciones de búsqueda y visualización
+   - Gestor de Documentos: opciones anteriores + carga y edición
+   - Administrador: todas las opciones + administración
+4. Implementar ocultamiento de elementos no autorizados
+5. Crear sistema de redirección para accesos no permitidos
+6. Configurar actualización de UI al cambiar de página
+7. Implementar consistencia visual entre diferentes vistas
+
+# Test Strategy:
+Verificar que los elementos se muestran correctamente según el rol del usuario. Probar la navegación entre páginas y comprobar que la UI se actualiza adecuadamente. Verificar que los elementos no autorizados están ocultos. Probar la redirección para accesos no permitidos. Comprobar la consistencia visual en diferentes secciones.
+
+# Subtasks:
+## 1. Desarrollo del sistema de renderizado condicional basado en permisos [pending]
+### Dependencies: None
+### Description: Crear un sistema que permita mostrar u ocultar elementos de la interfaz según los permisos del usuario actual
+### Details:
+1. Diseñar la estructura de datos para mapear permisos a elementos UI
+2. Crear componente utilitario para verificar permisos
+3. Implementar hook personalizado (usePermission) para facilitar verificaciones
+4. Desarrollar directivas condicionales para elementos visuales
+5. Integrar con el contexto de autenticación existente
+6. Documentar el uso del sistema para otros desarrolladores
+
+## 2. Implementación del HOC para protección de rutas [pending]
+### Dependencies: 36.1
+### Description: Desarrollar un componente de orden superior (HOC) que proteja las rutas según los permisos del usuario
+### Details:
+1. Crear componente ProtectedRoute que verifique permisos antes de renderizar
+2. Implementar lógica de verificación de múltiples permisos
+3. Configurar redirección a página de acceso denegado
+4. Integrar con el router de la aplicación
+5. Añadir soporte para rutas anidadas
+6. Implementar caché de verificaciones para optimizar rendimiento
+7. Crear tests unitarios para el componente
+
+## 3. Desarrollo de la visualización de elementos según rol [pending]
+### Dependencies: 36.1, 36.2
+### Description: Configurar la visualización condicional de elementos de interfaz según el rol del usuario
+### Details:
+1. Implementar menús dinámicos según rol del usuario
+2. Configurar botones y acciones específicas por rol:
+   - Usuario de Consulta: opciones de búsqueda y visualización
+   - Gestor de Documentos: opciones anteriores + carga y edición
+   - Administrador: todas las opciones + administración
+3. Desarrollar componentes que se adapten según permisos
+4. Implementar ocultamiento de elementos no autorizados
+5. Asegurar consistencia visual entre diferentes vistas
+
+## 4. Implementación del sistema de redirección para accesos no permitidos [pending]
+### Dependencies: 36.2, 36.3
+### Description: Crear un sistema que redirija a los usuarios cuando intentan acceder a funcionalidades no permitidas
+### Details:
+1. Desarrollar página de acceso denegado (403)
+2. Implementar interceptor de respuestas HTTP para capturar errores de autorización
+3. Crear sistema de notificaciones para informar al usuario
+4. Configurar redirección inteligente a la última página válida
+5. Implementar registro de intentos de acceso no permitidos
+6. Configurar actualización de UI al cambiar de página
+7. Añadir opciones de contacto con administrador en página de acceso denegado
+

@@ -1,0 +1,58 @@
+# Task ID: 28
+# Title: Implementación de la visualización de resultados de búsqueda
+# Status: pending
+# Dependencies: 26, 27
+# Priority: medium
+# Description: Desarrollar la interfaz para mostrar resultados de búsqueda según los criterios de la HU007
+# Details:
+1. Crear componente para mostrar lista de resultados
+2. Implementar visualización de datos por documento:
+   - Título del documento
+   - Número de expediente
+   - Fecha de creación
+   - Categoría
+3. Diseñar sistema de paginación para más de 10 resultados
+4. Implementar mensaje para búsquedas sin resultados
+5. Crear tooltip o resumen al pasar el mouse sobre un documento
+6. Configurar redirección a vista detalle al hacer clic en un documento
+7. Implementar ordenamiento de resultados
+8. Añadir indicadores visuales para documentos recientes o importantes
+9. Optimizar renderizado para listas grandes
+
+# Test Strategy:
+Verificar que todos los datos requeridos se muestran correctamente. Probar la paginación con diferentes cantidades de resultados. Comprobar que el tooltip muestra la descripción al pasar el mouse. Verificar la redirección a la vista detalle. Probar el comportamiento cuando no hay resultados.
+
+# Subtasks:
+## 1. Diseño y maquetación del componente de lista de resultados [pending]
+### Dependencies: None
+### Description: Crear la estructura visual y el diseño del componente que mostrará los resultados de búsqueda, incluyendo la visualización de datos por documento y mensajes para búsquedas sin resultados.
+### Details:
+1. Diseñar la estructura HTML del componente de lista de resultados
+2. Implementar estilos CSS para la visualización adecuada de los resultados
+3. Crear la visualización de datos por documento (título, número de expediente, fecha, categoría)
+4. Implementar indicadores visuales para documentos recientes o importantes
+5. Diseñar y programar el mensaje para búsquedas sin resultados
+6. Optimizar el renderizado para listas grandes de resultados
+
+## 2. Implementación del sistema de paginación y ordenamiento [pending]
+### Dependencies: 28.1
+### Description: Desarrollar la funcionalidad de paginación para mostrar resultados por lotes y el sistema de ordenamiento para clasificar los resultados según diferentes criterios.
+### Details:
+1. Diseñar la interfaz de paginación (botones anterior/siguiente, selector de página)
+2. Implementar la lógica para mostrar máximo 10 resultados por página
+3. Crear controles para navegar entre páginas de resultados
+4. Desarrollar la funcionalidad de ordenamiento por diferentes campos (título, fecha, etc.)
+5. Implementar indicadores visuales del criterio de ordenamiento activo
+6. Asegurar que la paginación y el ordenamiento funcionen correctamente juntos
+
+## 3. Desarrollo de tooltips y comportamiento interactivo [pending]
+### Dependencies: 28.1, 28.2
+### Description: Implementar las funcionalidades interactivas como tooltips al pasar el mouse sobre documentos y la redirección a la vista detalle al hacer clic en un resultado.
+### Details:
+1. Crear el componente de tooltip para mostrar resumen del documento
+2. Implementar la lógica para mostrar/ocultar el tooltip al pasar el mouse
+3. Diseñar la apariencia visual del tooltip con información relevante
+4. Configurar la redirección a la vista detalle al hacer clic en un documento
+5. Implementar efectos visuales de hover para mejorar la experiencia de usuario
+6. Asegurar que todas las interacciones sean accesibles y funcionen en diferentes dispositivos
+

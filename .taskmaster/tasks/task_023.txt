@@ -1,0 +1,65 @@
+# Task ID: 23
+# Title: Implementación de la barra de navegación con estado de autenticación
+# Status: pending
+# Dependencies: 21, 22
+# Priority: high
+# Description: Desarrollar la barra de navegación que muestre el estado de autenticación del usuario según HU004
+# Details:
+1. Crear componente Navbar reutilizable
+2. Implementar lógica para mostrar diferentes opciones según estado de autenticación:
+   - Usuario no autenticado: mostrar enlaces a inicio, búsqueda y botón de login/registro
+   - Usuario autenticado: mostrar nombre de usuario, enlaces a funcionalidades según rol y botón de logout
+3. Implementar dropdown para opciones de usuario autenticado
+4. Añadir indicador visual del rol actual del usuario
+5. Implementar lógica para cerrar sesión
+6. Asegurar que la barra sea responsive para dispositivos móviles
+7. Implementar animaciones suaves para transiciones de estado
+
+# Test Strategy:
+Verificar que la barra de navegación muestra correctamente el estado de autenticación. Probar el cambio de estado al iniciar y cerrar sesión. Comprobar que las opciones mostradas corresponden al rol del usuario. Realizar pruebas en diferentes tamaños de pantalla para verificar responsividad.
+
+# Subtasks:
+## 1. Diseño base del componente Navbar [pending]
+### Dependencies: None
+### Description: Crear la estructura y el diseño base del componente de barra de navegación que será utilizado en toda la aplicación.
+### Details:
+1. Crear el componente Navbar.jsx con su estructura HTML básica
+2. Implementar el diseño visual según las guías de estilo del proyecto
+3. Definir la estructura de contenedores para los diferentes elementos (logo, enlaces, área de usuario)
+4. Configurar estilos CSS/SCSS para el componente
+5. Implementar posicionamiento fijo en la parte superior de la página
+
+## 2. Implementación de la lógica de autenticación y visualización condicional [pending]
+### Dependencies: 23.1
+### Description: Desarrollar la lógica que permita mostrar diferentes opciones en la barra de navegación según el estado de autenticación del usuario.
+### Details:
+1. Integrar el componente con el contexto de autenticación
+2. Implementar lógica condicional para mostrar diferentes elementos según estado de autenticación
+3. Crear componentes para estado no autenticado (enlaces a inicio, búsqueda, botones de login/registro)
+4. Crear componentes para estado autenticado (nombre de usuario, botón de logout)
+5. Implementar la lógica para el proceso de cierre de sesión
+6. Añadir indicador visual del rol actual del usuario
+
+## 3. Desarrollo del menú desplegable y opciones por rol [pending]
+### Dependencies: 23.2
+### Description: Implementar el menú desplegable para usuarios autenticados con opciones específicas según el rol del usuario.
+### Details:
+1. Crear componente de menú desplegable (dropdown)
+2. Implementar lógica para mostrar diferentes opciones según el rol del usuario
+3. Configurar enlaces a funcionalidades específicas por rol
+4. Implementar estilos para destacar visualmente el rol actual
+5. Añadir iconos representativos para cada opción del menú
+6. Configurar comportamiento de apertura/cierre del menú
+
+## 4. Implementación de la responsividad y animaciones [pending]
+### Dependencies: 23.1, 23.2, 23.3
+### Description: Adaptar la barra de navegación para dispositivos móviles e implementar animaciones para mejorar la experiencia de usuario.
+### Details:
+1. Implementar diseño responsive utilizando media queries
+2. Crear menú hamburguesa para dispositivos móviles
+3. Configurar comportamiento de colapso/expansión en pantallas pequeñas
+4. Implementar animaciones suaves para transiciones de estado
+5. Añadir efectos de hover y focus para mejorar la interactividad
+6. Realizar pruebas en diferentes tamaños de pantalla
+7. Optimizar rendimiento de animaciones
+

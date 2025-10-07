@@ -1,0 +1,76 @@
+# Task ID: 29
+# Title: Implementación de la vista detalle de documento
+# Status: pending
+# Dependencies: 27, 28
+# Priority: medium
+# Description: Desarrollar la vista detalle completa de un documento según los criterios de la HU008
+# Details:
+1. Crear componente de vista detalle que muestre:
+   - Título del documento
+   - Número de expediente
+   - Descripción completa
+   - Fecha de creación
+   - Fecha de última modificación
+   - Categoría
+   - Usuario que lo creó
+   - Tipo de documento
+   - Botón de descarga
+2. Implementar sección de información de categoría
+3. Crear componente para mostrar historial de versiones:
+   - Número de versión
+   - Fecha del cambio
+   - Comentarios de la versión
+   - Link para descargar versión específica
+4. Implementar lógica de descarga de documentos
+5. Añadir botón para volver a resultados de búsqueda
+6. Implementar verificación de permisos para acceso y descarga
+7. Diseñar interfaz responsiva para diferentes dispositivos
+
+# Test Strategy:
+Verificar que todos los datos del documento se muestran correctamente. Comprobar que el historial de versiones funciona adecuadamente. Probar la descarga de documentos y versiones específicas. Verificar que el botón de regreso funciona correctamente. Probar la visualización en diferentes dispositivos.
+
+# Subtasks:
+## 1. Diseño y maquetación del componente principal [pending]
+### Dependencies: None
+### Description: Crear el componente de vista detalle con la información básica del documento y la sección de información de categoría
+### Details:
+1. Desarrollar el componente React para la vista detalle
+2. Implementar la visualización de los datos básicos: título, número de expediente, descripción, fechas, categoría, usuario creador y tipo de documento
+3. Diseñar la sección de información de categoría
+4. Añadir el botón para volver a resultados de búsqueda
+5. Crear la estructura HTML/CSS base para toda la vista
+6. Implementar la conexión con la API para obtener los datos del documento
+
+## 2. Implementación del componente de historial de versiones [pending]
+### Dependencies: 29.1
+### Description: Desarrollar el componente que muestra el historial completo de versiones del documento
+### Details:
+1. Crear el componente para mostrar el listado de versiones
+2. Implementar la visualización de: número de versión, fecha del cambio y comentarios
+3. Añadir links para descargar versiones específicas
+4. Diseñar la interfaz para mostrar las versiones de forma clara y ordenada
+5. Implementar la conexión con la API para obtener el historial de versiones
+6. Añadir paginación si el historial es extenso
+
+## 3. Desarrollo de la funcionalidad de descarga de documentos [pending]
+### Dependencies: 29.1, 29.2
+### Description: Implementar la lógica completa para la descarga del documento actual y versiones anteriores
+### Details:
+1. Implementar el botón de descarga del documento actual
+2. Desarrollar la lógica para solicitar el archivo al servidor
+3. Manejar el proceso de descarga (progreso, errores, etc.)
+4. Implementar la funcionalidad para descargar versiones específicas desde el historial
+5. Añadir indicadores visuales durante el proceso de descarga
+6. Gestionar los diferentes tipos de documentos y sus formatos
+
+## 4. Implementación de verificación de permisos y diseño responsivo [pending]
+### Dependencies: 29.1, 29.2, 29.3
+### Description: Desarrollar la verificación de permisos para acceso y descarga, y asegurar que la interfaz sea responsiva
+### Details:
+1. Implementar la verificación de permisos para acceder a la vista detalle
+2. Añadir validación de permisos para la descarga de documentos
+3. Ocultar o deshabilitar funcionalidades según los permisos del usuario
+4. Diseñar la interfaz para que sea responsiva en diferentes dispositivos
+5. Probar y ajustar la visualización en móviles, tablets y escritorio
+6. Implementar mensajes informativos cuando el usuario no tenga permisos suficientes
+

@@ -1,0 +1,74 @@
+# Task ID: 24
+# Title: Implementación del formulario de registro de usuarios
+# Status: pending
+# Dependencies: 21, 23
+# Priority: high
+# Description: Desarrollar el formulario de registro de usuarios según los criterios de la HU002
+# Details:
+1. Crear componente de formulario de registro con los campos requeridos:
+   - Nombre y Apellido
+   - Email (será el usuario)
+   - Contraseña
+   - Confirmar Contraseña
+   - DNI
+2. Implementar validaciones en tiempo real para todos los campos:
+   - Email con formato válido
+   - Contraseña con mínimo 8 caracteres y una mayúscula
+   - Coincidencia de contraseñas
+   - DNI como número válido
+3. Crear endpoint en el backend para procesar el registro
+4. Implementar verificación de usuario existente (email o DNI)
+5. Configurar encriptación de contraseñas con bcrypt
+6. Implementar manejo de errores y mensajes informativos
+7. Añadir redirección a la página de login tras registro exitoso
+
+# Test Strategy:
+Realizar pruebas unitarias para las validaciones de campos. Probar casos de éxito y error en el registro. Verificar que las contraseñas se almacenan encriptadas. Comprobar que los mensajes de error son específicos y claros. Verificar la redirección tras registro exitoso.
+
+# Subtasks:
+## 1. Diseño y maquetación del formulario de registro [pending]
+### Dependencies: None
+### Description: Crear la estructura HTML y CSS del formulario de registro con todos los campos requeridos según el diseño de la aplicación.
+### Details:
+1. Crear componente React para el formulario de registro
+2. Implementar los campos requeridos: Nombre y Apellido, Email, Contraseña, Confirmar Contraseña, DNI
+3. Diseñar la interfaz siguiendo los estándares de UI/UX del proyecto
+4. Añadir botones de 'Registrar' y 'Cancelar'
+5. Implementar la estructura responsive para diferentes dispositivos
+
+## 2. Implementación de validaciones en tiempo real [pending]
+### Dependencies: 24.1
+### Description: Desarrollar todas las validaciones de los campos del formulario que se ejecuten en tiempo real mientras el usuario completa la información.
+### Details:
+1. Implementar validación de formato de email
+2. Crear validación de contraseña (mínimo 8 caracteres y una mayúscula)
+3. Verificar coincidencia entre contraseña y confirmación
+4. Validar que el DNI sea un número válido
+5. Mostrar mensajes de error específicos para cada campo
+6. Implementar estado visual de campos válidos/inválidos
+7. Deshabilitar botón de registro hasta que todos los campos sean válidos
+
+## 3. Desarrollo del endpoint backend para registro [pending]
+### Dependencies: None
+### Description: Crear el endpoint en el backend que procesará los datos del formulario y registrará al usuario en la base de datos.
+### Details:
+1. Crear ruta POST /api/users/register
+2. Implementar validación de datos en el servidor
+3. Verificar si el usuario ya existe (por email o DNI)
+4. Configurar encriptación de contraseñas con bcrypt
+5. Crear modelo de usuario en la base de datos
+6. Implementar manejo de errores específicos
+7. Generar respuestas adecuadas para diferentes escenarios (éxito, error, conflicto)
+
+## 4. Integración frontend-backend y manejo de errores [pending]
+### Dependencies: 24.1, 24.2, 24.3
+### Description: Conectar el formulario frontend con el endpoint backend e implementar el manejo de respuestas y errores.
+### Details:
+1. Implementar servicio de comunicación con el endpoint de registro
+2. Mostrar indicador de carga durante el proceso de registro
+3. Manejar y mostrar errores devueltos por el backend
+4. Implementar mensajes de éxito para registro completado
+5. Configurar redirección a la página de login tras registro exitoso
+6. Añadir opción para volver a intentar en caso de error
+7. Implementar registro de eventos para análisis y depuración
+

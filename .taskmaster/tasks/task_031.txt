@@ -1,0 +1,79 @@
+# Task ID: 31
+# Title: Implementación del sistema de almacenamiento de documentos
+# Status: pending
+# Dependencies: 30
+# Priority: high
+# Description: Desarrollar el sistema para guardar documentos de forma segura según los criterios de la HU010
+# Details:
+1. Crear servicio para gestión de almacenamiento de archivos
+2. Implementar verificación de unicidad de títulos
+3. Configurar proceso de guardado en base de datos y sistema de archivos:
+   - Guardar registro en BD para obtener ID
+   - Guardar archivo físico usando ID como nombre
+   - Actualizar campo path_archivo con la ruta generada
+4. Implementar registro de acciones en historial
+5. Crear sistema de manejo de errores y rollback:
+   - Eliminar archivos parcialmente guardados
+   - Revertir cambios en base de datos
+   - Notificar errores al usuario
+6. Configurar verificación de integridad de archivos
+7. Implementar sistema de respaldo y recuperación
+
+# Test Strategy:
+Realizar pruebas unitarias para verificar el correcto almacenamiento. Probar casos de error y verificar que el rollback funciona correctamente. Comprobar que se detectan documentos con títulos duplicados. Verificar que los archivos se guardan con el nombre correcto y en la ubicación adecuada. Probar la integridad de los archivos guardados.
+
+# Subtasks:
+## 1. Diseño del modelo de datos para documentos [pending]
+### Dependencies: None
+### Description: Crear la estructura de datos necesaria para almacenar documentos de forma segura en la base de datos
+### Details:
+1. Definir esquema de tabla para documentos con campos: id, título, descripción, tipo, categoría, fecha_creación, usuario_creador, path_archivo, hash_verificación
+2. Crear relaciones con otras entidades del sistema
+3. Implementar índices para búsqueda eficiente
+4. Diseñar estructura para almacenar metadatos adicionales
+5. Documentar el modelo de datos y sus restricciones
+
+## 2. Implementación del servicio de almacenamiento físico de archivos [pending]
+### Dependencies: 31.1
+### Description: Desarrollar el servicio encargado de guardar los archivos en el sistema de archivos utilizando el ID como nombre
+### Details:
+1. Crear servicio para gestión de almacenamiento de archivos
+2. Implementar proceso de guardado en sistema de archivos usando ID como nombre
+3. Configurar estructura de directorios para organizar archivos
+4. Implementar manejo de permisos a nivel de sistema de archivos
+5. Desarrollar función para actualizar campo path_archivo con la ruta generada
+6. Crear sistema de respaldo automático de archivos
+
+## 3. Desarrollo del sistema de verificación de unicidad e integridad [pending]
+### Dependencies: 31.1, 31.2
+### Description: Implementar mecanismos para garantizar que no existan títulos duplicados y verificar la integridad de los archivos
+### Details:
+1. Implementar verificación de unicidad de títulos en la base de datos
+2. Crear función para generar hash de verificación de archivos
+3. Desarrollar sistema de validación periódica de integridad
+4. Implementar alertas para archivos corruptos o modificados
+5. Configurar verificación de integridad durante la carga y descarga
+6. Documentar el proceso de verificación
+
+## 4. Implementación del registro de historial [pending]
+### Dependencies: 31.1, 31.2, 31.3
+### Description: Desarrollar el sistema para registrar todas las acciones realizadas sobre los documentos
+### Details:
+1. Crear tabla de historial para registrar acciones sobre documentos
+2. Implementar registro de eventos: creación, modificación, visualización y eliminación
+3. Almacenar información detallada: usuario, fecha/hora, acción, IP
+4. Desarrollar interfaz para consulta de historial por documento
+5. Configurar retención de registros históricos según políticas
+6. Implementar exportación de historial a formatos estándar
+
+## 5. Desarrollo del sistema de rollback y manejo de errores [pending]
+### Dependencies: 31.1, 31.2, 31.3, 31.4
+### Description: Implementar mecanismos para revertir cambios en caso de errores durante el proceso de almacenamiento
+### Details:
+1. Crear sistema de manejo de errores durante el proceso de guardado
+2. Implementar eliminación de archivos parcialmente guardados
+3. Desarrollar funcionalidad para revertir cambios en base de datos
+4. Configurar sistema de notificación de errores al usuario
+5. Implementar registro detallado de errores para análisis técnico
+6. Crear pruebas automatizadas para verificar el correcto funcionamiento del rollback
+

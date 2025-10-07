@@ -1,0 +1,76 @@
+# Task ID: 35
+# Title: Implementación del sistema de validación de accesos
+# Status: pending
+# Dependencies: 34
+# Priority: high
+# Description: Desarrollar el middleware de validación de permisos según los criterios de la HU014
+# Details:
+1. Crear middleware de autenticación para verificar tokens JWT
+2. Implementar middleware de autorización para validar permisos
+3. Configurar verificación de estado activo de usuario
+4. Implementar registro de intentos de acceso
+5. Crear manejo de errores para accesos no autorizados (403)
+6. Configurar validación de múltiples permisos para acciones sensibles
+7. Implementar principio de menor privilegio
+8. Añadir sistema de notificación de errores al equipo técnico
+9. Configurar actualización en tiempo real de permisos
+
+# Test Strategy:
+Realizar pruebas unitarias para verificar el funcionamiento del middleware. Probar accesos con diferentes roles y permisos. Verificar que se registran los intentos de acceso. Comprobar que se devuelve el código 403 para accesos no autorizados. Probar la validación de múltiples permisos. Verificar que los permisos se actualizan en tiempo real.
+
+# Subtasks:
+## 1. Desarrollo del middleware de autenticación con JWT [pending]
+### Dependencies: None
+### Description: Implementar el middleware para verificar tokens JWT y validar la identidad del usuario antes de permitir el acceso a recursos protegidos.
+### Details:
+1. Crear función para extraer token de los headers de la petición
+2. Implementar verificación de firma del token JWT
+3. Validar tiempo de expiración del token
+4. Extraer información del usuario del payload
+5. Configurar manejo de errores para tokens inválidos o expirados
+6. Implementar verificación de estado activo del usuario
+
+## 2. Implementación del middleware de autorización basado en permisos [pending]
+### Dependencies: 35.1
+### Description: Desarrollar el middleware que valida si el usuario autenticado tiene los permisos necesarios para acceder a un recurso específico.
+### Details:
+1. Crear función para verificar permisos requeridos para cada ruta
+2. Implementar validación de permisos individuales
+3. Configurar validación de múltiples permisos para acciones sensibles
+4. Implementar principio de menor privilegio
+5. Crear sistema de caché de permisos para optimizar rendimiento
+6. Desarrollar mecanismo para verificar permisos jerárquicos
+
+## 3. Desarrollo del sistema de registro de intentos de acceso [pending]
+### Dependencies: 35.1, 35.2
+### Description: Implementar un sistema que registre todos los intentos de acceso, tanto exitosos como fallidos, para auditoría y seguridad.
+### Details:
+1. Crear modelo de datos para almacenar registros de acceso
+2. Implementar registro de accesos exitosos con información del usuario
+3. Configurar registro de intentos fallidos con motivo del fallo
+4. Desarrollar sistema de alertas para múltiples intentos fallidos
+5. Implementar rotación de logs para optimizar almacenamiento
+6. Crear interfaz para consulta de registros de acceso
+
+## 4. Implementación del manejo de errores para accesos no autorizados [pending]
+### Dependencies: 35.2
+### Description: Desarrollar un sistema robusto para manejar y responder adecuadamente a los intentos de acceso no autorizados.
+### Details:
+1. Crear respuestas estandarizadas para errores 403 (Forbidden)
+2. Implementar mensajes de error claros pero sin revelar información sensible
+3. Configurar sistema de notificación de errores al equipo técnico
+4. Desarrollar mecanismo para detectar posibles ataques de fuerza bruta
+5. Implementar bloqueo temporal de IP tras múltiples intentos fallidos
+6. Crear documentación para usuarios sobre errores de acceso
+
+## 5. Desarrollo de la actualización en tiempo real de permisos [pending]
+### Dependencies: 35.2
+### Description: Implementar un sistema que permita actualizar los permisos de los usuarios en tiempo real sin necesidad de cerrar sesión.
+### Details:
+1. Configurar sistema de websockets para notificaciones de cambios de permisos
+2. Implementar verificación periódica de permisos en segundo plano
+3. Desarrollar mecanismo para invalidar caché de permisos tras actualizaciones
+4. Crear sistema de notificación al usuario sobre cambios en sus permisos
+5. Implementar revalidación automática de permisos en rutas críticas
+6. Configurar sincronización entre múltiples instancias del servidor
+

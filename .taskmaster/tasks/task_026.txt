@@ -1,0 +1,51 @@
+# Task ID: 26
+# Title: Implementación de la interfaz de búsqueda básica
+# Status: pending
+# Dependencies: 21, 22
+# Priority: high
+# Description: Desarrollar la interfaz de búsqueda simple según los criterios de la HU005
+# Details:
+1. Crear componente de búsqueda con campo prominente y botón de búsqueda
+2. Implementar validación para evitar búsquedas con campo vacío
+3. Diseñar componente de calendario para filtrado por fechas
+4. Implementar lógica para selección de fechas desde/hasta
+5. Crear estado local para almacenar términos de búsqueda y filtros
+6. Implementar manejo de eventos para iniciar búsqueda con Enter o clic en botón
+7. Diseñar interfaz responsiva para diferentes dispositivos
+8. Añadir indicadores visuales durante la búsqueda (loading)
+9. Implementar mensajes de ayuda y placeholder informativos
+
+# Test Strategy:
+Verificar que la interfaz muestra todos los elementos requeridos. Probar búsquedas con campo vacío y verificar mensajes de error. Comprobar que el calendario funciona correctamente para selección de fechas. Verificar que la búsqueda se inicia tanto con Enter como con el botón.
+
+# Subtasks:
+## 1. Diseño y maquetación del componente de búsqueda [pending]
+### Dependencies: None
+### Description: Crear la interfaz visual del componente de búsqueda con campo de texto prominente, botón de búsqueda y validaciones básicas
+### Details:
+1. Diseñar el componente de búsqueda con campo de texto prominente y botón de búsqueda
+2. Implementar validación para evitar búsquedas con campo vacío
+3. Añadir mensajes de ayuda y placeholder informativos
+4. Diseñar interfaz responsiva para diferentes dispositivos
+5. Añadir indicadores visuales durante la búsqueda (loading)
+
+## 2. Implementación del componente de calendario para filtrado [pending]
+### Dependencies: 26.1
+### Description: Desarrollar el componente de calendario que permitirá filtrar los resultados de búsqueda por fechas
+### Details:
+1. Diseñar componente de calendario para filtrado por fechas
+2. Implementar lógica para selección de fechas desde/hasta
+3. Asegurar que el componente sea responsivo y accesible
+4. Integrar el componente de calendario con el componente principal de búsqueda
+5. Implementar validaciones para rangos de fechas inválidos
+
+## 3. Desarrollo de la lógica de estado y manejo de eventos [pending]
+### Dependencies: 26.1, 26.2
+### Description: Implementar la gestión del estado local y los manejadores de eventos para el funcionamiento de la búsqueda
+### Details:
+1. Crear estado local para almacenar términos de búsqueda y filtros
+2. Implementar manejo de eventos para iniciar búsqueda con Enter o clic en botón
+3. Desarrollar la lógica para combinar términos de búsqueda con filtros de fecha
+4. Implementar la persistencia temporal de los criterios de búsqueda
+5. Añadir funcionalidad para limpiar/resetear los campos de búsqueda
+

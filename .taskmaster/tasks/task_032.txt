@@ -1,0 +1,68 @@
+# Task ID: 32
+# Title: Implementación de la edición básica de documentos
+# Status: pending
+# Dependencies: 29, 30, 31
+# Priority: medium
+# Description: Desarrollar la funcionalidad para editar documentos existentes según los criterios de la HU011
+# Details:
+1. Crear formulario de edición que permita modificar:
+   - Título del documento
+   - Descripción
+   - Número de expediente
+   - Tipo de documento
+2. Implementar validación de unicidad de título
+3. Configurar actualización de fecha de modificación
+4. Implementar registro de acciones en historial
+5. Crear verificación de permisos de edición
+6. Añadir validación de campos obligatorios
+7. Implementar confirmación para cancelar cambios no guardados
+8. Configurar redirección tras edición exitosa
+
+# Test Strategy:
+Probar la edición de documentos con diferentes cambios. Verificar que se valida la unicidad del título. Comprobar que se actualiza la fecha de modificación. Verificar que los usuarios sin permisos no pueden editar. Probar la confirmación al cancelar cambios no guardados. Verificar que todos los campos se validan correctamente.
+
+# Subtasks:
+## 1. Diseño y maquetación del formulario de edición [pending]
+### Dependencies: None
+### Description: Crear la interfaz de usuario para el formulario de edición de documentos con todos los campos necesarios
+### Details:
+1. Diseñar la estructura del formulario de edición
+2. Implementar campos para modificar título, descripción, número de expediente y tipo de documento
+3. Añadir botones de guardar y cancelar
+4. Implementar la carga de datos existentes del documento
+5. Crear estilos CSS para el formulario
+6. Asegurar que el diseño sea responsive
+
+## 2. Implementación de validaciones y verificación de unicidad [pending]
+### Dependencies: 32.1
+### Description: Desarrollar todas las validaciones necesarias para el formulario de edición de documentos
+### Details:
+1. Implementar validación de campos obligatorios
+2. Desarrollar verificación de unicidad de título
+3. Crear validaciones de formato para cada campo
+4. Implementar mensajes de error para cada validación
+5. Configurar actualización automática de fecha de modificación
+6. Añadir validación del tamaño máximo de los campos
+
+## 3. Desarrollo del sistema de registro de cambios en historial [pending]
+### Dependencies: 32.2
+### Description: Implementar la funcionalidad para registrar todas las modificaciones realizadas a los documentos
+### Details:
+1. Crear modelo de datos para el historial de cambios
+2. Implementar función para comparar documento original con versión editada
+3. Desarrollar registro de usuario, fecha y hora de modificación
+4. Configurar almacenamiento de valores anteriores y nuevos
+5. Implementar visualización del historial de cambios
+6. Añadir filtros para consultar el historial
+
+## 4. Implementación de verificación de permisos y confirmaciones [pending]
+### Dependencies: 32.1, 32.2, 32.3
+### Description: Desarrollar los sistemas de seguridad y confirmación para la edición de documentos
+### Details:
+1. Implementar verificación de permisos de edición
+2. Crear diálogo de confirmación para cancelar cambios no guardados
+3. Desarrollar sistema de bloqueo para ediciones simultáneas
+4. Configurar redirección tras edición exitosa
+5. Implementar notificaciones de éxito o error
+6. Añadir registro de intentos de edición no autorizados
+

@@ -1,0 +1,65 @@
+# Task ID: 22
+# Title: Diseño e implementación de la página principal
+# Status: pending
+# Dependencies: 21
+# Priority: high
+# Description: Desarrollar la página de bienvenida según los criterios de la HU001
+# Details:
+1. Crear componente de página principal (LandingPage)
+2. Diseñar layout con logo del municipio y título de bienvenida
+3. Implementar secciones informativas sobre las funcionalidades del sistema:
+   - Búsqueda de documentos
+   - Gestión organizada de documentos
+   - Acceso rápido de documentos
+   - Acceso controlado y seguro
+4. Crear botones de navegación principales:
+   - Botón de Búsqueda de Documentos en el body
+   - Botón de Gestión de Documentos en el body
+   - Botón de Login/Registro en el navbar
+5. Implementar estilos responsivos para diferentes dispositivos
+6. Optimizar imágenes y recursos para carga rápida
+
+# Test Strategy:
+Realizar pruebas de visualización en diferentes navegadores y dispositivos. Verificar que todos los elementos especificados en los criterios de aceptación están presentes y son visualmente claros. Comprobar que los botones de navegación funcionan correctamente.
+
+# Subtasks:
+## 1. Diseño y maquetación del layout principal [pending]
+### Dependencies: None
+### Description: Crear la estructura base y el diseño visual de la página principal siguiendo los lineamientos de la HU001
+### Details:
+1. Crear componente React para la página principal (LandingPage)
+2. Diseñar estructura HTML con header, main y footer
+3. Implementar navbar con logo del municipio y espacio para botón de Login/Registro
+4. Diseñar sección de hero con título de bienvenida y mensaje introductorio
+5. Configurar sistema de grid responsivo para diferentes dispositivos
+6. Optimizar imágenes y recursos para carga rápida
+7. Implementar paleta de colores según identidad visual del municipio
+
+## 2. Implementación de secciones informativas [pending]
+### Dependencies: 22.1
+### Description: Desarrollar las secciones que presentan las funcionalidades principales del sistema a los usuarios
+### Details:
+1. Crear componentes para cada sección informativa
+2. Diseñar tarjetas o bloques para cada funcionalidad:
+   - Búsqueda de documentos (con ícono y descripción)
+   - Gestión organizada de documentos (con ícono y descripción)
+   - Acceso rápido de documentos (con ícono y descripción)
+   - Acceso controlado y seguro (con ícono y descripción)
+3. Implementar animaciones sutiles para mejorar la experiencia de usuario
+4. Asegurar que los textos sean claros y concisos
+5. Optimizar el diseño responsivo para estas secciones
+
+## 3. Desarrollo de componentes de navegación [pending]
+### Dependencies: 22.1, 22.2
+### Description: Implementar los botones y elementos de navegación que permitirán a los usuarios acceder a las diferentes funcionalidades del sistema
+### Details:
+1. Diseñar e implementar botones principales en el body:
+   - Botón de Búsqueda de Documentos con ícono y texto descriptivo
+   - Botón de Gestión de Documentos con ícono y texto descriptivo
+2. Implementar botón de Login/Registro en el navbar
+3. Configurar enrutamiento para cada botón
+4. Añadir efectos hover y focus para mejorar la interactividad
+5. Implementar comportamiento responsivo para los botones en dispositivos móviles
+6. Asegurar accesibilidad con atributos ARIA apropiados
+7. Realizar pruebas de navegación entre las diferentes secciones
+

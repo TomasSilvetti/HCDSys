@@ -1,0 +1,59 @@
+# Task ID: 37
+# Title: Implementación de filtros avanzados de búsqueda
+# Status: pending
+# Dependencies: 27, 28
+# Priority: medium
+# Description: Desarrollar la funcionalidad de filtros adicionales según los criterios de la HU016
+# Details:
+1. Ampliar interfaz de búsqueda con sección "Más Filtros"
+2. Implementar filtros adicionales:
+   - Tipo de documento (desplegable)
+   - Usuario que lo cargó (autocompletado)
+   - Número de expediente (campo de texto)
+   - Categoría (desplegable)
+3. Crear lógica para combinar múltiples filtros con operador AND
+4. Implementar visualización de filtros activos
+5. Añadir funcionalidad para eliminar filtros individualmente
+6. Configurar persistencia de filtros entre búsquedas
+7. Implementar mensajes para resultados vacíos con sugerencias
+8. Crear función para limpiar todos los filtros
+
+# Test Strategy:
+Verificar que todos los filtros adicionales funcionan correctamente. Probar la combinación de múltiples filtros. Comprobar que se muestran claramente los filtros activos. Verificar que se pueden eliminar filtros individualmente. Probar la función de limpiar todos los filtros. Comprobar que aparecen sugerencias cuando no hay resultados.
+
+# Subtasks:
+## 1. Ampliación de la interfaz de búsqueda con sección de filtros adicionales [pending]
+### Dependencies: None
+### Description: Desarrollar la interfaz de usuario para la sección 'Más Filtros' que incluya todos los filtros adicionales especificados en la HU016.
+### Details:
+1. Diseñar y crear el componente desplegable 'Más Filtros'
+2. Implementar los siguientes controles de filtro:
+   - Tipo de documento (desplegable)
+   - Usuario que lo cargó (campo con autocompletado)
+   - Número de expediente (campo de texto)
+   - Categoría (desplegable)
+3. Asegurar que la interfaz sea responsive y accesible
+4. Añadir botones para aplicar y limpiar filtros
+
+## 2. Implementación de la lógica para combinar múltiples filtros [pending]
+### Dependencies: 37.1
+### Description: Desarrollar la lógica de backend y frontend necesaria para aplicar múltiples filtros simultáneamente con operador AND y mantener su persistencia.
+### Details:
+1. Crear estructura de datos para almacenar múltiples criterios de filtro
+2. Implementar lógica para combinar filtros con operador AND
+3. Desarrollar endpoint en la API para procesar consultas con múltiples filtros
+4. Configurar persistencia de filtros entre búsquedas
+5. Implementar mensajes para resultados vacíos con sugerencias
+6. Optimizar rendimiento para consultas complejas
+
+## 3. Desarrollo de la visualización y gestión de filtros activos [pending]
+### Dependencies: 37.1, 37.2
+### Description: Implementar la funcionalidad para mostrar, gestionar y eliminar los filtros que están actualmente aplicados a la búsqueda.
+### Details:
+1. Crear componente para visualizar los filtros activos
+2. Implementar funcionalidad para eliminar filtros individualmente
+3. Desarrollar función para limpiar todos los filtros a la vez
+4. Asegurar que la interfaz actualiza los resultados inmediatamente al eliminar filtros
+5. Implementar indicadores visuales claros para los filtros activos
+6. Añadir tooltips explicativos para cada filtro aplicado
+

@@ -1,0 +1,66 @@
+# Task ID: 27
+# Title: Implementación del endpoint de búsqueda simple
+# Status: pending
+# Dependencies: 21, 25, 26
+# Priority: high
+# Description: Desarrollar el endpoint para búsqueda de documentos según los criterios de la HU006
+# Details:
+1. Crear endpoint REST para búsqueda de documentos
+2. Implementar filtrado por título o número de expediente
+3. Añadir filtrado por rango de fechas
+4. Implementar validación de permisos de acceso a documentos
+5. Configurar exclusión de documentos clasificados/restringidos según permisos
+6. Implementar validación de parámetros de búsqueda
+7. Crear respuestas de error para términos vacíos (400)
+8. Configurar manejo de errores del servidor (500)
+9. Optimizar consultas a base de datos para mejor rendimiento
+10. Implementar paginación de resultados
+
+# Test Strategy:
+Realizar pruebas unitarias para validar el funcionamiento del endpoint. Probar búsquedas con diferentes parámetros. Verificar que los documentos restringidos no aparecen para usuarios sin permisos. Comprobar los códigos de error en diferentes escenarios. Realizar pruebas de rendimiento con grandes volúmenes de datos.
+
+# Subtasks:
+## 1. Diseño de la API REST para búsqueda [pending]
+### Dependencies: None
+### Description: Crear la estructura del endpoint REST para búsqueda de documentos con todos los parámetros necesarios y manejo de errores
+### Details:
+1. Definir la ruta del endpoint (ej: /api/documentos/buscar)
+2. Diseñar estructura de parámetros de búsqueda (query params)
+3. Implementar validación de parámetros de búsqueda
+4. Crear respuestas de error para términos vacíos (400)
+5. Configurar manejo de errores del servidor (500)
+6. Documentar la API con Swagger/OpenAPI
+
+## 2. Implementación de filtros básicos [pending]
+### Dependencies: 27.1
+### Description: Desarrollar la lógica de filtrado por título, número de expediente y rango de fechas
+### Details:
+1. Implementar filtrado por título (búsqueda parcial)
+2. Implementar filtrado por número de expediente (búsqueda exacta)
+3. Añadir filtrado por rango de fechas (desde/hasta)
+4. Crear consultas SQL/ORM optimizadas para estos filtros
+5. Implementar combinación de múltiples criterios de filtrado
+6. Realizar pruebas unitarias de cada filtro
+
+## 3. Sistema de validación de permisos [pending]
+### Dependencies: 27.1, 27.2
+### Description: Implementar la validación de permisos de acceso a documentos y exclusión de documentos restringidos
+### Details:
+1. Integrar con el sistema de autenticación existente
+2. Implementar validación de permisos de acceso a documentos
+3. Configurar exclusión de documentos clasificados/restringidos según permisos
+4. Añadir filtrado automático basado en nivel de acceso del usuario
+5. Implementar registro de intentos de acceso a documentos restringidos
+6. Realizar pruebas de seguridad para verificar el correcto funcionamiento
+
+## 4. Paginación y optimización de rendimiento [pending]
+### Dependencies: 27.2, 27.3
+### Description: Implementar la paginación de resultados y optimizar las consultas para mejorar el rendimiento
+### Details:
+1. Implementar paginación de resultados con parámetros page y pageSize
+2. Añadir metadatos de paginación en la respuesta (total, páginas, etc.)
+3. Optimizar consultas a base de datos para mejor rendimiento
+4. Implementar índices en la base de datos si es necesario
+5. Realizar pruebas de carga para verificar rendimiento con grandes volúmenes
+6. Configurar caché para búsquedas frecuentes
+

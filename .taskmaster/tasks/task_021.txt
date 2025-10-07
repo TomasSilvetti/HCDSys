@@ -1,0 +1,56 @@
+# Task ID: 21
+# Title: Configuración inicial del proyecto
+# Status: pending
+# Dependencies: None
+# Priority: high
+# Description: Establecer la estructura base del proyecto y configurar el entorno de desarrollo
+# Details:
+1. Crear repositorio Git para el proyecto
+2. Configurar estructura de carpetas (frontend/backend)
+3. Inicializar proyecto frontend con React.js
+4. Inicializar proyecto backend con Node.js/Express
+5. Configurar ESLint y Prettier para mantener consistencia de código
+6. Crear archivo README.md con instrucciones de instalación
+7. Configurar variables de entorno (.env) para desarrollo y producción
+8. Instalar dependencias básicas para frontend y backend
+9. Configurar scripts de inicio y construcción
+10. Realizar commit inicial
+
+# Test Strategy:
+Verificar que el entorno de desarrollo funciona correctamente ejecutando los scripts de inicio tanto para frontend como backend. Comprobar que la estructura de carpetas es adecuada y que las herramientas de linting funcionan correctamente.
+
+# Subtasks:
+## 1. Configuración del repositorio y estructura base [pending]
+### Dependencies: None
+### Description: Crear el repositorio Git y establecer la estructura de carpetas básica para el proyecto
+### Details:
+1. Crear repositorio Git para el proyecto
+2. Configurar estructura de carpetas principal (frontend/backend/docs)
+3. Crear archivo README.md con instrucciones de instalación y descripción del proyecto
+4. Configurar .gitignore para archivos temporales y dependencias
+5. Configurar variables de entorno (.env) para desarrollo y producción
+6. Realizar commit inicial con la estructura base
+
+## 2. Configuración del entorno frontend [pending]
+### Dependencies: 21.1
+### Description: Inicializar y configurar el proyecto frontend con React.js y herramientas de desarrollo
+### Details:
+1. Inicializar proyecto frontend con React.js usando Create React App o Vite
+2. Instalar dependencias básicas para frontend (React Router, Axios, etc.)
+3. Configurar ESLint y Prettier para el código frontend
+4. Establecer estructura de carpetas para componentes, páginas, servicios y estilos
+5. Configurar scripts de inicio y construcción en package.json
+6. Realizar prueba de inicio del servidor de desarrollo
+
+## 3. Configuración del entorno backend [pending]
+### Dependencies: 21.1
+### Description: Inicializar y configurar el proyecto backend con Node.js/Express y herramientas de desarrollo
+### Details:
+1. Inicializar proyecto backend con Node.js/Express
+2. Instalar dependencias básicas para backend (Express, Mongoose, dotenv, etc.)
+3. Configurar ESLint y Prettier para el código backend
+4. Establecer estructura de carpetas para rutas, controladores, modelos y middleware
+5. Configurar scripts de inicio y desarrollo en package.json
+6. Crear archivo de configuración para conexión a base de datos
+7. Realizar prueba de inicio del servidor backend
+

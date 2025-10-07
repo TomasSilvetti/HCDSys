@@ -11,7 +11,7 @@ los roles van a tener diferentes permisos, estos son los diferentes roles:
 - 
 
 ## Tecnologías
-- Frontend: React
+- Frontend: React + Vite
 - Backend: FastAPI
 - Base de datos: PostgreSQL
 - Conexión DB: psycopg2
@@ -24,9 +24,9 @@ los roles van a tener diferentes permisos, estos son los diferentes roles:
 
 ## Configuración del Proyecto
 ### Requisitos Previos
-- Python 3.8+
-- Node.js 18+
-- PostgreSQL 14+
+- Python 3.11+
+- Node.js 20+
+- PostgreSQL 15+
 
 ### Instalación
 [Instrucciones de instalación pendientes]

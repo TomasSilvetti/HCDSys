@@ -1,0 +1,585 @@
+# Documento de Requisitos del Producto (PRD) - HCDSys
+
+## Resumen del Proyecto
+
+HCDSys es un sistema de gestión documental para el Honorable Concejo Deliberante que permite la búsqueda, gestión y acceso controlado a documentos digitales.
+
+## Objetivos del Proyecto
+
+- Facilitar la búsqueda rápida de documentos
+- Permitir la gestión organizada de documentos
+- Proporcionar acceso controlado según roles de usuario
+- Mantener un registro histórico de documentos
+
+## Historias de Usuario
+
+### Slice1 Landing Auth
+
+#### HU001: Visualización de Página Principal
+
+Como visitante del sistema
+Quiero ver una página de bienvenida clara y ordenada
+Quiero ver una página de bienvenida clara y ordenada
+Para entender el propósito del sistema y sus funciones principales
+**Criterios de Aceptación:**
+
+- 1. Dado que soy un visitante
+- Cuando ingreso a la página principal
+- Entonces veo un título de bienvenida claro y el logo del municipio
+- 2. Dado que estoy en la página principal
+- Cuando observo el contenido
+- Entonces veo una explicación clara de las funcionalidades:
+- - Búsqueda de documentos
+- - Gestión organizada de documentos
+- - Acceso rápido de documentos
+- - Acceso controlado y seguro
+- 3. Dado que estoy en la página principal
+- Cuando miro las opciones de navegación
+- Entonces veo dos botones claramente identificables:
+- - Botón de Búsqueda de Documentos en el body
+- - Botón de Gestión de Documentos en el body
+- - Botón de Login/Registro en el navbar
+
+#### HU002: Registro de Usuario Básico
+
+Como visitante del sistema
+Quiero poder registrarme como usuario
+Quiero poder registrarme como usuario
+Para poder acceder a las funcionalidades básicas del sistema
+**Criterios de Aceptación:**
+
+- 1. Dado que soy un visitante
+- Cuando hago clic en "Registrarse"
+- Entonces veo un formulario con los siguientes campos:
+- - Nombre y Apellido
+- - Email (será el usuario)
+- - Contraseña
+- - Confirmar Contraseña
+- - DNI
+- 2. Dado que estoy en el formulario de registro
+- Cuando ingreso datos inválidos
+- Entonces veo mensajes de error específicos:
+- - Email debe tener formato válido
+- - Contraseña debe tener al menos 8 caracteres y una mayuscula
+- - Las contraseñas deben coincidir
+- - DNI debe ser un número válido
+- 3. Dado que completo el formulario correctamente
+- Cuando presiono "Crear Cuenta"
+- Entonces:
+- - Se crea mi cuenta
+- - Recibo un mensaje de éxito
+- - Soy redirigido a la página de login
+- 4. Dado que intento registrarme
+- Cuando el email o DNI ya existe
+- Entonces veo un mensaje de error indicando que el usuario ya existe
+
+#### HU003: Login de Usuario
+
+Como usuario registrado
+Quiero poder iniciar sesión en el sistema
+Quiero poder iniciar sesión en el sistema
+Para acceder a las funcionalidades según mi rol
+**Criterios de Aceptación:**
+
+- 1. Dado que soy un usuario registrado
+- Cuando visito la página de login
+- Entonces veo un formulario con:
+- - Campo para email
+- - Campo para contraseña
+- - Botón "Iniciar Sesión"
+- - Enlace "¿Olvidaste tu contraseña?"
+- - Enlace "Registrarse"
+- 2. Dado que ingreso credenciales válidas
+- Cuando presiono "Iniciar Sesión"
+- Entonces:
+- - Soy autenticado en el sistema
+- - Soy redirigido a la página principal
+- - Veo mi nombre en la barra de navegación
+- - Se actualiza mi último acceso en la base de datos
+- 3. Dado que ingreso credenciales inválidas
+- Cuando presiono "Iniciar Sesión"
+- Entonces:
+- - Veo un mensaje de error
+- - Los campos se mantienen (excepto la contraseña)
+- - No soy redirigido
+- 4. Dado que mi cuenta está desactivada
+- Cuando intento iniciar sesión
+- Entonces veo un mensaje indicando que contacte al administrador
+
+#### HU004: Navbar con Estado de Autenticación
+
+Como usuario del sistema
+Quiero ver mi estado de autenticación en la barra de navegación
+Quiero ver mi estado de autenticación en la barra de navegación
+Para saber si estoy logueado y qué acciones puedo realizar
+### Slice2 Search
+
+#### HU005: Interfaz de Búsqueda Básica
+
+Como usuario del sistema
+Quiero tener una interfaz de búsqueda simple
+Quiero tener una interfaz de búsqueda simple
+Para encontrar documentos fácilmente
+**Criterios de Aceptación:**
+
+- 1. Dado que soy un usuario en la página principal
+- Cuando accedo a la sección de búsqueda
+- Entonces veo un campo de búsqueda prominente y fácil de usar
+- 2. Dado que estoy en la interfaz de búsqueda
+- Cuando escribo en el campo de búsqueda
+- Entonces puedo ver un botón de "Buscar" claramente visible
+- 3. Dado que el campo de búsqueda está vacío
+- Cuando intento realizar una búsqueda
+- Entonces el sistema me indica que debo ingresar un término de búsqueda
+- 4. Dado que estoy en la interfaz de búsqueda
+- Cuando ingreso un término de búsqueda y presiono Enter o el botón Buscar
+- Entonces el sistema inicia la búsqueda
+- 5. Dado que estoy en la interfaz de búsqueda
+- Cuando quiero filtrar por fechas
+- Entonces puedo usar un calendario desplegable para seleccionar las fechas desde/hasta de manera intuitiva
+
+#### HU006: Endpoint de Búsqueda Simple
+
+Como usuario del sistema
+Quiero poder buscar documentos por título o número de expediente, y filtrar por rango de fechas
+Quiero poder buscar documentos por título o número de expediente, y filtrar por rango de fechas
+Para encontrar la información que necesito
+**Criterios de Aceptación:**
+
+- 1. Dado que soy un usuario con una sesión activa
+- Cuando realizo una búsqueda con un término válido
+- Entonces recibo una lista solo de los documentos a los que tengo permiso de acceso y que coinciden con mi búsqueda
+- 2. Dado que soy un usuario con una sesión activa
+- Cuando existen documentos clasificados o restringidos
+- Entonces estos documentos son completamente excluidos de mis resultados de búsqueda si no tengo los permisos necesarios
+- 2. Dado que realizo una búsqueda
+- Cuando el término de búsqueda está vacío
+- Entonces el servidor responde con un error 400 indicando que el término es requerido
+- 3. Dado que realizo una búsqueda con fechas
+- Cuando especifico una fecha desde y/o hasta
+- Entonces recibo documentos que fueron creados en ese rango de fechas
+- 4. Dado que realizo una búsqueda
+- Cuando no se encuentran documentos que coincidan
+- Entonces recibo una lista vacía y un mensaje indicando que no hay resultados
+- 5. Dado que realizo una búsqueda
+- Cuando hay un error en el servidor
+- Entonces recibo un mensaje de error apropiado y un código de estado HTTP 500
+
+#### HU007: Visualización de Resultados de Búsqueda
+
+Como usuario del sistema
+Quiero ver los resultados de búsqueda de forma clara
+Quiero ver los resultados de búsqueda de forma clara
+Para poder identificar fácilmente los documentos que necesito
+**Criterios de Aceptación:**
+
+- 1. Dado que realicé una búsqueda exitosa
+- Cuando el sistema encuentra documentos
+- Entonces veo una lista con los siguientes datos por cada documento:
+- - Título del documento
+- - Número de expediente
+- - Fecha de creación
+- - Categoría
+- 2. Dado que estoy viendo los resultados
+- Cuando hay más de 10 documentos
+- Entonces veo una paginación que me permite navegar entre páginas de resultados
+- 3. Dado que estoy viendo la lista de resultados
+- Cuando no hay documentos que coincidan con la búsqueda
+- Entonces veo un mensaje amigable indicando que no se encontraron resultados
+- 4. Dado que estoy viendo los resultados
+- Cuando paso el mouse sobre un documento
+- Entonces veo un resumen con su descripción
+- 5. Dado que estoy viendo la lista de resultados
+- Cuando hago clic en un documento
+- Entonces soy redirigido a la vista detalle de ese documento
+
+#### HU008: Vista Detalle de Documento
+
+Como usuario del sistema
+Quiero poder ver el detalle completo de un documento
+Quiero poder ver el detalle completo de un documento
+Para acceder a toda su información y contenido
+**Criterios de Aceptación:**
+
+- 1. Dado que seleccioné un documento de los resultados de búsqueda
+- Cuando accedo a su vista detalle
+- Entonces veo la siguiente información:
+- - Título del documento
+- - Número de expediente
+- - Descripción completa
+- - Fecha de creación
+- - Fecha de última modificación
+- - Categoría a la que pertenece
+- - Usuario que lo creó
+- - Tipo de documento
+- - Botón de descarga del archivo
+- 2. Dado que estoy en la vista detalle
+- Cuando el documento pertenece a una categoría
+- Entonces veo el nombre y descripción de la categoría
+- 3. Dado que estoy en la vista detalle
+- Cuando el documento tiene versiones anteriores
+- Entonces veo un historial de versiones con:
+- - Número de versión
+- - Fecha del cambio
+- - Comentarios de la versión
+- - Link para descargar la versión específica
+- 4. Dado que estoy en la vista detalle
+- Cuando intento descargar el documento
+- Entonces el sistema inicia la descarga ya que tengo los permisos necesarios
+- 5. Dado que estoy en la vista detalle
+- Cuando quiero volver a los resultados de búsqueda
+- Entonces encuentro un botón para regresar fácilmente
+
+### Slice3 Gestion
+
+#### HU009: Formulario de Carga de Documentos
+
+Como gestor de documentos
+Quiero poder cargar nuevos documentos al sistema
+Quiero poder cargar nuevos documentos al sistema
+Para mantener actualizada la base documental
+**Criterios de Aceptación:**
+
+- 1. Dado que soy un gestor de documentos
+- Cuando accedo a la sección de carga de documentos
+- Entonces veo un formulario con los siguientes campos:
+- - Título del documento (obligatorio)
+- - Número de expediente (obligatorio)
+- - Descripción
+- - Categoría (selector, Por el momento no obligatorio)
+- - Tipo de documento (selector, obligatorio)
+- - Área de carga de archivo que permite:
+- * Arrastrar y soltar archivos (drag & drop)
+- * Botón para seleccionar archivo del dispositivo
+- 2. Dado que estoy en el formulario de carga
+- Cuando arrastro un archivo al área de carga o uso el botón de selección
+- Entonces el área de carga muestra una vista previa del archivo seleccionado
+- 3. Dado que estoy en el formulario de carga
+- Cuando intento subir un archivo (por cualquiera de los dos métodos)
+- Entonces solo puedo seleccionar archivos de tipo:
+- - PDF (.pdf)
+- - Word (.doc, .docx)
+- - Excel (.xls, .xlsx)
+- - Texto plano (.txt)
+- 3. Dado que estoy completando el formulario
+- Cuando algún campo obligatorio está vacío
+- Entonces veo un mensaje de error indicando los campos requeridos
+- 4. Dado que estoy subiendo un archivo
+- Cuando el archivo excede el tamaño máximo permitido (10MB)
+- Entonces veo un mensaje de error indicando el límite de tamaño
+- 5. Dado que he completado el formulario correctamente
+- Cuando presiono el botón "Cargar Documento"
+- Entonces veo una barra de progreso de la carga
+- 6. Dado que la carga fue exitosa
+- Cuando el documento se guarda correctamente
+- Entonces soy redirigido a la vista detalle del nuevo documento
+- 7. Dado que ocurre un error durante la carga
+- Cuando el sistema no puede procesar el documento
+- Entonces veo un mensaje de error explicativo y puedo intentar nuevamente
+
+#### HU010: Almacenamiento de Documentos
+
+Como gestor de documentos
+Quiero que los documentos se guarden de forma segura
+Quiero que los documentos se guarden de forma segura
+Para mantener la integridad de la información
+**Criterios de Aceptación:**
+
+- 1. Dado que se ha subido un documento
+- Cuando el sistema lo almacena
+- Entonces:
+- - Se verifica que no exista otro documento con el mismo título
+- - Se guarda el registro en la base de datos para obtener el ID
+- - Se guarda el archivo físico usando el ID como nombre (ej: "123.pdf")
+- - Se actualiza el campo path_archivo con la ruta generada
+- 2. Dado que se está guardando un documento
+- Cuando ya existe un documento con el mismo título
+- Entonces el sistema:
+- - Muestra un mensaje de error al usuario
+- - Solicita que modifique el título
+- - No procede con el guardado hasta que el título sea único
+- 3. Dado que se guarda un documento
+- Cuando el proceso es exitoso
+- Entonces:
+- - Se registra la acción en el historial de acceso
+- 4. Dado que ocurre un error durante el almacenamiento
+- Cuando el sistema no puede guardar el archivo
+- Entonces:
+- - Se eliminan los archivos parcialmente guardados
+- - Se revierten los cambios en la base de datos
+- - Se notifica el error al usuario
+- 5. Dado que se ha guardado un documento
+- Cuando se necesita acceder a él posteriormente
+- Entonces el sistema garantiza:
+- - La integridad del archivo
+- - Que el contenido no ha sido alterado
+- - Que la ruta de acceso es válida
+
+#### HU011: Edición Básica de Documentos
+
+Como gestor de documentos
+Quiero poder editar los documentos que he cargado
+Quiero poder editar los documentos que he cargado
+Para mantener la información actualizada
+**Criterios de Aceptación:**
+
+- 1. Dado que soy un gestor de documentos
+- Cuando accedo a editar un documento que he cargado
+- Entonces puedo modificar:
+- - Título del documento
+- - Descripción
+- - Número de expediente
+- - Tipo de documento
+- 2. Dado que estoy editando un documento
+- Cuando intento guardar cambios
+- Entonces:
+- - Se valida que el nuevo título no exista para otro documento
+- - Se actualiza la fecha de modificación
+- - Se registra la acción en el historial de acceso
+- 3. Dado que intento editar un documento
+- Cuando mi rol no tiene permisos de edición
+- Entonces:
+- - Se me muestra un mensaje indicando que no tengo permisos suficientes
+- - No se me permite acceder al formulario de edición
+- - Se registra el intento de acceso no autorizado en el historial
+- 4. Dado que estoy editando un documento
+- Cuando realizo cambios en el formulario
+- Entonces:
+- - Se muestran los campos obligatorios claramente marcados
+- - Se validan los datos ingresados en tiempo real
+- - Se muestra un botón para cancelar los cambios
+- 5. Dado que cancelo la edición
+- Cuando hay cambios sin guardar
+- Entonces:
+- - Se me muestra una advertencia
+- - Se me da la opción de descartar o continuar editando
+
+### Slice4 Roles
+
+#### HU012: Gestión de Roles de Usuario
+
+Como administrador del sistema
+Quiero poder asignar y modificar roles a los usuarios
+Quiero poder asignar y modificar roles a los usuarios
+Para controlar los niveles de acceso al sistema
+**Criterios de Aceptación:**
+
+- 1. Dado que soy administrador
+- Cuando accedo a la sección de gestión de usuarios
+- Entonces:
+- - Veo una lista de todos los usuarios registrados
+- - Cada entrada muestra: nombre, email, rol actual y estado (activo/inactivo)
+- - La lista está ordenada alfabéticamente por nombre
+- - Puedo buscar usuarios por nombre o email
+- 2. Dado que estoy en la lista de usuarios
+- Cuando selecciono un usuario
+- Entonces puedo ver:
+- - Detalles completos del usuario
+- - Su rol actual
+- - Historial de cambios de rol
+- - Fecha del último acceso
+- 3. Dado que estoy editando un usuario
+- Cuando cambio su rol
+- Entonces:
+- - El sistema registra el cambio inmediatamente
+- - Se actualiza el campo role_id en la tabla Usuario
+- - Se registra en el historial quién hizo el cambio y cuándo
+- - Se muestra un mensaje de confirmación
+- 4. Dado que estoy en la gestión de usuarios
+- Cuando intento modificar roles
+- Entonces solo puedo asignar los roles predefinidos:
+- - Administrador
+- - Gestor de Documentos
+- - Usuario de Consulta
+- 5. Dado que soy administrador
+- Cuando intento modificar mi propio rol
+- Entonces:
+- - El sistema me impide hacerlo
+- - Muestra un mensaje explicando que no puedo cambiar mi propio rol
+- - Mantiene mi rol actual
+
+#### HU013: Asignación de Permisos
+
+Como administrador del sistema
+Quiero poder gestionar los permisos de cada rol
+Quiero poder gestionar los permisos de cada rol
+Para definir exactamente qué puede hacer cada tipo de usuario
+**Criterios de Aceptación:**
+
+- 1. Dado que soy administrador
+- Cuando accedo a la gestión de roles
+- Entonces:
+- - Veo una lista de todos los roles disponibles
+- - Cada rol muestra su nombre y descripción
+- - Puedo seleccionar un rol para ver/editar sus permisos
+- 2. Dado que selecciono un rol
+- Cuando accedo a sus permisos
+- Entonces veo:
+- - Lista de todos los permisos disponibles
+- - Estado actual de cada permiso (activado/desactivado)
+- - Agrupación de permisos por categoría:
+- * Gestión de Documentos
+- * Gestión de Usuarios
+- * Administración del Sistema
+- * Búsqueda y Consulta
+- 3. Dado que estoy editando permisos de un rol
+- Cuando guardo los cambios
+- Entonces:
+- - Se actualizan los permisos inmediatamente
+- - Se registra quién hizo el cambio y cuándo
+- - Se notifica el éxito de la operación
+- - Los cambios afectan a todos los usuarios con ese rol
+- 4. Dado que estoy configurando permisos
+- Cuando intento modificar el rol de Administrador
+- Entonces:
+- - No se me permite desactivar permisos críticos
+- - Se muestran advertencias sobre permisos esenciales
+- - Se mantienen los permisos mínimos necesarios
+- 5. Dado que hay usuarios activos
+- Cuando modifico los permisos de un rol
+- Entonces:
+- - Los cambios se aplican en tiempo real
+- - Las sesiones activas se actualizan
+- - Se registra en el historial de cambios
+
+#### HU014: Validación de Accesos
+
+Como desarrollador del sistema
+Quiero implementar un sistema de validación de permisos
+Quiero implementar un sistema de validación de permisos
+Para asegurar que los usuarios solo accedan a lo autorizado
+**Criterios de Aceptación:**
+
+- 1. Dado que un usuario realiza una petición al sistema
+- Cuando intenta acceder a cualquier endpoint
+- Entonces:
+- - Se verifica el token de autenticación
+- - Se valida que el usuario esté activo
+- - Se comprueban los permisos asociados a su rol
+- - Se registra el intento de acceso
+- 2. Dado que se valida un permiso
+- Cuando el usuario no tiene la autorización necesaria
+- Entonces:
+- - Se rechaza la petición inmediatamente
+- - Se retorna un código 403 (Forbidden)
+- - Se registra el intento no autorizado
+- - Se notifica al usuario con un mensaje claro
+- 3. Dado que se realiza una acción sensible
+- Cuando requiere múltiples permisos
+- Entonces:
+- - Se verifican todos los permisos necesarios
+- - Solo se permite si cumple con todos
+- - Se aplica el principio de menor privilegio
+- 4. Dado que hay una falla en el sistema de permisos
+- Cuando ocurre un error en la validación
+- Entonces:
+- - Se deniega el acceso por defecto
+- - Se registra el error detalladamente
+- - Se notifica al equipo técnico
+- - Se mantiene la seguridad del sistema
+- 5. Dado que se actualizan los permisos de un rol
+- Cuando hay usuarios con sesiones activas
+- Entonces:
+- - Se actualizan los permisos en tiempo real
+- - Se validan las nuevas restricciones inmediatamente
+- - Se mantiene la consistencia de accesos
+
+#### HU015: UI Condicionada por Rol
+
+Como usuario del sistema
+Como usuario del sistema
+Quiero ver solo las opciones permitidas para mi rol
+**Criterios de Aceptación:**
+
+- 1. Dado que soy un usuario del sistema
+- Cuando ingreso a cualquier página
+- Entonces:
+- - Solo veo las opciones disponibles para mi rol
+- - Los elementos no autorizados están ocultos
+- - La navegación muestra solo rutas permitidas
+- 2. Dado que soy un usuario con rol "Usuario de Consulta"
+- Cuando accedo al sistema
+- Entonces:
+- - Veo opciones de búsqueda
+- - Veo opciones de visualización
+- - No veo opciones de edición o gestión
+- - No veo sección de administración
+- 3. Dado que soy un usuario con rol "Gestor de Documentos"
+- Cuando accedo al sistema
+- Entonces:
+- - Veo opciones de búsqueda
+- - Veo opciones de carga de documentos
+- - Veo opciones de edición
+- - No veo sección de administración
+- 4. Dado que soy un usuario con rol "Administrador"
+- Cuando accedo al sistema
+- Entonces:
+- - Veo todas las opciones disponibles
+- - Veo la sección de administración
+- - Veo gestión de usuarios y roles
+- 5. Dado que cambio de página dentro del sistema
+- Cuando la nueva página carga
+- Entonces:
+- - La UI se actualiza según mis permisos
+- - Se mantiene consistencia en las opciones mostradas
+- - No aparecen elementos no autorizados
+
+### Slice5 Busqueda
+
+#### HU016: Filtros Avanzados
+
+Como usuario del sistema
+Quiero poder aplicar filtros adicionales a mi búsqueda
+Quiero poder aplicar filtros adicionales a mi búsqueda
+Para refinar los resultados con criterios más específicos
+**Criterios de Aceptación:**
+
+- 1. Dado que estoy en la interfaz de búsqueda
+- Cuando selecciono "Más Filtros"
+- Entonces además de la búsqueda simple veo:
+- - Tipo de documento (desplegable)
+- - Usuario que lo cargó (autocompletado)
+- - Número de expediente (campo de texto)
+- - Categoría (desplegable)
+- 2. Dado que estoy en búsqueda avanzada
+- Cuando aplico múltiples filtros
+- Entonces:
+- - Los filtros se combinan con operador AND
+- - Se actualiza la lista de resultados
+- - Se muestra claramente los filtros activos
+- - Puedo eliminar filtros individualmente
+- 3. Dado que hay filtros activos
+- Cuando realizo una nueva búsqueda
+- Entonces:
+- - Se muestran los documentos que cumplen todos los criterios
+- - Se indica el total de resultados encontrados
+- - Se mantiene el orden por relevancia
+- 4. Dado que estoy viendo resultados filtrados
+- Cuando no hay coincidencias
+- Entonces:
+- - Se muestra un mensaje claro
+- - Se sugiere reducir o modificar los filtros
+- - Se mantienen visibles los filtros aplicados
+- 5. Dado que uso la búsqueda avanzada
+- Cuando limpio los filtros
+- Entonces:
+- - Se resetean todos los campos
+- - Se vuelve a la vista de resultados sin filtros
+- - Se mantiene la última búsqueda por palabras clave
+
+### Slice6 Gestion
+
+#### HU017: Versionado de Documentos
+
+Como gestor de documentos
+Quiero que el sistema mantenga versiones de los documentos
+Quiero que el sistema mantenga versiones de los documentos
+Para tener un historial de cambios
+**Detalles Técnicos:**
+
+- - El versionado debe implementarse a nivel de base de datos y sistema de archivos
+- - Cada versión debe mantener:
+- * El archivo original
+- * Los metadatos actualizados
+- * Referencias a las versiones anterior y siguiente
+
