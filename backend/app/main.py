@@ -5,9 +5,10 @@ from fastapi.security import OAuth2PasswordBearer
 from sqlalchemy.orm import Session
 
 from .db.database import engine, Base, get_db
-from .routes import auth, documents, users, roles, permissions, websockets
+from .routes import auth, documents, users, roles, permissions, websockets, security
 from .utils.config import settings
 from .db.init_roles import init_roles_and_permissions
+from .utils.middleware import AuthenticationMiddleware, AuthorizationMiddleware, IPBlockMiddleware
 
 # Crear tablas en la base de datos
 Base.metadata.create_all(bind=engine)
@@ -27,12 +28,19 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+# Añadir middlewares de seguridad
+# El orden es importante: primero IPBlock, luego Authentication, finalmente Authorization
+app.add_middleware(IPBlockMiddleware)
+app.add_middleware(AuthenticationMiddleware)
+app.add_middleware(AuthorizationMiddleware)
+
 # Incluir rutas
 app.include_router(auth.router, prefix="/api", tags=["auth"])
 app.include_router(documents.router, prefix="/api", tags=["documents"])
 app.include_router(users.router, prefix="/api", tags=["users"])
 app.include_router(roles.router, prefix="/api", tags=["roles"])
 app.include_router(permissions.router, prefix="/api", tags=["permissions"])
+app.include_router(security.router, prefix="/api", tags=["security"])
 app.include_router(websockets.router, prefix="/api")
 
 @app.get("/api/health")

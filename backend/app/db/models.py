@@ -31,6 +31,7 @@ class Usuario(Base):
     documentos = relationship("Documento", back_populates="usuario")
     versiones = relationship("VersionDocumento", back_populates="usuario")
     historial = relationship("HistorialAcceso", back_populates="usuario")
+    registros_acceso = relationship("RegistroAcceso", back_populates="usuario")
 
 class Rol(Base):
     __tablename__ = "roles"
@@ -170,3 +171,42 @@ class HistorialPermiso(Base):
     rol = relationship("Rol", foreign_keys=[rol_id])
     permiso = relationship("Permiso", foreign_keys=[permiso_id])
     modificado_por = relationship("Usuario", foreign_keys=[modificado_por_id])
+
+class RegistroAcceso(Base):
+    __tablename__ = "registro_acceso"
+    
+    id = Column(Integer, primary_key=True, index=True)
+    usuario_id = Column(Integer, ForeignKey("usuarios.id"), nullable=True)  # Puede ser nulo en intentos fallidos
+    ip_address = Column(String, nullable=False)
+    user_agent = Column(String, nullable=True)
+    endpoint = Column(String, nullable=False)
+    metodo = Column(String, nullable=False)  # GET, POST, PUT, DELETE, etc.
+    fecha = Column(DateTime, default=datetime.utcnow)
+    exitoso = Column(Boolean, default=True)
+    codigo_respuesta = Column(Integer, nullable=False)  # 200, 401, 403, etc.
+    mensaje_error = Column(String, nullable=True)  # Detalle del error si falla
+    tiempo_respuesta = Column(Float, nullable=True)  # Tiempo de respuesta en ms
+    
+    # Relaciones
+    usuario = relationship("Usuario", foreign_keys=[usuario_id], back_populates="registros_acceso")
+
+class IntentosLogin(Base):
+    __tablename__ = "intentos_login"
+    
+    id = Column(Integer, primary_key=True, index=True)
+    email = Column(String, nullable=False, index=True)
+    ip_address = Column(String, nullable=False)
+    user_agent = Column(String, nullable=True)
+    fecha = Column(DateTime, default=datetime.utcnow)
+    exitoso = Column(Boolean, default=False)
+    motivo_fallo = Column(String, nullable=True)  # "credenciales_invalidas", "usuario_inactivo", etc.
+    
+class BloqueoIP(Base):
+    __tablename__ = "bloqueo_ip"
+    
+    id = Column(Integer, primary_key=True, index=True)
+    ip_address = Column(String, nullable=False, index=True, unique=True)
+    motivo = Column(String, nullable=False)  # "intentos_fallidos", "actividad_sospechosa", etc.
+    fecha_inicio = Column(DateTime, default=datetime.utcnow)
+    fecha_fin = Column(DateTime, nullable=False)  # Cuando expira el bloqueo
+    activo = Column(Boolean, default=True)

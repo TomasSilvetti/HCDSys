@@ -322,3 +322,69 @@ class PaginatedResponse(BaseModel):
     
     class Config:
         orm_mode = True
+
+# Esquemas para registro de accesos
+class RegistroAccesoBase(BaseModel):
+    ip_address: str
+    user_agent: Optional[str] = None
+    endpoint: str
+    metodo: str
+    exitoso: bool = True
+    codigo_respuesta: int
+    mensaje_error: Optional[str] = None
+    tiempo_respuesta: Optional[float] = None
+
+class RegistroAccesoCreate(RegistroAccesoBase):
+    usuario_id: Optional[int] = None
+
+class RegistroAccesoInDB(RegistroAccesoBase):
+    id: int
+    usuario_id: Optional[int] = None
+    fecha: datetime
+
+    class Config:
+        orm_mode = True
+
+class RegistroAcceso(RegistroAccesoInDB):
+    usuario: Optional[Usuario] = None
+
+# Esquemas para intentos de login
+class IntentosLoginBase(BaseModel):
+    email: str
+    ip_address: str
+    user_agent: Optional[str] = None
+    exitoso: bool = False
+    motivo_fallo: Optional[str] = None
+
+class IntentosLoginCreate(IntentosLoginBase):
+    pass
+
+class IntentosLoginInDB(IntentosLoginBase):
+    id: int
+    fecha: datetime
+
+    class Config:
+        orm_mode = True
+
+class IntentosLogin(IntentosLoginInDB):
+    pass
+
+# Esquemas para bloqueo de IP
+class BloqueoIPBase(BaseModel):
+    ip_address: str
+    motivo: str
+    fecha_fin: datetime
+    activo: bool = True
+
+class BloqueoIPCreate(BloqueoIPBase):
+    pass
+
+class BloqueoIPInDB(BloqueoIPBase):
+    id: int
+    fecha_inicio: datetime
+
+    class Config:
+        orm_mode = True
+
+class BloqueoIP(BloqueoIPInDB):
+    pass
