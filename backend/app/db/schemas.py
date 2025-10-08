@@ -44,6 +44,16 @@ class UsuarioInDB(UsuarioBase):
     class Config:
         orm_mode = True
 
+class UsuarioBasico(BaseModel):
+    id: int
+    nombre: str
+    apellido: str
+    email: EmailStr
+    nombre_completo: str
+    
+    class Config:
+        orm_mode = True
+
 class Usuario(UsuarioInDB):
     pass
 

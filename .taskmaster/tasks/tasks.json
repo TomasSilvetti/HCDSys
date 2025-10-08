@@ -875,7 +875,7 @@
           23,
           35
         ],
-        "status": "pending",
+        "status": "done",
         "subtasks": [
           {
             "id": 1,
@@ -883,7 +883,7 @@
             "description": "Crear un sistema que permita mostrar u ocultar elementos de la interfaz según los permisos del usuario actual",
             "dependencies": [],
             "details": "1. Diseñar la estructura de datos para mapear permisos a elementos UI\n2. Crear componente utilitario para verificar permisos\n3. Implementar hook personalizado (usePermission) para facilitar verificaciones\n4. Desarrollar directivas condicionales para elementos visuales\n5. Integrar con el contexto de autenticación existente\n6. Documentar el uso del sistema para otros desarrolladores",
-            "status": "pending",
+            "status": "done",
             "testStrategy": ""
           },
           {
@@ -894,7 +894,7 @@
               "36.1"
             ],
             "details": "1. Crear componente ProtectedRoute que verifique permisos antes de renderizar\n2. Implementar lógica de verificación de múltiples permisos\n3. Configurar redirección a página de acceso denegado\n4. Integrar con el router de la aplicación\n5. Añadir soporte para rutas anidadas\n6. Implementar caché de verificaciones para optimizar rendimiento\n7. Crear tests unitarios para el componente",
-            "status": "pending",
+            "status": "done",
             "testStrategy": ""
           },
           {
@@ -906,7 +906,7 @@
               "36.2"
             ],
             "details": "1. Implementar menús dinámicos según rol del usuario\n2. Configurar botones y acciones específicas por rol:\n   - Usuario de Consulta: opciones de búsqueda y visualización\n   - Gestor de Documentos: opciones anteriores + carga y edición\n   - Administrador: todas las opciones + administración\n3. Desarrollar componentes que se adapten según permisos\n4. Implementar ocultamiento de elementos no autorizados\n5. Asegurar consistencia visual entre diferentes vistas",
-            "status": "pending",
+            "status": "done",
             "testStrategy": ""
           },
           {
@@ -918,7 +918,7 @@
               "36.3"
             ],
             "details": "1. Desarrollar página de acceso denegado (403)\n2. Implementar interceptor de respuestas HTTP para capturar errores de autorización\n3. Crear sistema de notificaciones para informar al usuario\n4. Configurar redirección inteligente a la última página válida\n5. Implementar registro de intentos de acceso no permitidos\n6. Configurar actualización de UI al cambiar de página\n7. Añadir opciones de contacto con administrador en página de acceso denegado",
-            "status": "pending",
+            "status": "done",
             "testStrategy": ""
           }
         ]
@@ -934,7 +934,7 @@
           27,
           28
         ],
-        "status": "pending",
+        "status": "done",
         "subtasks": [
           {
             "id": 1,
@@ -942,7 +942,7 @@
             "description": "Desarrollar la interfaz de usuario para la sección 'Más Filtros' que incluya todos los filtros adicionales especificados en la HU016.",
             "dependencies": [],
             "details": "1. Diseñar y crear el componente desplegable 'Más Filtros'\n2. Implementar los siguientes controles de filtro:\n   - Tipo de documento (desplegable)\n   - Usuario que lo cargó (campo con autocompletado)\n   - Número de expediente (campo de texto)\n   - Categoría (desplegable)\n3. Asegurar que la interfaz sea responsive y accesible\n4. Añadir botones para aplicar y limpiar filtros",
-            "status": "pending",
+            "status": "done",
             "testStrategy": ""
           },
           {
@@ -953,7 +953,7 @@
               "37.1"
             ],
             "details": "1. Crear estructura de datos para almacenar múltiples criterios de filtro\n2. Implementar lógica para combinar filtros con operador AND\n3. Desarrollar endpoint en la API para procesar consultas con múltiples filtros\n4. Configurar persistencia de filtros entre búsquedas\n5. Implementar mensajes para resultados vacíos con sugerencias\n6. Optimizar rendimiento para consultas complejas",
-            "status": "pending",
+            "status": "done",
             "testStrategy": ""
           },
           {
@@ -965,7 +965,7 @@
               "37.2"
             ],
             "details": "1. Crear componente para visualizar los filtros activos\n2. Implementar funcionalidad para eliminar filtros individualmente\n3. Desarrollar función para limpiar todos los filtros a la vez\n4. Asegurar que la interfaz actualiza los resultados inmediatamente al eliminar filtros\n5. Implementar indicadores visuales claros para los filtros activos\n6. Añadir tooltips explicativos para cada filtro aplicado",
-            "status": "pending",
+            "status": "done",
             "testStrategy": ""
           }
         ]
@@ -1162,7 +1162,7 @@
     ],
     "metadata": {
       "created": "2025-10-07T16:52:07.729Z",
-      "updated": "2025-10-08T01:07:31.945Z",
+      "updated": "2025-10-08T01:27:47.308Z",
       "description": "Tasks for master context"
     }
   }

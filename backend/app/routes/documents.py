@@ -22,6 +22,10 @@ async def search_documents(
     fecha_hasta: Optional[str] = Query(None, description="Fecha hasta (YYYY-MM-DD)"),
     categoria_id: Optional[int] = Query(None, description="ID de categoría"),
     tipo_documento_id: Optional[int] = Query(None, description="ID de tipo de documento"),
+    numero_expediente: Optional[str] = Query(None, description="Número de expediente exacto"),
+    usuario_id: Optional[int] = Query(None, description="ID del usuario que cargó el documento"),
+    sort_by: str = Query("fecha_modificacion", description="Campo para ordenar los resultados"),
+    sort_order: str = Query("desc", description="Orden de los resultados (asc, desc)"),
     page: int = Query(1, description="Número de página", ge=1),
     page_size: int = Query(10, description="Tamaño de página", ge=1, le=100),
     current_user: models.Usuario = Depends(get_current_active_user),
@@ -34,10 +38,13 @@ async def search_documents(
     - **termino**: Busca en título, número de expediente y descripción
     - **fecha_desde/fecha_hasta**: Filtra por rango de fechas (formato YYYY-MM-DD)
     - **categoria_id/tipo_documento_id**: Filtra por categoría o tipo de documento
+    - **numero_expediente**: Filtra por número de expediente exacto
+    - **usuario_id**: Filtra por usuario que cargó el documento
+    - **sort_by/sort_order**: Controla el ordenamiento de los resultados
     - **page/page_size**: Controla la paginación de resultados
     """
     # Validación de parámetros
-    if not termino and not fecha_desde and not fecha_hasta and not categoria_id and not tipo_documento_id:
+    if not termino and not fecha_desde and not fecha_hasta and not categoria_id and not tipo_documento_id and not numero_expediente and not usuario_id:
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
             detail="Debe proporcionar al menos un criterio de búsqueda"
@@ -55,6 +62,14 @@ async def search_documents(
                 models.Documento.descripcion.ilike(f"%{termino}%")
             )
         )
+        
+    # Filtro exacto por número de expediente
+    if numero_expediente:
+        query = query.filter(models.Documento.numero_expediente == numero_expediente)
+        
+    # Filtro por usuario que cargó el documento
+    if usuario_id:
+        query = query.filter(models.Documento.usuario_id == usuario_id)
     
     if fecha_desde:
         try:
@@ -141,8 +156,29 @@ async def search_documents(
         joinedload(models.Documento.usuario)
     )
     
-    # 3. Ordenar por fecha de modificación (más reciente primero) para resultados más relevantes
-    query = query.order_by(models.Documento.fecha_modificacion.desc())
+    # 3. Ordenar según los parámetros proporcionados
+    sort_column = None
+    
+    # Determinar la columna de ordenamiento
+    if sort_by == "titulo":
+        sort_column = models.Documento.titulo
+    elif sort_by == "numero_expediente":
+        sort_column = models.Documento.numero_expediente
+    elif sort_by == "fecha_creacion":
+        sort_column = models.Documento.fecha_creacion
+    elif sort_by == "categoria_id":
+        sort_column = models.Documento.categoria_id
+    elif sort_by == "tipo_documento_id":
+        sort_column = models.Documento.tipo_documento_id
+    else:
+        # Por defecto, ordenar por fecha de modificación
+        sort_column = models.Documento.fecha_modificacion
+    
+    # Aplicar el orden
+    if sort_order.lower() == "asc":
+        query = query.order_by(sort_column.asc())
+    else:
+        query = query.order_by(sort_column.desc())
     
     # Calcular total de resultados para la paginación
     # Usar una consulta separada y optimizada solo para contar
@@ -157,6 +193,14 @@ async def search_documents(
                 models.Documento.descripcion.ilike(f"%{termino}%")
             )
         )
+        
+    # Filtro exacto por número de expediente
+    if numero_expediente:
+        count_query = count_query.filter(models.Documento.numero_expediente == numero_expediente)
+        
+    # Filtro por usuario que cargó el documento
+    if usuario_id:
+        count_query = count_query.filter(models.Documento.usuario_id == usuario_id)
     
     if fecha_desde and 'fecha_desde_dt' in locals():
         count_query = count_query.filter(models.Documento.fecha_creacion >= fecha_desde_dt)
