@@ -2,8 +2,9 @@ import os
 import shutil
 import hashlib
 import logging
+import difflib
 from datetime import datetime
-from typing import Optional, Tuple, Dict, Any
+from typing import Optional, Tuple, Dict, Any, List
 from fastapi import UploadFile
 from sqlalchemy.orm import Session
 
@@ -15,7 +16,7 @@ logger = logging.getLogger(__name__)
 
 class StorageService:
     """
-    Servicio para gestionar el almacenamiento físico de documentos.
+    Servicio para gestionar el almacenamiento físico de documentos y sus versiones.
     """
     
     @staticmethod
@@ -247,6 +248,427 @@ class StorageService:
         except Exception as e:
             logger.error(f"Error al crear respaldo: {str(e)}")
             return False, f"Error al crear respaldo: {str(e)}", None
+    
+    @staticmethod
+    async def create_document_version(
+        file: UploadFile,
+        document_id: int,
+        user_id: int,
+        comentario: Optional[str] = None,
+        cambios: Optional[str] = None,
+        db: Session
+    ) -> Tuple[bool, str, Optional[int]]:
+        """
+        Crea una nueva versión de un documento existente.
+        
+        Args:
+            file: Archivo de la nueva versión
+            document_id: ID del documento
+            user_id: ID del usuario que crea la versión
+            comentario: Comentario opcional sobre la versión
+            cambios: Descripción opcional de los cambios realizados
+            db: Sesión de base de datos
+            
+        Returns:
+            Tuple con:
+            - Éxito de la operación (bool)
+            - Mensaje (str)
+            - ID de la versión creada (int o None)
+        """
+        try:
+            # Verificar que el documento existe
+            documento = db.query(models.Documento).filter(
+                models.Documento.id == document_id,
+                models.Documento.activo == True
+            ).first()
+            
+            if not documento:
+                return False, f"Documento con ID {document_id} no encontrado", None
+            
+            # Obtener la última versión del documento
+            ultima_version = db.query(models.VersionDocumento).filter(
+                models.VersionDocumento.documento_id == document_id,
+                models.VersionDocumento.es_actual == True
+            ).first()
+            
+            # Si no hay versión actual, buscar la versión con número más alto
+            if not ultima_version:
+                ultima_version = db.query(models.VersionDocumento).filter(
+                    models.VersionDocumento.documento_id == document_id
+                ).order_by(models.VersionDocumento.numero_version.desc()).first()
+            
+            # Determinar el número de la nueva versión
+            nuevo_numero_version = 1
+            version_anterior_id = None
+            
+            if ultima_version:
+                nuevo_numero_version = ultima_version.numero_version + 1
+                version_anterior_id = ultima_version.id
+                
+                # Actualizar la versión anterior para que no sea la actual
+                ultima_version.es_actual = False
+                db.add(ultima_version)
+            
+            # Crear directorio para versiones si no existe
+            versions_dir = os.path.join(settings.DOCUMENT_STORAGE_PATH, str(document_id), "versions")
+            os.makedirs(versions_dir, exist_ok=True)
+            
+            # Obtener extensión del archivo
+            file_extension = os.path.splitext(file.filename)[1].lower()
+            
+            # Definir ruta completa del archivo de la versión
+            version_file_path = os.path.join(versions_dir, f"{document_id}_v{nuevo_numero_version}{file_extension}")
+            
+            # Leer contenido del archivo
+            contents = await file.read()
+            
+            # Calcular hash del archivo
+            file_hash = hashlib.sha256(contents).hexdigest()
+            
+            # Guardar archivo de la versión
+            with open(version_file_path, "wb") as buffer:
+                buffer.write(contents)
+            
+            # Crear registro de la nueva versión
+            nueva_version = models.VersionDocumento(
+                documento_id=document_id,
+                numero_version=nuevo_numero_version,
+                fecha_version=datetime.utcnow(),
+                comentario=comentario,
+                cambios=cambios,
+                path_archivo=version_file_path,
+                usuario_id=user_id,
+                version_anterior_id=version_anterior_id,
+                hash_archivo=file_hash,
+                tamano_archivo=len(contents),
+                extension_archivo=file_extension,
+                es_actual=True
+            )
+            
+            db.add(nueva_version)
+            db.commit()
+            db.refresh(nueva_version)
+            
+            # Actualizar el documento principal con la información de la nueva versión
+            documento.path_archivo = version_file_path
+            documento.hash_archivo = file_hash
+            documento.tamano_archivo = len(contents)
+            documento.extension_archivo = file_extension
+            documento.fecha_modificacion = datetime.utcnow()
+            documento.fecha_ultima_verificacion = datetime.utcnow()
+            documento.estado_integridad = True
+            
+            db.add(documento)
+            db.commit()
+            
+            # Registrar la acción en el historial
+            historial = models.HistorialAcceso(
+                usuario_id=user_id,
+                documento_id=document_id,
+                accion="nueva_version",
+                detalles=f"Nueva versión {nuevo_numero_version} creada"
+            )
+            db.add(historial)
+            db.commit()
+            
+            return True, f"Versión {nuevo_numero_version} creada correctamente", nueva_version.id
+            
+        except Exception as e:
+            logger.error(f"Error al crear versión: {str(e)}")
+            db.rollback()
+            
+            # Registrar error
+            error_log = models.ErrorAlmacenamiento(
+                documento_id=document_id,
+                usuario_id=user_id,
+                tipo_error="version",
+                mensaje_error=f"Error al crear versión: {str(e)}"
+            )
+            db.add(error_log)
+            try:
+                db.commit()
+            except:
+                db.rollback()
+            
+            return False, f"Error al crear versión: {str(e)}", None
+    
+    @staticmethod
+    def restore_version(
+        document_id: int,
+        version_id: int,
+        user_id: int,
+        comentario: Optional[str] = None,
+        db: Session
+    ) -> Tuple[bool, str, Optional[int]]:
+        """
+        Restaura una versión específica de un documento, creando una nueva versión.
+        
+        Args:
+            document_id: ID del documento
+            version_id: ID de la versión a restaurar
+            user_id: ID del usuario que realiza la restauración
+            comentario: Comentario opcional sobre la restauración
+            db: Sesión de base de datos
+            
+        Returns:
+            Tuple con:
+            - Éxito de la operación (bool)
+            - Mensaje (str)
+            - ID de la nueva versión creada (int o None)
+        """
+        try:
+            # Verificar que el documento existe
+            documento = db.query(models.Documento).filter(
+                models.Documento.id == document_id,
+                models.Documento.activo == True
+            ).first()
+            
+            if not documento:
+                return False, f"Documento con ID {document_id} no encontrado", None
+            
+            # Verificar que la versión existe y pertenece al documento
+            version = db.query(models.VersionDocumento).filter(
+                models.VersionDocumento.id == version_id,
+                models.VersionDocumento.documento_id == document_id
+            ).first()
+            
+            if not version:
+                return False, f"Versión con ID {version_id} no encontrada para el documento {document_id}", None
+            
+            # Verificar que el archivo de la versión existe
+            if not os.path.exists(version.path_archivo):
+                return False, f"Archivo de la versión no encontrado: {version.path_archivo}", None
+            
+            # Obtener la última versión del documento
+            ultima_version = db.query(models.VersionDocumento).filter(
+                models.VersionDocumento.documento_id == document_id,
+                models.VersionDocumento.es_actual == True
+            ).first()
+            
+            # Si no hay versión actual, buscar la versión con número más alto
+            if not ultima_version:
+                ultima_version = db.query(models.VersionDocumento).filter(
+                    models.VersionDocumento.documento_id == document_id
+                ).order_by(models.VersionDocumento.numero_version.desc()).first()
+            
+            # Determinar el número de la nueva versión
+            nuevo_numero_version = 1
+            version_anterior_id = None
+            
+            if ultima_version:
+                nuevo_numero_version = ultima_version.numero_version + 1
+                version_anterior_id = ultima_version.id
+                
+                # Actualizar la versión anterior para que no sea la actual
+                ultima_version.es_actual = False
+                db.add(ultima_version)
+            
+            # Crear directorio para versiones si no existe
+            versions_dir = os.path.join(settings.DOCUMENT_STORAGE_PATH, str(document_id), "versions")
+            os.makedirs(versions_dir, exist_ok=True)
+            
+            # Definir ruta completa del archivo de la nueva versión
+            version_file_path = os.path.join(versions_dir, f"{document_id}_v{nuevo_numero_version}{version.extension_archivo}")
+            
+            # Copiar archivo de la versión a restaurar
+            shutil.copy2(version.path_archivo, version_file_path)
+            
+            # Calcular hash del archivo
+            with open(version_file_path, "rb") as file:
+                contents = file.read()
+                file_hash = hashlib.sha256(contents).hexdigest()
+            
+            # Crear registro de la nueva versión
+            nueva_version = models.VersionDocumento(
+                documento_id=document_id,
+                numero_version=nuevo_numero_version,
+                fecha_version=datetime.utcnow(),
+                comentario=comentario or f"Restauración de la versión {version.numero_version}",
+                cambios=f"Restauración de la versión {version.numero_version}",
+                path_archivo=version_file_path,
+                usuario_id=user_id,
+                version_anterior_id=version_anterior_id,
+                hash_archivo=file_hash,
+                tamano_archivo=os.path.getsize(version_file_path),
+                extension_archivo=version.extension_archivo,
+                es_actual=True
+            )
+            
+            db.add(nueva_version)
+            db.commit()
+            db.refresh(nueva_version)
+            
+            # Actualizar el documento principal con la información de la nueva versión
+            documento.path_archivo = version_file_path
+            documento.hash_archivo = file_hash
+            documento.tamano_archivo = os.path.getsize(version_file_path)
+            documento.extension_archivo = version.extension_archivo
+            documento.fecha_modificacion = datetime.utcnow()
+            documento.fecha_ultima_verificacion = datetime.utcnow()
+            documento.estado_integridad = True
+            
+            db.add(documento)
+            db.commit()
+            
+            # Registrar la acción en el historial
+            historial = models.HistorialAcceso(
+                usuario_id=user_id,
+                documento_id=document_id,
+                accion="restauracion_version",
+                detalles=f"Restauración de la versión {version.numero_version} como nueva versión {nuevo_numero_version}"
+            )
+            db.add(historial)
+            db.commit()
+            
+            return True, f"Versión {version.numero_version} restaurada como versión {nuevo_numero_version}", nueva_version.id
+            
+        except Exception as e:
+            logger.error(f"Error al restaurar versión: {str(e)}")
+            db.rollback()
+            
+            # Registrar error
+            error_log = models.ErrorAlmacenamiento(
+                documento_id=document_id,
+                usuario_id=user_id,
+                tipo_error="restauracion_version",
+                mensaje_error=f"Error al restaurar versión: {str(e)}"
+            )
+            db.add(error_log)
+            try:
+                db.commit()
+            except:
+                db.rollback()
+            
+            return False, f"Error al restaurar versión: {str(e)}", None
+    
+    @staticmethod
+    def compare_versions(
+        document_id: int,
+        version_id1: int,
+        version_id2: int,
+        db: Session
+    ) -> Tuple[bool, str, Optional[Dict[str, Any]]]:
+        """
+        Compara dos versiones de un documento.
+        
+        Args:
+            document_id: ID del documento
+            version_id1: ID de la primera versión a comparar
+            version_id2: ID de la segunda versión a comparar
+            db: Sesión de base de datos
+            
+        Returns:
+            Tuple con:
+            - Éxito de la operación (bool)
+            - Mensaje (str)
+            - Diccionario con los resultados de la comparación (Dict o None)
+        """
+        try:
+            # Verificar que el documento existe
+            documento = db.query(models.Documento).filter(
+                models.Documento.id == document_id,
+                models.Documento.activo == True
+            ).first()
+            
+            if not documento:
+                return False, f"Documento con ID {document_id} no encontrado", None
+            
+            # Verificar que las versiones existen y pertenecen al documento
+            version1 = db.query(models.VersionDocumento).filter(
+                models.VersionDocumento.id == version_id1,
+                models.VersionDocumento.documento_id == document_id
+            ).first()
+            
+            version2 = db.query(models.VersionDocumento).filter(
+                models.VersionDocumento.id == version_id2,
+                models.VersionDocumento.documento_id == document_id
+            ).first()
+            
+            if not version1:
+                return False, f"Versión con ID {version_id1} no encontrada para el documento {document_id}", None
+                
+            if not version2:
+                return False, f"Versión con ID {version_id2} no encontrada para el documento {document_id}", None
+            
+            # Verificar que los archivos de las versiones existen
+            if not os.path.exists(version1.path_archivo):
+                return False, f"Archivo de la versión {version_id1} no encontrado: {version1.path_archivo}", None
+                
+            if not os.path.exists(version2.path_archivo):
+                return False, f"Archivo de la versión {version_id2} no encontrado: {version2.path_archivo}", None
+            
+            # Leer contenido de los archivos
+            try:
+                with open(version1.path_archivo, "r", encoding="utf-8") as file1:
+                    content1 = file1.readlines()
+                    
+                with open(version2.path_archivo, "r", encoding="utf-8") as file2:
+                    content2 = file2.readlines()
+            except UnicodeDecodeError:
+                # Si no se pueden leer como texto, comparar solo metadatos
+                return True, "Los archivos son binarios, solo se pueden comparar metadatos", {
+                    "version1": {
+                        "numero": version1.numero_version,
+                        "fecha": version1.fecha_version.isoformat(),
+                        "usuario": f"{version1.usuario.nombre} {version1.usuario.apellido}",
+                        "tamano": version1.tamano_archivo,
+                        "comentario": version1.comentario,
+                        "cambios": version1.cambios
+                    },
+                    "version2": {
+                        "numero": version2.numero_version,
+                        "fecha": version2.fecha_version.isoformat(),
+                        "usuario": f"{version2.usuario.nombre} {version2.usuario.apellido}",
+                        "tamano": version2.tamano_archivo,
+                        "comentario": version2.comentario,
+                        "cambios": version2.cambios
+                    },
+                    "diff": None,
+                    "is_binary": True
+                }
+            
+            # Generar diff
+            diff = list(difflib.unified_diff(
+                content1, 
+                content2, 
+                fromfile=f"v{version1.numero_version}", 
+                tofile=f"v{version2.numero_version}",
+                lineterm=""
+            ))
+            
+            # Contar cambios
+            added_lines = sum(1 for line in diff if line.startswith('+') and not line.startswith('+++'))
+            removed_lines = sum(1 for line in diff if line.startswith('-') and not line.startswith('---'))
+            
+            # Preparar resultado
+            result = {
+                "version1": {
+                    "numero": version1.numero_version,
+                    "fecha": version1.fecha_version.isoformat(),
+                    "usuario": f"{version1.usuario.nombre} {version1.usuario.apellido}",
+                    "tamano": version1.tamano_archivo,
+                    "comentario": version1.comentario,
+                    "cambios": version1.cambios
+                },
+                "version2": {
+                    "numero": version2.numero_version,
+                    "fecha": version2.fecha_version.isoformat(),
+                    "usuario": f"{version2.usuario.nombre} {version2.usuario.apellido}",
+                    "tamano": version2.tamano_archivo,
+                    "comentario": version2.comentario,
+                    "cambios": version2.cambios
+                },
+                "diff": diff,
+                "added_lines": added_lines,
+                "removed_lines": removed_lines,
+                "is_binary": False
+            }
+            
+            return True, "Comparación realizada correctamente", result
+            
+        except Exception as e:
+            logger.error(f"Error al comparar versiones: {str(e)}")
+            return False, f"Error al comparar versiones: {str(e)}", None
     
     @staticmethod
     def restore_from_backup(

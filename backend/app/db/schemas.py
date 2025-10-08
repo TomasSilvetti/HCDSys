@@ -256,22 +256,38 @@ class VersionDocumentoBase(BaseModel):
     documento_id: int
     numero_version: int
     comentario: Optional[str] = None
+    cambios: Optional[str] = None
+    version_anterior_id: Optional[int] = None
 
 class VersionDocumentoCreate(VersionDocumentoBase):
     pass
+
+class VersionDocumentoUpdate(BaseModel):
+    comentario: Optional[str] = None
+    cambios: Optional[str] = None
+    es_actual: Optional[bool] = None
 
 class VersionDocumentoInDB(VersionDocumentoBase):
     id: int
     fecha_version: datetime
     path_archivo: str
     usuario_id: int
+    hash_archivo: Optional[str] = None
+    tamano_archivo: Optional[int] = None
+    extension_archivo: Optional[str] = None
+    es_actual: bool = False
 
     class Config:
         orm_mode = True
 
+class VersionDocumentoSimple(VersionDocumentoInDB):
+    usuario: Usuario
+
 class VersionDocumento(VersionDocumentoInDB):
     documento: Documento
     usuario: Usuario
+    version_anterior: Optional['VersionDocumentoSimple'] = None
+    version_siguiente: Optional['VersionDocumentoSimple'] = None
 
 # Esquemas de Historial de Acceso
 class HistorialAccesoBase(BaseModel):

@@ -623,7 +623,7 @@
           30,
           31
         ],
-        "status": "pending",
+        "status": "done",
         "subtasks": [
           {
             "id": 1,
@@ -631,7 +631,7 @@
             "description": "Crear la interfaz de usuario para el formulario de edición de documentos con todos los campos necesarios",
             "dependencies": [],
             "details": "1. Diseñar la estructura del formulario de edición\n2. Implementar campos para modificar título, descripción, número de expediente y tipo de documento\n3. Añadir botones de guardar y cancelar\n4. Implementar la carga de datos existentes del documento\n5. Crear estilos CSS para el formulario\n6. Asegurar que el diseño sea responsive",
-            "status": "pending",
+            "status": "done",
             "testStrategy": ""
           },
           {
@@ -642,7 +642,7 @@
               "32.1"
             ],
             "details": "1. Implementar validación de campos obligatorios\n2. Desarrollar verificación de unicidad de título\n3. Crear validaciones de formato para cada campo\n4. Implementar mensajes de error para cada validación\n5. Configurar actualización automática de fecha de modificación\n6. Añadir validación del tamaño máximo de los campos",
-            "status": "pending",
+            "status": "done",
             "testStrategy": ""
           },
           {
@@ -653,7 +653,7 @@
               "32.2"
             ],
             "details": "1. Crear modelo de datos para el historial de cambios\n2. Implementar función para comparar documento original con versión editada\n3. Desarrollar registro de usuario, fecha y hora de modificación\n4. Configurar almacenamiento de valores anteriores y nuevos\n5. Implementar visualización del historial de cambios\n6. Añadir filtros para consultar el historial",
-            "status": "pending",
+            "status": "done",
             "testStrategy": ""
           },
           {
@@ -666,7 +666,7 @@
               "32.3"
             ],
             "details": "1. Implementar verificación de permisos de edición\n2. Crear diálogo de confirmación para cancelar cambios no guardados\n3. Desarrollar sistema de bloqueo para ediciones simultáneas\n4. Configurar redirección tras edición exitosa\n5. Implementar notificaciones de éxito o error\n6. Añadir registro de intentos de edición no autorizados",
-            "status": "pending",
+            "status": "done",
             "testStrategy": ""
           }
         ]
@@ -981,7 +981,7 @@
           31,
           32
         ],
-        "status": "pending",
+        "status": "done",
         "subtasks": [
           {
             "id": 1,
@@ -989,7 +989,7 @@
             "description": "Crear la estructura de datos necesaria para almacenar y gestionar las diferentes versiones de los documentos en el sistema.",
             "dependencies": [],
             "details": "- Definir entidades y relaciones para el versionado\n- Diseñar esquema de base de datos con campos para metadatos de versión\n- Establecer estructura para referencias entre versiones (anterior/siguiente)\n- Documentar el modelo de datos\n- Validar el diseño con el equipo técnico\n- Preparar scripts de migración de base de datos",
-            "status": "pending",
+            "status": "done",
             "testStrategy": ""
           },
           {
@@ -1000,7 +1000,7 @@
               "38.1"
             ],
             "details": "- Implementar guardado del archivo original\n- Desarrollar sistema de metadatos para cada versión\n- Crear lógica para referencias entre versiones\n- Implementar mecanismo para crear nueva versión al editar documento\n- Configurar sistema de comentarios por versión\n- Desarrollar pruebas unitarias para el sistema de almacenamiento",
-            "status": "pending",
+            "status": "done",
             "testStrategy": ""
           },
           {
@@ -1011,7 +1011,7 @@
               "38.2"
             ],
             "details": "- Diseñar interfaz para mostrar historial de versiones\n- Implementar visualización cronológica de cambios\n- Desarrollar funcionalidad para descargar versiones específicas\n- Mostrar metadatos relevantes de cada versión\n- Implementar paginación para documentos con muchas versiones\n- Crear pruebas de integración para la visualización",
-            "status": "pending",
+            "status": "done",
             "testStrategy": ""
           },
           {
@@ -1022,7 +1022,7 @@
               "38.3"
             ],
             "details": "- Implementar herramienta de comparación visual entre versiones\n- Desarrollar funcionalidad para resaltar cambios entre versiones\n- Crear mecanismo para restaurar versiones anteriores\n- Implementar confirmación de restauración\n- Añadir registro de actividad para restauraciones\n- Desarrollar pruebas para la comparación y restauración",
-            "status": "pending",
+            "status": "done",
             "testStrategy": ""
           }
         ]
@@ -1162,7 +1162,7 @@
     ],
     "metadata": {
       "created": "2025-10-07T16:52:07.729Z",
-      "updated": "2025-10-08T01:27:47.308Z",
+      "updated": "2025-10-08T02:48:29.949Z",
       "description": "Tasks for master context"
     }
   }

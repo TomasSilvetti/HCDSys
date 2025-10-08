@@ -2,7 +2,7 @@ import os
 import shutil
 import hashlib
 from datetime import datetime
-from typing import List, Optional
+from typing import List, Optional, Dict, Any
 from fastapi import APIRouter, Depends, HTTPException, status, UploadFile, File, Form, Query, BackgroundTasks
 from sqlalchemy.orm import Session, joinedload
 from sqlalchemy import or_, and_, func
@@ -465,16 +465,307 @@ async def create_document(
             detail=f"Error al crear documento: {str(e)}"
         )
 
+# Endpoints para gestión de versiones de documentos
+@router.get("/{documento_id}/versions", response_model=List[schemas.VersionDocumentoSimple])
+async def get_document_versions(
+    documento_id: int,
+    current_user: models.Usuario = Depends(get_current_active_user),
+    db: Session = Depends(get_db)
+):
+    """
+    Obtener todas las versiones de un documento.
+    """
+    # Verificar si el documento existe
+    documento = db.query(models.Documento).filter(
+        models.Documento.id == documento_id,
+        models.Documento.activo == True
+    ).first()
+    
+    if not documento:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Documento no encontrado"
+        )
+    
+    # Verificar permisos para ver el documento
+    is_owner = documento.usuario_id == current_user.id
+    has_permission = check_permission(current_user, "DOCUMENT_VIEW_ALL", db) or check_permission(current_user, "DOCUMENT_VIEW_RESTRICTED", db)
+    
+    if not (is_owner or has_permission):
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="No tiene permisos para ver este documento"
+        )
+    
+    # Obtener todas las versiones del documento
+    versiones = db.query(models.VersionDocumento).filter(
+        models.VersionDocumento.documento_id == documento_id
+    ).order_by(models.VersionDocumento.numero_version.desc()).all()
+    
+    # Registrar la acción en el historial
+    historial = models.HistorialAcceso(
+        usuario_id=current_user.id,
+        documento_id=documento_id,
+        accion="consulta_versiones",
+        detalles="Consulta de historial de versiones"
+    )
+    db.add(historial)
+    db.commit()
+    
+    return versiones
+
+@router.get("/{documento_id}/versions/{version_id}", response_model=schemas.VersionDocumento)
+async def get_document_version(
+    documento_id: int,
+    version_id: int,
+    current_user: models.Usuario = Depends(get_current_active_user),
+    db: Session = Depends(get_db)
+):
+    """
+    Obtener una versión específica de un documento.
+    """
+    # Verificar si el documento existe
+    documento = db.query(models.Documento).filter(
+        models.Documento.id == documento_id,
+        models.Documento.activo == True
+    ).first()
+    
+    if not documento:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Documento no encontrado"
+        )
+    
+    # Verificar permisos para ver el documento
+    is_owner = documento.usuario_id == current_user.id
+    has_permission = check_permission(current_user, "DOCUMENT_VIEW_ALL", db) or check_permission(current_user, "DOCUMENT_VIEW_RESTRICTED", db)
+    
+    if not (is_owner or has_permission):
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="No tiene permisos para ver este documento"
+        )
+    
+    # Obtener la versión específica
+    version = db.query(models.VersionDocumento).filter(
+        models.VersionDocumento.documento_id == documento_id,
+        models.VersionDocumento.id == version_id
+    ).first()
+    
+    if not version:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Versión no encontrada"
+        )
+    
+    # Registrar la acción en el historial
+    historial = models.HistorialAcceso(
+        usuario_id=current_user.id,
+        documento_id=documento_id,
+        accion="consulta_version",
+        detalles=f"Consulta de la versión {version.numero_version}"
+    )
+    db.add(historial)
+    db.commit()
+    
+    return version
+
+@router.get("/{documento_id}/versions/{version_id}/download")
+async def download_document_version(
+    documento_id: int,
+    version_id: int,
+    current_user: models.Usuario = Depends(get_current_active_user),
+    db: Session = Depends(get_db)
+):
+    """
+    Descargar una versión específica de un documento.
+    """
+    # Verificar si el documento existe
+    documento = db.query(models.Documento).filter(
+        models.Documento.id == documento_id,
+        models.Documento.activo == True
+    ).first()
+    
+    if not documento:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Documento no encontrado"
+        )
+    
+    # Verificar permisos para descargar el documento
+    is_owner = documento.usuario_id == current_user.id
+    has_permission = check_permission(current_user, "DOCUMENT_DOWNLOAD", db)
+    
+    if not (is_owner or has_permission):
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="No tiene permisos para descargar este documento"
+        )
+    
+    # Obtener la versión específica
+    version = db.query(models.VersionDocumento).filter(
+        models.VersionDocumento.documento_id == documento_id,
+        models.VersionDocumento.id == version_id
+    ).first()
+    
+    if not version:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Versión no encontrada"
+        )
+    
+    # Verificar que el archivo existe
+    if not os.path.exists(version.path_archivo):
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Archivo no encontrado"
+        )
+    
+    # Registrar la acción en el historial
+    historial = models.HistorialAcceso(
+        usuario_id=current_user.id,
+        documento_id=documento_id,
+        accion="descarga_version",
+        detalles=f"Descarga de la versión {version.numero_version}"
+    )
+    db.add(historial)
+    db.commit()
+    
+    # Obtener nombre original del archivo
+    filename = f"{documento.titulo}_v{version.numero_version}{version.extension_archivo}"
+    
+    return FileResponse(
+        path=version.path_archivo,
+        filename=filename,
+        media_type="application/octet-stream"
+    )
+
+@router.post("/{documento_id}/versions/{version_id}/restore", response_model=schemas.Documento)
+async def restore_document_version(
+    documento_id: int,
+    version_id: int,
+    comentario: Optional[str] = Form(None),
+    current_user: models.Usuario = Depends(get_current_active_user),
+    db: Session = Depends(get_db)
+):
+    """
+    Restaurar una versión específica de un documento, creando una nueva versión.
+    """
+    # Verificar si el documento existe
+    documento = db.query(models.Documento).filter(
+        models.Documento.id == documento_id,
+        models.Documento.activo == True
+    ).first()
+    
+    if not documento:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Documento no encontrado"
+        )
+    
+    # Verificar permisos para editar el documento
+    is_owner = documento.usuario_id == current_user.id
+    has_permission = check_permission(current_user, "DOCUMENT_EDIT", db)
+    
+    if not (is_owner or has_permission):
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="No tiene permisos para editar este documento"
+        )
+    
+    # Restaurar la versión
+    success, message, version_id = StorageService.restore_version(
+        document_id=documento_id,
+        version_id=version_id,
+        user_id=current_user.id,
+        comentario=comentario,
+        db=db
+    )
+    
+    if not success:
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=message
+        )
+    
+    # Obtener el documento actualizado
+    db.refresh(documento)
+    
+    return documento
+
+@router.post("/{documento_id}/versions/compare")
+async def compare_document_versions(
+    documento_id: int,
+    version_id1: int,
+    version_id2: int,
+    current_user: models.Usuario = Depends(get_current_active_user),
+    db: Session = Depends(get_db)
+):
+    """
+    Comparar dos versiones de un documento.
+    """
+    # Verificar si el documento existe
+    documento = db.query(models.Documento).filter(
+        models.Documento.id == documento_id,
+        models.Documento.activo == True
+    ).first()
+    
+    if not documento:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Documento no encontrado"
+        )
+    
+    # Verificar permisos para ver el documento
+    is_owner = documento.usuario_id == current_user.id
+    has_permission = check_permission(current_user, "DOCUMENT_VIEW_ALL", db) or check_permission(current_user, "DOCUMENT_VIEW_RESTRICTED", db)
+    
+    if not (is_owner or has_permission):
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="No tiene permisos para ver este documento"
+        )
+    
+    # Comparar versiones
+    success, message, result = StorageService.compare_versions(
+        document_id=documento_id,
+        version_id1=version_id1,
+        version_id2=version_id2,
+        db=db
+    )
+    
+    if not success:
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=message
+        )
+    
+    # Registrar la acción en el historial
+    historial = models.HistorialAcceso(
+        usuario_id=current_user.id,
+        documento_id=documento_id,
+        accion="comparacion_versiones",
+        detalles=f"Comparación de las versiones {version_id1} y {version_id2}"
+    )
+    db.add(historial)
+    db.commit()
+    
+    return result
+
 @router.put("/{documento_id}", response_model=schemas.Documento)
 async def update_document(
     documento_id: int,
     documento_update: schemas.DocumentoUpdate,
+    file: Optional[UploadFile] = None,
+    comentario: Optional[str] = Form(None),
+    cambios: Optional[str] = Form(None),
     current_user: models.Usuario = Depends(get_current_active_user),
     db: Session = Depends(get_db)
 ):
     """
     Actualizar un documento existente.
     Solo el creador del documento o usuarios con permisos de administrador pueden editar documentos.
+    Si se proporciona un archivo, se crea una nueva versión del documento.
     """
     # Verificar si el documento existe
     documento = db.query(models.Documento).filter(
@@ -512,6 +803,45 @@ async def update_document(
                 detail="Ya existe un documento con ese título"
             )
     
+    # Si se proporciona un archivo, crear una nueva versión
+    if file:
+        # Verificar tipo de documento
+        tipo_documento = db.query(models.TipoDocumento).filter(
+            models.TipoDocumento.id == documento.tipo_documento_id
+        ).first()
+        
+        if not tipo_documento:
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail="Tipo de documento no válido"
+            )
+        
+        # Verificar extensión del archivo
+        file_extension = os.path.splitext(file.filename)[1].lower()
+        allowed_extensions = tipo_documento.extensiones_permitidas.split(",")
+        
+        if file_extension not in allowed_extensions:
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail=f"Extensión de archivo no permitida. Extensiones permitidas: {tipo_documento.extensiones_permitidas}"
+            )
+        
+        # Crear nueva versión
+        success, message, version_id = await StorageService.create_document_version(
+            file=file,
+            document_id=documento_id,
+            user_id=current_user.id,
+            comentario=comentario,
+            cambios=cambios,
+            db=db
+        )
+        
+        if not success:
+            raise HTTPException(
+                status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+                detail=message
+            )
+    
     # Actualizar campos
     if documento_update.titulo:
         documento.titulo = documento_update.titulo
@@ -526,20 +856,22 @@ async def update_document(
     if documento_update.activo is not None:
         documento.activo = documento_update.activo
     
-    # Actualizar fecha de modificación
-    documento.fecha_modificacion = datetime.utcnow()
+    # Actualizar fecha de modificación si no se actualizó con una nueva versión
+    if not file:
+        documento.fecha_modificacion = datetime.utcnow()
     
     db.commit()
     db.refresh(documento)
     
-    # Registrar la acción en el historial
-    historial = models.HistorialAcceso(
-        usuario_id=current_user.id,
-        documento_id=documento.id,
-        accion="edicion",
-        detalles="Edición de documento"
-    )
-    db.add(historial)
-    db.commit()
+    # Registrar la acción en el historial si no se registró al crear la versión
+    if not file:
+        historial = models.HistorialAcceso(
+            usuario_id=current_user.id,
+            documento_id=documento.id,
+            accion="edicion",
+            detalles="Edición de metadatos del documento"
+        )
+        db.add(historial)
+        db.commit()
     
     return documento

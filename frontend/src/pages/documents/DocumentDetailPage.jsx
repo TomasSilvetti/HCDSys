@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useParams, useNavigate, useLocation } from 'react-router-dom';
-import { FiArrowLeft, FiDownload, FiClock, FiUser, FiFileText, FiTag, FiCalendar, FiLock } from 'react-icons/fi';
+import { FiArrowLeft, FiDownload, FiClock, FiUser, FiFileText, FiTag, FiCalendar, FiLock, FiEdit } from 'react-icons/fi';
 import { documentService } from '../../utils/documentService';
 import { useAuth } from '../../context/AuthContext';
 import VersionHistory from '../../components/documents/VersionHistory';
@@ -32,6 +32,13 @@ const DocumentDetailPage = () => {
     currentUser?.role_id === 1 || // Administrador
     document?.usuario_id === currentUser?.id || // Creador del documento
     (currentUser?.permissions && currentUser.permissions.includes('DOCUMENT_DOWNLOAD'))
+  );
+  
+  // Verificar si el usuario tiene permisos para editar
+  const canEdit = isAuthenticated && (
+    currentUser?.role_id === 1 || // Administrador
+    document?.usuario_id === currentUser?.id || // Creador del documento
+    (currentUser?.permissions && currentUser.permissions.includes('DOCUMENT_EDIT'))
   );
   
   // Cargar datos del documento
@@ -157,22 +164,33 @@ const DocumentDetailPage = () => {
       {/* Encabezado del documento */}
       <div className="bg-white shadow overflow-hidden sm:rounded-lg mb-6">
         <div className="px-6 py-5 border-b border-gray-200">
-          <div className="flex justify-between items-start">
+            <div className="flex justify-between items-start">
             <h1 className="text-2xl font-bold text-gray-900">{document.titulo}</h1>
-            {canDownload && (
-              <button 
-                onClick={handleDownload}
-                disabled={isDownloading}
-                className={`px-4 py-2 rounded-md flex items-center ${
-                  isDownloading 
-                    ? 'bg-gray-300 text-gray-500 cursor-not-allowed' 
-                    : 'bg-primary-600 text-white hover:bg-primary-700'
-                }`}
-              >
-                <FiDownload className="mr-2" /> 
-                {isDownloading ? 'Descargando...' : 'Descargar'}
-              </button>
-            )}
+            <div className="flex space-x-2">
+              {canEdit && (
+                <button 
+                  onClick={() => navigate(`/documentos/${id}/editar`)}
+                  className="px-4 py-2 rounded-md flex items-center bg-amber-600 text-white hover:bg-amber-700"
+                >
+                  <FiEdit className="mr-2" /> 
+                  Editar
+                </button>
+              )}
+              {canDownload && (
+                <button 
+                  onClick={handleDownload}
+                  disabled={isDownloading}
+                  className={`px-4 py-2 rounded-md flex items-center ${
+                    isDownloading 
+                      ? 'bg-gray-300 text-gray-500 cursor-not-allowed' 
+                      : 'bg-primary-600 text-white hover:bg-primary-700'
+                  }`}
+                >
+                  <FiDownload className="mr-2" /> 
+                  {isDownloading ? 'Descargando...' : 'Descargar'}
+                </button>
+              )}
+            </div>
           </div>
           <p className="mt-2 text-sm text-gray-500">Expediente: <span className="font-medium">{document.numero_expediente}</span></p>
         </div>
@@ -240,7 +258,7 @@ const DocumentDetailPage = () => {
           <h2 className="text-xl font-medium text-gray-900">Historial de versiones</h2>
         </div>
         <div className="px-6 py-5">
-          <VersionHistory documentId={id} canDownload={canDownload} />
+          <VersionHistory documentId={id} canDownload={canDownload} canEdit={canEdit} />
         </div>
       </div>
     </div>

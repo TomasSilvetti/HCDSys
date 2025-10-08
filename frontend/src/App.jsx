@@ -14,6 +14,7 @@ const LoginPage = lazy(() => import('./pages/auth/LoginPage'))
 const RegisterPage = lazy(() => import('./pages/auth/RegisterPage'))
 const SearchPage = lazy(() => import('./pages/search/SearchPage'))
 const UploadDocumentPage = lazy(() => import('./pages/documents/UploadDocumentPage'))
+const EditDocumentPage = lazy(() => import('./pages/documents/EditDocumentPage'))
 const DocumentDetailPage = lazy(() => import('./pages/documents/DocumentDetailPage'))
 const NotFoundPage = lazy(() => import('./pages/NotFoundPage'))
 const AccessDeniedPage = lazy(() => import('./pages/AccessDeniedPage'))
@@ -52,6 +53,7 @@ function App() {
           {/* Rutas protegidas para gestores de documentos */}
           <Route path="documentos" element={<GestorRoute />}>
             <Route path="cargar" element={<UploadDocumentPage />} />
+            <Route path=":id/editar" element={<EditDocumentPage />} />
           </Route>
           
           {/* Rutas de administración protegidas */}

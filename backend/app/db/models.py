@@ -1,5 +1,5 @@
 from datetime import datetime
-from sqlalchemy import Boolean, Column, ForeignKey, Integer, String, Text, DateTime, Table
+from sqlalchemy import Boolean, Column, ForeignKey, Integer, String, Text, DateTime, Table, Float
 from sqlalchemy.orm import relationship
 
 from .database import Base
@@ -127,10 +127,17 @@ class VersionDocumento(Base):
     comentario = Column(Text, nullable=True)
     path_archivo = Column(String, nullable=False)
     usuario_id = Column(Integer, ForeignKey("usuarios.id"), nullable=False)
+    version_anterior_id = Column(Integer, ForeignKey("versiones_documento.id"), nullable=True)
+    hash_archivo = Column(String, nullable=True)  # Hash para verificación de integridad
+    tamano_archivo = Column(Integer, nullable=True)  # Tamaño en bytes
+    extension_archivo = Column(String, nullable=True)  # Extensión del archivo
+    cambios = Column(Text, nullable=True)  # Descripción de los cambios realizados
+    es_actual = Column(Boolean, default=False)  # Indica si es la versión actual del documento
 
     # Relaciones
     documento = relationship("Documento", back_populates="versiones")
     usuario = relationship("Usuario", back_populates="versiones")
+    version_anterior = relationship("VersionDocumento", remote_side=[id], backref="version_siguiente", uselist=False)
 
 class HistorialAcceso(Base):
     __tablename__ = "historial_acceso"

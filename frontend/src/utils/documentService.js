@@ -142,6 +142,132 @@ export const documentService = {
     } catch (error) {
       throw handleApiError(error);
     }
+  },
+  
+  // Obtener una versión específica de un documento
+  getDocumentVersion: async (documentId, versionId) => {
+    try {
+      const response = await api.get(`/documents/${documentId}/versions/${versionId}`);
+      return response.data;
+    } catch (error) {
+      throw handleApiError(error);
+    }
+  },
+  
+  // Descargar una versión específica de un documento
+  downloadDocumentVersion: async (documentId, versionId, fileName = null) => {
+    try {
+      const response = await api.get(`/documents/${documentId}/versions/${versionId}/download`, {
+        responseType: 'blob'
+      });
+      
+      // Crear URL para el blob
+      const url = window.URL.createObjectURL(new Blob([response.data]));
+      
+      // Crear enlace temporal para la descarga
+      const link = document.createElement('a');
+      link.href = url;
+      
+      // Usar nombre proporcionado o extraer del header Content-Disposition
+      const contentDisposition = response.headers['content-disposition'];
+      const defaultFileName = `documento_${documentId}_v${versionId}.pdf`;
+      
+      if (fileName) {
+        link.setAttribute('download', fileName);
+      } else if (contentDisposition) {
+        const fileNameMatch = contentDisposition.match(/filename="(.+)"/);
+        link.setAttribute('download', fileNameMatch ? fileNameMatch[1] : defaultFileName);
+      } else {
+        link.setAttribute('download', defaultFileName);
+      }
+      
+      // Añadir al DOM, hacer clic y eliminar
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      
+      // Liberar la URL
+      window.URL.revokeObjectURL(url);
+      
+      return true;
+    } catch (error) {
+      throw handleApiError(error);
+    }
+  },
+  
+  // Restaurar una versión específica de un documento
+  restoreDocumentVersion: async (documentId, versionId, comentario = null) => {
+    try {
+      const formData = new FormData();
+      if (comentario) {
+        formData.append('comentario', comentario);
+      }
+      
+      const response = await api.post(
+        `/documents/${documentId}/versions/${versionId}/restore`, 
+        formData,
+        {
+          headers: {
+            'Content-Type': 'multipart/form-data'
+          }
+        }
+      );
+      
+      return response.data;
+    } catch (error) {
+      throw handleApiError(error);
+    }
+  },
+  
+  // Comparar dos versiones de un documento
+  compareDocumentVersions: async (documentId, versionId1, versionId2) => {
+    try {
+      const response = await api.post(`/documents/${documentId}/versions/compare`, {
+        version_id1: versionId1,
+        version_id2: versionId2
+      });
+      
+      return response.data;
+    } catch (error) {
+      throw handleApiError(error);
+    }
+  },
+  
+  // Actualizar un documento existente
+  updateDocument: async (id, documentData, file = null, comentario = null, cambios = null) => {
+    try {
+      let response;
+      
+      // Si hay archivo, usar FormData
+      if (file) {
+        const formData = new FormData();
+        
+        // Añadir campos del documento
+        Object.keys(documentData).forEach(key => {
+          if (documentData[key] !== null && documentData[key] !== undefined) {
+            formData.append(key, documentData[key]);
+          }
+        });
+        
+        // Añadir archivo y comentarios si existen
+        formData.append('file', file);
+        if (comentario) formData.append('comentario', comentario);
+        if (cambios) formData.append('cambios', cambios);
+        
+        response = await api.put(`/documents/${id}`, formData, {
+          headers: {
+            'Content-Type': 'multipart/form-data'
+          }
+        });
+      } else {
+        // Sin archivo, enviar como JSON normal
+        response = await api.put(`/documents/${id}`, documentData);
+      }
+      
+      return response.data;
+    } catch (error) {
+      throw handleApiError(error);
+    }
   }
 };
 
