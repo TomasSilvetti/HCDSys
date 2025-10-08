@@ -12,6 +12,7 @@ const LoginPage = lazy(() => import('./pages/auth/LoginPage'))
 const RegisterPage = lazy(() => import('./pages/auth/RegisterPage'))
 const SearchPage = lazy(() => import('./pages/search/SearchPage'))
 const UploadDocumentPage = lazy(() => import('./pages/documents/UploadDocumentPage'))
+const DocumentDetailPage = lazy(() => import('./pages/documents/DocumentDetailPage'))
 const NotFoundPage = lazy(() => import('./pages/NotFoundPage'))
 
 // Admin Pages
@@ -39,6 +40,7 @@ function App() {
           {/* Rutas protegidas para usuarios autenticados */}
           <Route path="documentos" element={<ProtectedRoute />}>
             <Route path="cargar" element={<UploadDocumentPage />} />
+            <Route path=":id" element={<DocumentDetailPage />} />
           </Route>
           
           {/* Rutas de administración protegidas */}

@@ -384,7 +384,7 @@
           26,
           27
         ],
-        "status": "pending",
+        "status": "done",
         "subtasks": [
           {
             "id": 1,
@@ -392,7 +392,7 @@
             "description": "Crear la estructura visual y el diseño del componente que mostrará los resultados de búsqueda, incluyendo la visualización de datos por documento y mensajes para búsquedas sin resultados.",
             "dependencies": [],
             "details": "1. Diseñar la estructura HTML del componente de lista de resultados\n2. Implementar estilos CSS para la visualización adecuada de los resultados\n3. Crear la visualización de datos por documento (título, número de expediente, fecha, categoría)\n4. Implementar indicadores visuales para documentos recientes o importantes\n5. Diseñar y programar el mensaje para búsquedas sin resultados\n6. Optimizar el renderizado para listas grandes de resultados",
-            "status": "pending",
+            "status": "done",
             "testStrategy": ""
           },
           {
@@ -403,7 +403,7 @@
               "28.1"
             ],
             "details": "1. Diseñar la interfaz de paginación (botones anterior/siguiente, selector de página)\n2. Implementar la lógica para mostrar máximo 10 resultados por página\n3. Crear controles para navegar entre páginas de resultados\n4. Desarrollar la funcionalidad de ordenamiento por diferentes campos (título, fecha, etc.)\n5. Implementar indicadores visuales del criterio de ordenamiento activo\n6. Asegurar que la paginación y el ordenamiento funcionen correctamente juntos",
-            "status": "pending",
+            "status": "done",
             "testStrategy": ""
           },
           {
@@ -415,7 +415,7 @@
               "28.2"
             ],
             "details": "1. Crear el componente de tooltip para mostrar resumen del documento\n2. Implementar la lógica para mostrar/ocultar el tooltip al pasar el mouse\n3. Diseñar la apariencia visual del tooltip con información relevante\n4. Configurar la redirección a la vista detalle al hacer clic en un documento\n5. Implementar efectos visuales de hover para mejorar la experiencia de usuario\n6. Asegurar que todas las interacciones sean accesibles y funcionen en diferentes dispositivos",
-            "status": "pending",
+            "status": "done",
             "testStrategy": ""
           }
         ]
@@ -431,7 +431,7 @@
           27,
           28
         ],
-        "status": "pending",
+        "status": "done",
         "subtasks": [
           {
             "id": 1,
@@ -439,7 +439,7 @@
             "description": "Crear el componente de vista detalle con la información básica del documento y la sección de información de categoría",
             "dependencies": [],
             "details": "1. Desarrollar el componente React para la vista detalle\n2. Implementar la visualización de los datos básicos: título, número de expediente, descripción, fechas, categoría, usuario creador y tipo de documento\n3. Diseñar la sección de información de categoría\n4. Añadir el botón para volver a resultados de búsqueda\n5. Crear la estructura HTML/CSS base para toda la vista\n6. Implementar la conexión con la API para obtener los datos del documento",
-            "status": "pending",
+            "status": "done",
             "testStrategy": ""
           },
           {
@@ -450,7 +450,7 @@
               "29.1"
             ],
             "details": "1. Crear el componente para mostrar el listado de versiones\n2. Implementar la visualización de: número de versión, fecha del cambio y comentarios\n3. Añadir links para descargar versiones específicas\n4. Diseñar la interfaz para mostrar las versiones de forma clara y ordenada\n5. Implementar la conexión con la API para obtener el historial de versiones\n6. Añadir paginación si el historial es extenso",
-            "status": "pending",
+            "status": "done",
             "testStrategy": ""
           },
           {
@@ -462,7 +462,7 @@
               "29.2"
             ],
             "details": "1. Implementar el botón de descarga del documento actual\n2. Desarrollar la lógica para solicitar el archivo al servidor\n3. Manejar el proceso de descarga (progreso, errores, etc.)\n4. Implementar la funcionalidad para descargar versiones específicas desde el historial\n5. Añadir indicadores visuales durante el proceso de descarga\n6. Gestionar los diferentes tipos de documentos y sus formatos",
-            "status": "pending",
+            "status": "done",
             "testStrategy": ""
           },
           {
@@ -475,7 +475,7 @@
               "29.3"
             ],
             "details": "1. Implementar la verificación de permisos para acceder a la vista detalle\n2. Añadir validación de permisos para la descarga de documentos\n3. Ocultar o deshabilitar funcionalidades según los permisos del usuario\n4. Diseñar la interfaz para que sea responsiva en diferentes dispositivos\n5. Probar y ajustar la visualización en móviles, tablets y escritorio\n6. Implementar mensajes informativos cuando el usuario no tenga permisos suficientes",
-            "status": "pending",
+            "status": "done",
             "testStrategy": ""
           }
         ]
@@ -1162,7 +1162,7 @@
     ],
     "metadata": {
       "created": "2025-10-07T16:52:07.729Z",
-      "updated": "2025-10-08T00:49:47.556Z",
+      "updated": "2025-10-08T01:07:31.945Z",
       "description": "Tasks for master context"
     }
   }
