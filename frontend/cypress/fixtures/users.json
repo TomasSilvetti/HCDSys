@@ -1,0 +1,22 @@
+{
+  "admin": {
+    "email": "admin@example.com",
+    "password": "adminpassword",
+    "fullName": "Admin User"
+  },
+  "gestor": {
+    "email": "gestor@example.com",
+    "password": "gestorpassword",
+    "fullName": "Gestor User"
+  },
+  "usuario": {
+    "email": "usuario@example.com",
+    "password": "userpassword",
+    "fullName": "Regular User"
+  },
+  "newUser": {
+    "email": "newuser@example.com",
+    "password": "newuserpassword",
+    "fullName": "New Test User"
+  }
+}

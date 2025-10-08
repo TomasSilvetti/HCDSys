@@ -1,0 +1,15 @@
+{
+  "name": "hcdsys-backend",
+  "version": "0.1.0",
+  "description": "Backend para el Sistema de Gestión de Documentos HCDSys",
+  "scripts": {
+    "start": "uvicorn app.main:app --reload",
+    "test": "pytest",
+    "test:cov": "pytest --cov=app --cov-report=term-missing",
+    "test:cov-html": "pytest --cov=app --cov-report=html",
+    "test:unit": "pytest tests/unit -v",
+    "test:integration": "pytest tests/integration -v",
+    "test:unit-cov": "pytest tests/unit -v --cov=app --cov-report=term-missing",
+    "test:integration-cov": "pytest tests/integration -v --cov=app --cov-report=term-missing"
+  }
+}

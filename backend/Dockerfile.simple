@@ -1,0 +1,27 @@
+FROM python:3.11-slim
+
+WORKDIR /app
+
+# Instalar dependencias del sistema
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    build-essential \
+    libpq-dev \
+    && apt-get clean \
+    && rm -rf /var/lib/apt/lists/*
+
+# Copiar e instalar dependencias
+COPY requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt && \
+    pip install --no-cache-dir email-validator
+
+# Copiar el resto del código
+COPY . .
+
+# Asegurar que el archivo .env está presente
+RUN if [ -f .env ]; then echo "Archivo .env encontrado"; else echo "Archivo .env no encontrado, creando uno vacío"; touch .env; fi
+
+# Crear directorios necesarios
+RUN mkdir -p /app/storage/documents /app/logs
+
+# Comando para iniciar la aplicación - usando directamente uvicorn para simplificar
+CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000", "--log-level", "warning"]

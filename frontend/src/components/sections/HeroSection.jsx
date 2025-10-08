@@ -3,7 +3,39 @@ import { FiSearch, FiUpload } from 'react-icons/fi';
 import { useAuth } from '../../context/AuthContext';
 
 const HeroSection = () => {
-  const { isAuthenticated, userRole } = useAuth();
+  const { isAuthenticated, userRole, currentUser } = useAuth();
+  
+  console.log('HeroSection - Estado de autenticación:', { 
+    isAuthenticated, 
+    userRole, 
+    currentUser,
+    userRoleType: typeof userRole
+  });
+
+  // Determinar la URL para el botón "Gestionar Documentos"
+  const getManageDocsUrl = () => {
+    console.log('Calculando URL para Gestionar Documentos...');
+    
+    if (!isAuthenticated) {
+      console.log('Usuario no autenticado, redirigiendo a /login');
+      return '/login';
+    }
+    
+    // Verificar si el rol es 1 (admin) o 2 (gestor)
+    const roleId = Number(userRole);
+    console.log('Rol del usuario (número):', roleId);
+    
+    if (roleId === 1 || roleId === 2) {
+      console.log('Usuario con permisos, redirigiendo a /documentos/cargar');
+      return '/documentos/cargar';
+    } else {
+      console.log('Usuario sin permisos suficientes, redirigiendo a /login');
+      return '/login';
+    }
+  };
+  
+  const manageDocsUrl = getManageDocsUrl();
+  console.log('URL final para Gestionar Documentos:', manageDocsUrl);
 
   return (
     <section className="hero-wave-bg bg-gradient-to-r from-primary-700 to-primary-900 text-white rounded-lg p-8 md:p-12 relative overflow-hidden">
@@ -27,9 +59,13 @@ const HeroSection = () => {
             <FiSearch /> Buscar Documentos
           </Link>
           <Link 
-            to={isAuthenticated && (userRole === 'admin' || userRole === 'gestor') ? "/documentos/cargar" : "/login"} 
+            to={manageDocsUrl}
             className="btn btn-primary flex items-center justify-center gap-2 text-lg hover:scale-105 transition-transform"
             aria-label="Ir a gestión de documentos o iniciar sesión"
+            onClick={(e) => {
+              console.log('Click en botón Gestionar Documentos');
+              console.log('Redirigiendo a:', manageDocsUrl);
+            }}
           >
             <FiUpload /> Gestionar Documentos
           </Link>

@@ -233,6 +233,42 @@ export const documentService = {
     }
   },
   
+  // Cargar un nuevo documento
+  uploadDocument: async (documentData, onProgressUpdate = null) => {
+    try {
+      const formData = new FormData();
+      
+      // Añadir campos del documento
+      Object.keys(documentData).forEach(key => {
+        if (key === 'archivo') {
+          formData.append('archivo', documentData.archivo);
+        } else if (documentData[key] !== null && documentData[key] !== undefined) {
+          formData.append(key, documentData[key]);
+        }
+      });
+      
+      // Configuración para seguimiento de progreso
+      const config = {
+        headers: {
+          'Content-Type': 'multipart/form-data'
+        }
+      };
+      
+      // Añadir handler de progreso si se proporciona
+      if (onProgressUpdate) {
+        config.onUploadProgress = (progressEvent) => {
+          const percentCompleted = Math.round((progressEvent.loaded * 100) / progressEvent.total);
+          onProgressUpdate(percentCompleted);
+        };
+      }
+      
+      const response = await api.post('/documents', formData, config);
+      return response.data;
+    } catch (error) {
+      throw handleApiError(error);
+    }
+  },
+  
   // Actualizar un documento existente
   updateDocument: async (id, documentData, file = null, comentario = null, cambios = null) => {
     try {

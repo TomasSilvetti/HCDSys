@@ -254,9 +254,9 @@ class StorageService:
         file: UploadFile,
         document_id: int,
         user_id: int,
+        db: Session,
         comentario: Optional[str] = None,
-        cambios: Optional[str] = None,
-        db: Session
+        cambios: Optional[str] = None
     ) -> Tuple[bool, str, Optional[int]]:
         """
         Crea una nueva versión de un documento existente.
@@ -397,8 +397,8 @@ class StorageService:
         document_id: int,
         version_id: int,
         user_id: int,
-        comentario: Optional[str] = None,
-        db: Session
+        db: Session,
+        comentario: Optional[str] = None
     ) -> Tuple[bool, str, Optional[int]]:
         """
         Restaura una versión específica de un documento, creando una nueva versión.

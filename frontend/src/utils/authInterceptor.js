@@ -11,23 +11,27 @@ import { toast } from 'react-toastify';
 export const handleAuthError = (error, logout, navigate) => {
   // Si no hay respuesta, devolver el error
   if (!error.response) {
+    console.error('Error sin respuesta del servidor:', error);
+    toast.error('No se pudo conectar con el servidor. Verifique su conexión.');
     return Promise.reject(error);
   }
 
-  const { status } = error.response;
+  const { status, data } = error.response;
+  console.log(`Error ${status}:`, data);
 
   // Manejar error 401 (No autorizado)
   if (status === 401) {
     // Si el token expiró o es inválido, cerrar sesión
     logout();
     toast.error('Tu sesión ha expirado. Por favor, inicia sesión nuevamente.');
-    navigate('/login');
+    // Usar setTimeout para evitar problemas con la redirección durante el manejo de errores
+    setTimeout(() => navigate('/login'), 100);
   }
 
   // Manejar error 403 (Prohibido)
   if (status === 403) {
     toast.error('No tienes permisos para realizar esta acción.');
-    navigate('/acceso-denegado');
+    setTimeout(() => navigate('/acceso-denegado'), 100);
   }
 
   return Promise.reject(error);

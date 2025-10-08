@@ -10,6 +10,7 @@ import ProtectedRoute from './ProtectedRoute';
  * @returns {JSX.Element} Ruta protegida para gestores de documentos
  */
 const GestorRoute = ({ children }) => {
+  console.log('Renderizando GestorRoute - Requiere roles 1 o 2');
   return (
     <ProtectedRoute allowedRoles={['1', '2']}>
       {children || <Outlet />}

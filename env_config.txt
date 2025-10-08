@@ -1,0 +1,12 @@
+# Configuración de la base de datos
+DB_NAME=hcdsys_prod
+DB_USER=hcdsys_user
+DB_PASSWORD=StrongPassword123!
+
+# Configuración de seguridad
+SECRET_KEY=a8e7d6c5b4a3f2e1d0c9b8a7f6e5d4c3b2a1f0e9
+CORS_ORIGINS=http://localhost
+
+# Configuración del dominio
+DOMAIN_NAME=localhost
+EMAIL=admin@example.com

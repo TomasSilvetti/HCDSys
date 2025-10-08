@@ -44,7 +44,7 @@ export const authService = {
   login: async (credentials) => {
     try {
       // FastAPI OAuth2 espera un formato específico para login
-      const formData = new FormData();
+      const formData = new URLSearchParams();
       formData.append('username', credentials.email);
       formData.append('password', credentials.password);
       
@@ -59,11 +59,22 @@ export const authService = {
         
         // Decodificar el token para obtener información del usuario
         const user = parseJwt(response.data.access_token);
-        localStorage.setItem('user', JSON.stringify(user));
+        // Asegurar que el usuario tenga la información necesaria
+        if (!user.sub) {
+          throw new Error('Token inválido: falta información del usuario');
+        }
+        // Guardar información del usuario
+        localStorage.setItem('user', JSON.stringify({
+          email: user.sub,
+          role_id: user.role_id,
+          exp: user.exp
+        }));
+        console.log('Usuario autenticado:', user);
       }
       
       return response.data;
     } catch (error) {
+      console.error('Error completo de login:', error);
       throw handleApiError(error);
     }
   },
@@ -100,12 +111,38 @@ export const authService = {
   getCurrentUser: () => {
     try {
       const userStr = localStorage.getItem('user');
-      if (userStr) {
-        return JSON.parse(userStr);
+      const token = localStorage.getItem('token');
+      
+      if (!userStr || !token) {
+        return null;
       }
-      return null;
+      
+      // Verificar si el token ha expirado
+      const decoded = parseJwt(token);
+      const currentTime = Date.now() / 1000;
+      
+      if (decoded.exp < currentTime) {
+        // Token expirado, limpiar localStorage
+        localStorage.removeItem('token');
+        localStorage.removeItem('user');
+        return null;
+      }
+      
+      const user = JSON.parse(userStr);
+      
+      // Asegurarse de que el usuario tenga un role_id
+      if (!user.role_id && decoded.role_id) {
+        user.role_id = decoded.role_id;
+        localStorage.setItem('user', JSON.stringify(user));
+      }
+      
+      console.log('Usuario actual:', user);
+      return user;
     } catch (error) {
       console.error('Error al obtener usuario actual:', error);
+      // Limpiar localStorage en caso de error
+      localStorage.removeItem('token');
+      localStorage.removeItem('user');
       return null;
     }
   },

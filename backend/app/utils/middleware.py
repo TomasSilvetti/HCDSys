@@ -48,9 +48,9 @@ class AuthenticationMiddleware(BaseHTTPMiddleware):
         response_code = 200
         error_message = None
         
-        # Verificar si la ruta es pública
-        if any(path.startswith(public_path) for public_path in self.public_paths):
-            # Ruta pública, no se requiere autenticación
+        # Verificar si la ruta es pública o si es una solicitud OPTIONS
+        if any(path.startswith(public_path) for public_path in self.public_paths) or method == "OPTIONS":
+            # Ruta pública o solicitud OPTIONS, no se requiere autenticación
             response = await call_next(request)
             response_code = response.status_code
         else:
@@ -256,9 +256,9 @@ class AuthorizationMiddleware(BaseHTTPMiddleware):
         path = request.url.path
         method = request.method
         
-        # Verificar si la ruta es pública
-        if any(path.startswith(public_path) for public_path in self.public_paths):
-            # Ruta pública, no se requiere autorización
+        # Verificar si la ruta es pública o si es una solicitud OPTIONS
+        if any(path.startswith(public_path) for public_path in self.public_paths) or method == "OPTIONS":
+            # Ruta pública o solicitud OPTIONS, no se requiere autorización
             return await call_next(request)
         
         # Verificar si el usuario está autenticado
@@ -309,6 +309,10 @@ class IPBlockMiddleware(BaseHTTPMiddleware):
         self.db_func = db_func
     
     async def dispatch(self, request: Request, call_next: Callable) -> Response:
+        # Si es una solicitud OPTIONS, permitir sin verificar bloqueo
+        if request.method == "OPTIONS":
+            return await call_next(request)
+            
         # Obtener IP del cliente
         client_host = request.client.host if request.client else "unknown"
         

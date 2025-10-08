@@ -1,0 +1,89 @@
+version: '3.8'
+
+services:
+  db:
+    image: postgres:15-alpine
+    container_name: hcdsys-db
+    restart: always
+    environment:
+      POSTGRES_DB: ${DB_NAME:-hcdsys_prod}
+      POSTGRES_USER: ${DB_USER:-hcdsys_user}
+      POSTGRES_PASSWORD: ${DB_PASSWORD:-strong_password_here}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - hcdsys-network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${DB_USER:-hcdsys_user} -d ${DB_NAME:-hcdsys_prod}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    # Limitar recursos
+    deploy:
+      resources:
+        limits:
+          cpus: '0.5'
+          memory: 512M
+
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile.simple
+    container_name: hcdsys-backend
+    restart: always
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      - DB_HOST=db
+      - DB_PORT=5432
+      - DB_NAME=${DB_NAME:-hcdsys_prod}
+      - DB_USER=${DB_USER:-hcdsys_user}
+      - DB_PASSWORD=${DB_PASSWORD:-strong_password_here}
+      - API_PORT=8000
+      - API_HOST=0.0.0.0
+      - DEBUG=False
+      - ENVIRONMENT=production
+      - SECRET_KEY=${SECRET_KEY:-your_production_secret_key_here}
+      - ACCESS_TOKEN_EXPIRE_MINUTES=30
+      - DOCUMENT_STORAGE_PATH=/app/storage/documents
+      - CORS_ORIGINS=${CORS_ORIGINS:-http://localhost}
+      - LOG_LEVEL=WARNING
+    volumes:
+      - ./backend/storage:/app/storage
+      - ./backend/.env:/app/.env
+    networks:
+      - hcdsys-network
+    # Limitar recursos
+    deploy:
+      resources:
+        limits:
+          cpus: '1.0'
+          memory: 512M
+
+  nginx:
+    image: nginx:alpine
+    container_name: hcdsys-nginx
+    restart: always
+    ports:
+      - "80:80"
+    depends_on:
+      - backend
+    volumes:
+      - ./nginx.local.conf:/etc/nginx/conf.d/default.conf
+      - ./frontend/dist:/var/www/hcdsys/frontend/dist
+    networks:
+      - hcdsys-network
+    # Limitar recursos
+    deploy:
+      resources:
+        limits:
+          cpus: '0.5'
+          memory: 256M
+
+volumes:
+  postgres_data:
+
+networks:
+  hcdsys-network:
+    driver: bridge

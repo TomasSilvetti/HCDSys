@@ -1,0 +1,16 @@
+{
+  "testDocument": {
+    "title": "Documento de Prueba E2E",
+    "description": "Este es un documento creado para pruebas end-to-end",
+    "documentType": "informe"
+  },
+  "updatedDocument": {
+    "title": "Documento Actualizado E2E",
+    "description": "Este documento ha sido actualizado durante las pruebas end-to-end",
+    "documentType": "informe"
+  },
+  "searchTerms": {
+    "valid": "informe",
+    "invalid": "documentoinexistente"
+  }
+}

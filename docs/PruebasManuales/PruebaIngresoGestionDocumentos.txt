@@ -1,0 +1,6 @@
+al estar iniciado como usuario con rol=3, no puedo "gestionar documentos" deberia iniciar sesion como administrador. 
+Voy a hacer eso y pruebo de nuevo ingresar en "gestionar documentos"
+Okay, inicie sesion con el usuario administrador, el inicio de sesion fue exitoso, pero al intentar acceder a la pagina de "gestionar documentos" me redirige de nuevo al "inicio de sesion" aunque tenga el rol con autorizacion para entrar.
+luego de esa redireccion intente iniciar sesion como admin, y me manda nuevamente al inicio, por lo que es inaccesible la pagina "gestionar documentos"
+
+por que sucedio esto? podemos solucionarlo?

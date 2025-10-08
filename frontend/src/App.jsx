@@ -16,6 +16,7 @@ const SearchPage = lazy(() => import('./pages/search/SearchPage'))
 const UploadDocumentPage = lazy(() => import('./pages/documents/UploadDocumentPage'))
 const EditDocumentPage = lazy(() => import('./pages/documents/EditDocumentPage'))
 const DocumentDetailPage = lazy(() => import('./pages/documents/DocumentDetailPage'))
+const ProfilePage = lazy(() => import('./pages/user/ProfilePage'))
 const NotFoundPage = lazy(() => import('./pages/NotFoundPage'))
 const AccessDeniedPage = lazy(() => import('./pages/AccessDeniedPage'))
 
@@ -45,15 +46,17 @@ function App() {
           {/* Página de acceso denegado */}
           <Route path="acceso-denegado" element={<AccessDeniedPage />} />
           
-          {/* Rutas protegidas para usuarios autenticados */}
-          <Route path="documentos" element={<ProtectedRoute />}>
-            <Route path=":id" element={<DocumentDetailPage />} />
-          </Route>
+          {/* Página de perfil */}
+          <Route path="perfil" element={<ProtectedRoute><ProfilePage /></ProtectedRoute>} />
           
-          {/* Rutas protegidas para gestores de documentos */}
-          <Route path="documentos" element={<GestorRoute />}>
-            <Route path="cargar" element={<UploadDocumentPage />} />
-            <Route path=":id/editar" element={<EditDocumentPage />} />
+          {/* Rutas protegidas para documentos */}
+          <Route path="documentos">
+            {/* Rutas para todos los usuarios autenticados */}
+            <Route path=":id" element={<ProtectedRoute><DocumentDetailPage /></ProtectedRoute>} />
+            
+            {/* Rutas solo para gestores y administradores */}
+            <Route path="cargar" element={<GestorRoute><UploadDocumentPage /></GestorRoute>} />
+            <Route path=":id/editar" element={<GestorRoute><EditDocumentPage /></GestorRoute>} />
           </Route>
           
           {/* Rutas de administración protegidas */}

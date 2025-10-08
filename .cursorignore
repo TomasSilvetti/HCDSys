@@ -1,0 +1,39 @@
+# Dependencies
+node_modules/
+vendor/
+
+# Build outputs
+dist/
+build/
+.next/
+out/
+
+# Cache
+.cache/
+.turbo/
+.vite/
+
+# Git
+.git/
+
+# Logs
+*.log
+logs/
+
+# Environment
+.env.local
+.env
+
+# Testing
+coverage/
+.nyc_output/
+
+# IDE
+.vscode/
+.idea/
+
+# Assets grandes
+*.mp4
+*.zip
+*.pdf
+public/images/

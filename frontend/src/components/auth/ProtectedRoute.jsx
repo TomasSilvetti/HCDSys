@@ -39,8 +39,14 @@ const ProtectedRoute = ({
   }
 
   // Si hay roles permitidos y el usuario no tiene uno de ellos, redirigir a acceso denegado
-  if (allowedRoles.length > 0 && !allowedRoles.includes(userRole)) {
-    return <Navigate to="/acceso-denegado" replace />;
+  if (allowedRoles.length > 0) {
+    const userRoleStr = String(userRole);
+    console.log('Verificando acceso: Usuario tiene rol', userRoleStr, 'necesita uno de estos roles:', allowedRoles);
+    
+    if (!allowedRoles.includes(userRoleStr)) {
+      console.log('Acceso denegado: El usuario tiene rol', userRoleStr, 'pero se requiere uno de estos roles:', allowedRoles);
+      return <Navigate to="/acceso-denegado" replace />;
+    }
   }
 
   // Si se requieren permisos específicos y el usuario no los tiene, redirigir a acceso denegado

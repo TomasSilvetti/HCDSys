@@ -15,6 +15,28 @@ from ..utils.storage import StorageService
 
 router = APIRouter(prefix="/documents", tags=["documents"])
 
+@router.get("/categories", response_model=List[schemas.Categoria])
+async def get_document_categories(
+    current_user: models.Usuario = Depends(get_current_active_user),
+    db: Session = Depends(get_db)
+):
+    """
+    Obtener todas las categorías de documentos disponibles.
+    """
+    categorias = db.query(models.Categoria).all()
+    return categorias
+
+@router.get("/types", response_model=List[schemas.TipoDocumento])
+async def get_document_types(
+    current_user: models.Usuario = Depends(get_current_active_user),
+    db: Session = Depends(get_db)
+):
+    """
+    Obtener todos los tipos de documentos disponibles.
+    """
+    tipos = db.query(models.TipoDocumento).all()
+    return tipos
+
 @router.get("/", response_model=schemas.PaginatedResponse)
 async def search_documents(
     termino: Optional[str] = Query(None, description="Término de búsqueda (título o número de expediente)"),
@@ -129,18 +151,28 @@ async def search_documents(
         
         if has_restricted_access:
             # El usuario puede ver documentos restringidos, pero no clasificados
+            # Usamos una forma alternativa para el filtro que no depende de .has()
+            classified_docs = db.query(models.TipoDocumento.id).filter(
+                models.TipoDocumento.nombre.ilike("%clasificado%")
+            ).subquery()
+            
             query = query.filter(
                 or_(
                     models.Documento.usuario_id == current_user.id,  # Documentos propios
-                    ~models.Documento.tipo_documento.has(models.TipoDocumento.nombre.ilike("%clasificado%"))  # No clasificados
+                    ~models.Documento.tipo_documento_id.in_(classified_docs)  # No clasificados
                 )
             )
         else:
             # El usuario solo puede ver documentos públicos y propios
+            # Usamos una forma alternativa para el filtro que no depende de .has()
+            public_docs = db.query(models.TipoDocumento.id).filter(
+                models.TipoDocumento.nombre.ilike("%público%")
+            ).subquery()
+            
             query = query.filter(
                 or_(
                     models.Documento.usuario_id == current_user.id,  # Documentos propios
-                    models.Documento.tipo_documento.has(models.TipoDocumento.nombre.ilike("%público%"))  # Documentos públicos
+                    models.Documento.tipo_documento_id.in_(public_docs)  # Documentos públicos
                 )
             )
     
@@ -217,17 +249,27 @@ async def search_documents(
     # Aplicar filtros de permisos a la consulta de conteo
     if not has_full_access:
         if has_restricted_access:
+            # Usamos una forma alternativa para el filtro que no depende de .has()
+            classified_docs = db.query(models.TipoDocumento.id).filter(
+                models.TipoDocumento.nombre.ilike("%clasificado%")
+            ).subquery()
+            
             count_query = count_query.filter(
                 or_(
                     models.Documento.usuario_id == current_user.id,
-                    ~models.Documento.tipo_documento.has(models.TipoDocumento.nombre.ilike("%clasificado%"))
+                    ~models.Documento.tipo_documento_id.in_(classified_docs)
                 )
             )
         else:
+            # Usamos una forma alternativa para el filtro que no depende de .has()
+            public_docs = db.query(models.TipoDocumento.id).filter(
+                models.TipoDocumento.nombre.ilike("%público%")
+            ).subquery()
+            
             count_query = count_query.filter(
                 or_(
                     models.Documento.usuario_id == current_user.id,
-                    models.Documento.tipo_documento.has(models.TipoDocumento.nombre.ilike("%público%"))
+                    models.Documento.tipo_documento_id.in_(public_docs)
                 )
             )
     
@@ -317,7 +359,7 @@ async def create_document(
     Implementa verificación de integridad y sistema de rollback en caso de errores.
     """
     # Verificar permiso
-    if not check_permission(current_user, "DOCUMENT_CREATE", db):
+    if not check_permission(current_user, "docs:create", db):
         raise HTTPException(
             status_code=status.HTTP_403_FORBIDDEN,
             detail="No tiene permisos para crear documentos"
@@ -678,8 +720,8 @@ async def restore_document_version(
         document_id=documento_id,
         version_id=version_id,
         user_id=current_user.id,
-        comentario=comentario,
-        db=db
+        db=db,
+        comentario=comentario
     )
     
     if not success:
@@ -831,9 +873,9 @@ async def update_document(
             file=file,
             document_id=documento_id,
             user_id=current_user.id,
+            db=db,
             comentario=comentario,
-            cambios=cambios,
-            db=db
+            cambios=cambios
         )
         
         if not success:
