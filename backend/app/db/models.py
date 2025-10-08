@@ -43,6 +43,17 @@ class Rol(Base):
     usuarios = relationship("Usuario", back_populates="role")
     permisos = relationship("Permiso", secondary=rol_permiso, back_populates="roles")
 
+class CategoriaPermiso(Base):
+    __tablename__ = "categorias_permiso"
+    
+    id = Column(Integer, primary_key=True, index=True)
+    nombre = Column(String, nullable=False)
+    descripcion = Column(Text, nullable=True)
+    codigo = Column(String, unique=True, nullable=False)
+    
+    # Relaciones
+    permisos = relationship("Permiso", back_populates="categoria")
+
 class Permiso(Base):
     __tablename__ = "permisos"
 
@@ -50,9 +61,12 @@ class Permiso(Base):
     nombre = Column(String, nullable=False)
     descripcion = Column(Text, nullable=True)
     codigo = Column(String, unique=True, nullable=False)
+    categoria_id = Column(Integer, ForeignKey("categorias_permiso.id"), nullable=False)
+    es_critico = Column(Boolean, default=False)
 
     # Relaciones
     roles = relationship("Rol", secondary=rol_permiso, back_populates="permisos")
+    categoria = relationship("CategoriaPermiso", back_populates="permisos")
 
 class Categoria(Base):
     __tablename__ = "categorias"
@@ -140,4 +154,19 @@ class HistorialRol(Base):
     usuario = relationship("Usuario", foreign_keys=[usuario_id])
     rol_anterior = relationship("Rol", foreign_keys=[rol_anterior_id])
     rol_nuevo = relationship("Rol", foreign_keys=[rol_nuevo_id])
+    modificado_por = relationship("Usuario", foreign_keys=[modificado_por_id])
+
+class HistorialPermiso(Base):
+    __tablename__ = "historial_permiso"
+    
+    id = Column(Integer, primary_key=True, index=True)
+    rol_id = Column(Integer, ForeignKey("roles.id"), nullable=False)
+    permiso_id = Column(Integer, ForeignKey("permisos.id"), nullable=False)
+    accion = Column(String, nullable=False)  # "asignado" o "removido"
+    modificado_por_id = Column(Integer, ForeignKey("usuarios.id"), nullable=False)
+    fecha_cambio = Column(DateTime, default=datetime.utcnow)
+    
+    # Relaciones
+    rol = relationship("Rol", foreign_keys=[rol_id])
+    permiso = relationship("Permiso", foreign_keys=[permiso_id])
     modificado_por = relationship("Usuario", foreign_keys=[modificado_por_id])

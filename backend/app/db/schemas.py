@@ -82,11 +82,35 @@ class RolInDB(RolBase):
 class Rol(RolInDB):
     pass
 
+# Esquemas de Categoría de Permiso
+class CategoriaPermisoBase(BaseModel):
+    nombre: str
+    descripcion: Optional[str] = None
+    codigo: str
+
+class CategoriaPermisoCreate(CategoriaPermisoBase):
+    pass
+
+class CategoriaPermisoUpdate(BaseModel):
+    nombre: Optional[str] = None
+    descripcion: Optional[str] = None
+
+class CategoriaPermisoInDB(CategoriaPermisoBase):
+    id: int
+
+    class Config:
+        orm_mode = True
+
+class CategoriaPermiso(CategoriaPermisoInDB):
+    pass
+
 # Esquemas de Permiso
 class PermisoBase(BaseModel):
     nombre: str
     descripcion: Optional[str] = None
     codigo: str
+    categoria_id: int
+    es_critico: bool = False
 
 class PermisoCreate(PermisoBase):
     pass
@@ -94,6 +118,8 @@ class PermisoCreate(PermisoBase):
 class PermisoUpdate(BaseModel):
     nombre: Optional[str] = None
     descripcion: Optional[str] = None
+    categoria_id: Optional[int] = None
+    es_critico: Optional[bool] = None
 
 class PermisoInDB(PermisoBase):
     id: int
@@ -102,7 +128,34 @@ class PermisoInDB(PermisoBase):
         orm_mode = True
 
 class Permiso(PermisoInDB):
+    categoria: Optional[CategoriaPermiso] = None
+
+# Esquemas para asignación de permisos
+class AsignarPermisoRequest(BaseModel):
+    rol_id: int
+    permiso_id: int
+
+# Esquemas para historial de permisos
+class HistorialPermisoBase(BaseModel):
+    rol_id: int
+    permiso_id: int
+    accion: str
+    modificado_por_id: int
+
+class HistorialPermisoCreate(HistorialPermisoBase):
     pass
+
+class HistorialPermisoInDB(HistorialPermisoBase):
+    id: int
+    fecha_cambio: datetime
+
+    class Config:
+        orm_mode = True
+
+class HistorialPermiso(HistorialPermisoInDB):
+    rol: Rol
+    permiso: Permiso
+    modificado_por: Usuario
 
 # Esquemas de Categoría
 class CategoriaBase(BaseModel):
@@ -258,3 +311,14 @@ class DocumentoSearchParams(BaseModel):
     categoria_id: Optional[int] = None
     numero_expediente: Optional[str] = None
     usuario_id: Optional[int] = None
+
+# Esquema para respuestas paginadas
+class PaginatedResponse(BaseModel):
+    total: int
+    page: int
+    page_size: int
+    total_pages: int
+    items: List[Documento]
+    
+    class Config:
+        orm_mode = True

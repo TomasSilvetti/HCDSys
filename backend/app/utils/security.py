@@ -1,7 +1,7 @@
 from datetime import datetime, timedelta
 from typing import Optional
 
-from fastapi import Depends, HTTPException, status
+from fastapi import Depends, HTTPException, status, WebSocket
 from fastapi.security import OAuth2PasswordBearer
 from jose import JWTError, jwt
 from passlib.context import CryptContext
@@ -111,3 +111,38 @@ def check_permission(user: models.Usuario, permission_code: str, db: Session):
     ).first()
     
     return has_permission is not None
+
+async def get_current_user_ws(token: str, db: Session):
+    """
+    Versión para WebSockets de get_current_user.
+    Obtiene el usuario actual a partir del token JWT.
+    """
+    credentials_exception = HTTPException(
+        status_code=status.HTTP_401_UNAUTHORIZED,
+        detail="Credenciales inválidas",
+        headers={"WWW-Authenticate": "Bearer"},
+    )
+    
+    try:
+        payload = jwt.decode(token, settings.SECRET_KEY, algorithms=[settings.ALGORITHM])
+        email: str = payload.get("sub")
+        if email is None:
+            raise credentials_exception
+        token_data = schemas.TokenData(email=email)
+    except JWTError:
+        raise credentials_exception
+    
+    user = db.query(models.Usuario).filter(models.Usuario.email == token_data.email).first()
+    if user is None:
+        raise credentials_exception
+    if not user.activo:
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="Usuario inactivo. Contacte al administrador."
+        )
+    
+    # Actualizar último acceso
+    user.ultimo_acceso = datetime.utcnow()
+    db.commit()
+    
+    return user

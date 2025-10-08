@@ -5,7 +5,7 @@ from fastapi.security import OAuth2PasswordBearer
 from sqlalchemy.orm import Session
 
 from .db.database import engine, Base, get_db
-from .routes import auth, documents, users, roles
+from .routes import auth, documents, users, roles, permissions, websockets
 from .utils.config import settings
 from .db.init_roles import init_roles_and_permissions
 
@@ -32,6 +32,8 @@ app.include_router(auth.router, prefix="/api", tags=["auth"])
 app.include_router(documents.router, prefix="/api", tags=["documents"])
 app.include_router(users.router, prefix="/api", tags=["users"])
 app.include_router(roles.router, prefix="/api", tags=["roles"])
+app.include_router(permissions.router, prefix="/api", tags=["permissions"])
+app.include_router(websockets.router, prefix="/api")
 
 @app.get("/api/health")
 def health_check():

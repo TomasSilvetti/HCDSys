@@ -3,8 +3,8 @@ import shutil
 from datetime import datetime
 from typing import List, Optional
 from fastapi import APIRouter, Depends, HTTPException, status, UploadFile, File, Form, Query
-from sqlalchemy.orm import Session
-from sqlalchemy import or_, and_
+from sqlalchemy.orm import Session, joinedload
+from sqlalchemy import or_, and_, func
 
 from ..db import models, schemas
 from ..db.database import get_db
@@ -13,22 +13,34 @@ from ..utils.config import settings
 
 router = APIRouter(prefix="/documents", tags=["documents"])
 
-@router.get("/", response_model=List[schemas.Documento])
+@router.get("/", response_model=schemas.PaginatedResponse)
 async def search_documents(
     termino: Optional[str] = Query(None, description="Término de búsqueda (título o número de expediente)"),
     fecha_desde: Optional[str] = Query(None, description="Fecha desde (YYYY-MM-DD)"),
     fecha_hasta: Optional[str] = Query(None, description="Fecha hasta (YYYY-MM-DD)"),
     categoria_id: Optional[int] = Query(None, description="ID de categoría"),
     tipo_documento_id: Optional[int] = Query(None, description="ID de tipo de documento"),
-    skip: int = Query(0, description="Número de resultados a omitir"),
-    limit: int = Query(10, description="Número máximo de resultados"),
+    page: int = Query(1, description="Número de página", ge=1),
+    page_size: int = Query(10, description="Tamaño de página", ge=1, le=100),
     current_user: models.Usuario = Depends(get_current_active_user),
     db: Session = Depends(get_db)
 ):
     """
-    Buscar documentos con filtros opcionales.
+    Buscar documentos con filtros opcionales y paginación.
     Los usuarios solo pueden ver documentos a los que tienen acceso según su rol.
+    
+    - **termino**: Busca en título, número de expediente y descripción
+    - **fecha_desde/fecha_hasta**: Filtra por rango de fechas (formato YYYY-MM-DD)
+    - **categoria_id/tipo_documento_id**: Filtra por categoría o tipo de documento
+    - **page/page_size**: Controla la paginación de resultados
     """
+    # Validación de parámetros
+    if not termino and not fecha_desde and not fecha_hasta and not categoria_id and not tipo_documento_id:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="Debe proporcionar al menos un criterio de búsqueda"
+        )
+    
     # Iniciar la consulta base
     query = db.query(models.Documento).filter(models.Documento.activo == True)
     
@@ -63,13 +75,123 @@ async def search_documents(
             )
     
     if categoria_id:
+        # Verificar que la categoría existe
+        categoria = db.query(models.Categoria).filter(models.Categoria.id == categoria_id).first()
+        if not categoria:
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail=f"Categoría con ID {categoria_id} no encontrada"
+            )
         query = query.filter(models.Documento.categoria_id == categoria_id)
     
     if tipo_documento_id:
+        # Verificar que el tipo de documento existe
+        tipo_documento = db.query(models.TipoDocumento).filter(models.TipoDocumento.id == tipo_documento_id).first()
+        if not tipo_documento:
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail=f"Tipo de documento con ID {tipo_documento_id} no encontrado"
+            )
         query = query.filter(models.Documento.tipo_documento_id == tipo_documento_id)
     
+    # Filtrar por permisos de acceso
+    # 1. Verificar si el usuario tiene permiso de acceso a todos los documentos
+    has_full_access = check_permission(current_user, "DOCUMENT_VIEW_ALL", db)
+    
+    # 2. Si no tiene acceso completo, filtrar según restricciones
+    if not has_full_access:
+        # Obtener documentos creados por el usuario
+        user_docs = query.filter(models.Documento.usuario_id == current_user.id)
+        
+        # Obtener documentos públicos o con acceso según rol
+        # Aquí asumimos que los documentos tienen un nivel de acceso basado en roles
+        # Si no existe esta estructura, se puede implementar según los requisitos específicos
+        
+        # Verificar si el usuario tiene permiso de acceso a documentos restringidos
+        has_restricted_access = check_permission(current_user, "DOCUMENT_VIEW_RESTRICTED", db)
+        
+        if has_restricted_access:
+            # El usuario puede ver documentos restringidos, pero no clasificados
+            query = query.filter(
+                or_(
+                    models.Documento.usuario_id == current_user.id,  # Documentos propios
+                    ~models.Documento.tipo_documento.has(models.TipoDocumento.nombre.ilike("%clasificado%"))  # No clasificados
+                )
+            )
+        else:
+            # El usuario solo puede ver documentos públicos y propios
+            query = query.filter(
+                or_(
+                    models.Documento.usuario_id == current_user.id,  # Documentos propios
+                    models.Documento.tipo_documento.has(models.TipoDocumento.nombre.ilike("%público%"))  # Documentos públicos
+                )
+            )
+    
+    # Optimizaciones para mejorar el rendimiento
+    
+    # 1. Usar select_from para hacer joins explícitos y mejorar el rendimiento
+    query = query.select_from(models.Documento)
+    
+    # 2. Aplicar eager loading para evitar problemas de N+1 queries
+    query = query.options(
+        joinedload(models.Documento.categoria),
+        joinedload(models.Documento.tipo_documento),
+        joinedload(models.Documento.usuario)
+    )
+    
+    # 3. Ordenar por fecha de modificación (más reciente primero) para resultados más relevantes
+    query = query.order_by(models.Documento.fecha_modificacion.desc())
+    
+    # Calcular total de resultados para la paginación
+    # Usar una consulta separada y optimizada solo para contar
+    count_query = db.query(func.count(models.Documento.id)).select_from(models.Documento)
+    
+    # Aplicar los mismos filtros a la consulta de conteo
+    if termino:
+        count_query = count_query.filter(
+            or_(
+                models.Documento.titulo.ilike(f"%{termino}%"),
+                models.Documento.numero_expediente.ilike(f"%{termino}%"),
+                models.Documento.descripcion.ilike(f"%{termino}%")
+            )
+        )
+    
+    if fecha_desde and 'fecha_desde_dt' in locals():
+        count_query = count_query.filter(models.Documento.fecha_creacion >= fecha_desde_dt)
+    
+    if fecha_hasta and 'fecha_hasta_dt' in locals():
+        count_query = count_query.filter(models.Documento.fecha_creacion <= fecha_hasta_dt)
+    
+    if categoria_id:
+        count_query = count_query.filter(models.Documento.categoria_id == categoria_id)
+    
+    if tipo_documento_id:
+        count_query = count_query.filter(models.Documento.tipo_documento_id == tipo_documento_id)
+    
+    # Aplicar filtros de permisos a la consulta de conteo
+    if not has_full_access:
+        if has_restricted_access:
+            count_query = count_query.filter(
+                or_(
+                    models.Documento.usuario_id == current_user.id,
+                    ~models.Documento.tipo_documento.has(models.TipoDocumento.nombre.ilike("%clasificado%"))
+                )
+            )
+        else:
+            count_query = count_query.filter(
+                or_(
+                    models.Documento.usuario_id == current_user.id,
+                    models.Documento.tipo_documento.has(models.TipoDocumento.nombre.ilike("%público%"))
+                )
+            )
+    
+    # Obtener el conteo total
+    total_items = count_query.scalar()
+    total_pages = (total_items + page_size - 1) // page_size if total_items > 0 else 0
+    
     # Aplicar paginación
-    documentos = query.offset(skip).limit(limit).all()
+    skip = (page - 1) * page_size
+    documentos = query.offset(skip).limit(page_size).all()
     
     # Registrar la búsqueda en el historial
     for doc in documentos:
@@ -77,13 +199,27 @@ async def search_documents(
             usuario_id=current_user.id,
             documento_id=doc.id,
             accion="busqueda",
-            detalles=f"Búsqueda: {termino if termino else 'todos'}"
+            detalles=f"Búsqueda: {termino if termino else 'filtrada'}, página {page}"
         )
         db.add(historial)
     
-    db.commit()
+    try:
+        db.commit()
+    except Exception as e:
+        db.rollback()
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f"Error al registrar la búsqueda: {str(e)}"
+        )
     
-    return documentos
+    # Construir respuesta paginada
+    return {
+        "total": total_items,
+        "page": page,
+        "page_size": page_size,
+        "total_pages": total_pages,
+        "items": documentos
+    }
 
 @router.get("/{documento_id}", response_model=schemas.Documento)
 async def get_document(

@@ -325,7 +325,7 @@
           25,
           26
         ],
-        "status": "pending",
+        "status": "done",
         "subtasks": [
           {
             "id": 1,
@@ -333,7 +333,7 @@
             "description": "Crear la estructura del endpoint REST para búsqueda de documentos con todos los parámetros necesarios y manejo de errores",
             "dependencies": [],
             "details": "1. Definir la ruta del endpoint (ej: /api/documentos/buscar)\n2. Diseñar estructura de parámetros de búsqueda (query params)\n3. Implementar validación de parámetros de búsqueda\n4. Crear respuestas de error para términos vacíos (400)\n5. Configurar manejo de errores del servidor (500)\n6. Documentar la API con Swagger/OpenAPI",
-            "status": "pending",
+            "status": "done",
             "testStrategy": ""
           },
           {
@@ -344,7 +344,7 @@
               "27.1"
             ],
             "details": "1. Implementar filtrado por título (búsqueda parcial)\n2. Implementar filtrado por número de expediente (búsqueda exacta)\n3. Añadir filtrado por rango de fechas (desde/hasta)\n4. Crear consultas SQL/ORM optimizadas para estos filtros\n5. Implementar combinación de múltiples criterios de filtrado\n6. Realizar pruebas unitarias de cada filtro",
-            "status": "pending",
+            "status": "done",
             "testStrategy": ""
           },
           {
@@ -356,7 +356,7 @@
               "27.2"
             ],
             "details": "1. Integrar con el sistema de autenticación existente\n2. Implementar validación de permisos de acceso a documentos\n3. Configurar exclusión de documentos clasificados/restringidos según permisos\n4. Añadir filtrado automático basado en nivel de acceso del usuario\n5. Implementar registro de intentos de acceso a documentos restringidos\n6. Realizar pruebas de seguridad para verificar el correcto funcionamiento",
-            "status": "pending",
+            "status": "done",
             "testStrategy": ""
           },
           {
@@ -368,7 +368,7 @@
               "27.3"
             ],
             "details": "1. Implementar paginación de resultados con parámetros page y pageSize\n2. Añadir metadatos de paginación en la respuesta (total, páginas, etc.)\n3. Optimizar consultas a base de datos para mejor rendimiento\n4. Implementar índices en la base de datos si es necesario\n5. Realizar pruebas de carga para verificar rendimiento con grandes volúmenes\n6. Configurar caché para búsquedas frecuentes",
-            "status": "pending",
+            "status": "done",
             "testStrategy": ""
           }
         ]
@@ -738,7 +738,7 @@
         "dependencies": [
           33
         ],
-        "status": "pending",
+        "status": "done",
         "subtasks": [
           {
             "id": 1,
@@ -746,7 +746,7 @@
             "description": "Crear la estructura de datos necesaria para almacenar y gestionar los permisos en el sistema",
             "dependencies": [],
             "details": "1. Definir entidades para permisos, roles y usuarios\n2. Diseñar relaciones entre permisos y roles\n3. Crear esquemas de base de datos para permisos\n4. Implementar métodos CRUD para gestión de permisos\n5. Documentar el modelo de datos y sus relaciones",
-            "status": "pending",
+            "status": "done",
             "testStrategy": ""
           },
           {
@@ -757,7 +757,7 @@
               "34.1"
             ],
             "details": "1. Implementar categoría de Gestión de Documentos\n2. Implementar categoría de Gestión de Usuarios\n3. Implementar categoría de Administración del Sistema\n4. Implementar categoría de Búsqueda y Consulta\n5. Crear relaciones entre categorías y roles existentes\n6. Configurar permisos predeterminados por rol",
-            "status": "pending",
+            "status": "done",
             "testStrategy": ""
           },
           {
@@ -768,7 +768,7 @@
               "34.2"
             ],
             "details": "1. Diseñar pantalla de gestión de roles y permisos\n2. Implementar visualización de permisos por rol\n3. Crear funcionalidad para activar/desactivar permisos\n4. Desarrollar componentes para asignación de permisos\n5. Implementar registro de cambios en historial\n6. Añadir validaciones de interfaz",
-            "status": "pending",
+            "status": "done",
             "testStrategy": ""
           },
           {
@@ -779,7 +779,7 @@
               "34.2"
             ],
             "details": "1. Identificar permisos críticos del sistema\n2. Configurar protección especial para permisos del rol Administrador\n3. Implementar confirmaciones adicionales para cambios en permisos críticos\n4. Crear sistema de alertas para modificaciones sensibles\n5. Desarrollar mecanismo de reversión de cambios críticos",
-            "status": "pending",
+            "status": "done",
             "testStrategy": ""
           },
           {
@@ -791,7 +791,7 @@
               "34.4"
             ],
             "details": "1. Diseñar mecanismo de notificación de cambios de permisos\n2. Implementar actualización en tiempo real para sesiones activas\n3. Crear sistema de revalidación de permisos en acciones críticas\n4. Desarrollar manejo de conflictos por cambios simultáneos\n5. Implementar registro de aplicación de cambios en tiempo real",
-            "status": "pending",
+            "status": "done",
             "testStrategy": ""
           }
         ]
@@ -1162,7 +1162,7 @@
     ],
     "metadata": {
       "created": "2025-10-07T16:52:07.729Z",
-      "updated": "2025-10-07T23:39:26.624Z",
+      "updated": "2025-10-08T00:21:37.244Z",
       "description": "Tasks for master context"
     }
   }
