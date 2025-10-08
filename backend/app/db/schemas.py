@@ -226,6 +226,11 @@ class DocumentoInDB(DocumentoBase):
     fecha_modificacion: datetime
     usuario_id: int
     path_archivo: str
+    hash_archivo: Optional[str] = None
+    tamano_archivo: Optional[int] = None
+    extension_archivo: Optional[str] = None
+    fecha_ultima_verificacion: Optional[datetime] = None
+    estado_integridad: Optional[bool] = None
     activo: bool
 
     class Config:
@@ -388,3 +393,26 @@ class BloqueoIPInDB(BloqueoIPBase):
 
 class BloqueoIP(BloqueoIPInDB):
     pass
+
+# Esquemas para errores de almacenamiento
+class ErrorAlmacenamientoBase(BaseModel):
+    usuario_id: int
+    tipo_error: str
+    mensaje_error: str
+    documento_id: Optional[int] = None
+    acciones_tomadas: Optional[str] = None
+    resuelto: bool = False
+
+class ErrorAlmacenamientoCreate(ErrorAlmacenamientoBase):
+    pass
+
+class ErrorAlmacenamientoInDB(ErrorAlmacenamientoBase):
+    id: int
+    fecha: datetime
+
+    class Config:
+        orm_mode = True
+
+class ErrorAlmacenamiento(ErrorAlmacenamientoInDB):
+    documento: Optional[Documento] = None
+    usuario: Usuario

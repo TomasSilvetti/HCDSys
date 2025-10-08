@@ -1,8 +1,9 @@
 import os
 import shutil
+import hashlib
 from datetime import datetime
 from typing import List, Optional
-from fastapi import APIRouter, Depends, HTTPException, status, UploadFile, File, Form, Query
+from fastapi import APIRouter, Depends, HTTPException, status, UploadFile, File, Form, Query, BackgroundTasks
 from sqlalchemy.orm import Session, joinedload
 from sqlalchemy import or_, and_, func
 
@@ -10,6 +11,7 @@ from ..db import models, schemas
 from ..db.database import get_db
 from ..utils.security import get_current_active_user, check_permission
 from ..utils.config import settings
+from ..utils.storage import StorageService
 
 router = APIRouter(prefix="/documents", tags=["documents"])
 
@@ -261,12 +263,14 @@ async def create_document(
     categoria_id: Optional[int] = Form(None),
     tipo_documento_id: int = Form(...),
     archivo: UploadFile = File(...),
+    background_tasks: BackgroundTasks = None,
     current_user: models.Usuario = Depends(get_current_active_user),
     db: Session = Depends(get_db)
 ):
     """
     Crear un nuevo documento.
     Solo usuarios con permiso de gestión de documentos pueden crear documentos.
+    Implementa verificación de integridad y sistema de rollback en caso de errores.
     """
     # Verificar permiso
     if not check_permission(current_user, "DOCUMENT_CREATE", db):
@@ -320,6 +324,9 @@ async def create_document(
             detail=f"El archivo excede el tamaño máximo permitido ({settings.MAX_UPLOAD_SIZE / 1024 / 1024} MB)"
         )
     
+    # Calcular hash del archivo para verificación de integridad
+    file_hash = hashlib.sha256(contents).hexdigest()
+    
     # Crear el documento en la base de datos
     new_document = models.Documento(
         titulo=titulo,
@@ -329,38 +336,90 @@ async def create_document(
         tipo_documento_id=tipo_documento_id,
         usuario_id=current_user.id,
         path_archivo="",  # Se actualizará después de guardar el archivo
+        hash_archivo=file_hash,
+        tamano_archivo=file_size,
+        extension_archivo=file_extension,
+        fecha_ultima_verificacion=datetime.utcnow(),
+        estado_integridad=True,
         activo=True
     )
     
-    db.add(new_document)
-    db.commit()
-    db.refresh(new_document)
-    
-    # Crear directorio de almacenamiento si no existe
-    document_dir = os.path.join(settings.DOCUMENT_STORAGE_PATH, str(new_document.id))
-    os.makedirs(document_dir, exist_ok=True)
-    
-    # Guardar el archivo
-    file_path = os.path.join(document_dir, f"{new_document.id}{file_extension}")
-    with open(file_path, "wb") as buffer:
-        buffer.write(contents)
-    
-    # Actualizar la ruta del archivo en la base de datos
-    new_document.path_archivo = file_path
-    db.commit()
-    db.refresh(new_document)
-    
-    # Registrar la acción en el historial
-    historial = models.HistorialAcceso(
-        usuario_id=current_user.id,
-        documento_id=new_document.id,
-        accion="creacion",
-        detalles="Creación de documento"
-    )
-    db.add(historial)
-    db.commit()
-    
-    return new_document
+    try:
+        # Iniciar transacción
+        db.add(new_document)
+        db.commit()
+        db.refresh(new_document)
+        
+        # Usar el servicio de almacenamiento para guardar el archivo
+        success, message, metadata = await StorageService.save_document(
+            archivo, new_document.id, current_user.id, db
+        )
+        
+        if not success:
+            # Si falla el guardado, hacer rollback y lanzar excepción
+            raise HTTPException(
+                status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+                detail=f"Error al guardar el archivo: {message}"
+            )
+        
+        # Actualizar metadatos del documento
+        for key, value in metadata.items():
+            setattr(new_document, key, value)
+        
+        db.commit()
+        db.refresh(new_document)
+        
+        # Registrar la acción en el historial
+        historial = models.HistorialAcceso(
+            usuario_id=current_user.id,
+            documento_id=new_document.id,
+            accion="creacion",
+            detalles="Creación de documento"
+        )
+        db.add(historial)
+        db.commit()
+        
+        # Programar verificación de integridad en segundo plano
+        if background_tasks:
+            from ..utils.tasks import verify_document_integrity
+            background_tasks.add_task(verify_document_integrity, db, new_document.id)
+        
+        return new_document
+        
+    except HTTPException as http_ex:
+        # Re-lanzar excepciones HTTP
+        raise http_ex
+        
+    except Exception as e:
+        # Hacer rollback en caso de error
+        db.rollback()
+        
+        # Registrar el error
+        error_log = models.ErrorAlmacenamiento(
+            documento_id=None,  # No tenemos ID porque falló antes de commit
+            usuario_id=current_user.id,
+            tipo_error="db",
+            mensaje_error=f"Error al crear documento: {str(e)}"
+        )
+        
+        try:
+            db.add(error_log)
+            db.commit()
+        except:
+            db.rollback()
+        
+        # Eliminar archivos parcialmente guardados si existen
+        try:
+            document_dir = os.path.join(settings.DOCUMENT_STORAGE_PATH, str(new_document.id))
+            if os.path.exists(document_dir):
+                shutil.rmtree(document_dir)
+        except:
+            pass
+        
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f"Error al crear documento: {str(e)}"
+        )
 
 @router.put("/{documento_id}", response_model=schemas.Documento)
 async def update_document(

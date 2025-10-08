@@ -103,6 +103,11 @@ class Documento(Base):
     tipo_documento_id = Column(Integer, ForeignKey("tipos_documento.id"), nullable=False)
     usuario_id = Column(Integer, ForeignKey("usuarios.id"), nullable=False)
     path_archivo = Column(String, nullable=False)
+    hash_archivo = Column(String, nullable=True)  # Hash para verificación de integridad
+    tamano_archivo = Column(Integer, nullable=True)  # Tamaño en bytes
+    extension_archivo = Column(String, nullable=True)  # Extensión del archivo
+    fecha_ultima_verificacion = Column(DateTime, nullable=True)  # Fecha de última verificación de integridad
+    estado_integridad = Column(Boolean, nullable=True)  # True si la última verificación fue exitosa
     activo = Column(Boolean, default=True)
 
     # Relaciones
@@ -210,3 +215,19 @@ class BloqueoIP(Base):
     fecha_inicio = Column(DateTime, default=datetime.utcnow)
     fecha_fin = Column(DateTime, nullable=False)  # Cuando expira el bloqueo
     activo = Column(Boolean, default=True)
+
+class ErrorAlmacenamiento(Base):
+    __tablename__ = "errores_almacenamiento"
+    
+    id = Column(Integer, primary_key=True, index=True)
+    documento_id = Column(Integer, ForeignKey("documentos.id"), nullable=True)  # Puede ser nulo si el error ocurre antes de crear el registro
+    usuario_id = Column(Integer, ForeignKey("usuarios.id"), nullable=False)
+    tipo_error = Column(String, nullable=False)  # "db", "filesystem", "integridad", etc.
+    mensaje_error = Column(Text, nullable=False)
+    fecha = Column(DateTime, default=datetime.utcnow)
+    resuelto = Column(Boolean, default=False)
+    acciones_tomadas = Column(Text, nullable=True)  # Acciones de rollback realizadas
+    
+    # Relaciones
+    documento = relationship("Documento", foreign_keys=[documento_id])
+    usuario = relationship("Usuario", foreign_keys=[usuario_id])
