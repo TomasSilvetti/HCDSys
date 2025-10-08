@@ -1,5 +1,8 @@
 import { createContext, useState, useContext, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { authService } from '../utils/api';
+import api from '../utils/api';
+import { setupAuthInterceptors } from '../utils/authInterceptor';
 
 // Crear el contexto de autenticación
 const AuthContext = createContext();
@@ -13,6 +16,12 @@ export const useAuth = () => {
 export const AuthProvider = ({ children }) => {
   const [currentUser, setCurrentUser] = useState(null);
   const [loading, setLoading] = useState(true);
+  const navigate = useNavigate();
+
+  // Configurar interceptores para manejar errores de autenticación
+  useEffect(() => {
+    setupAuthInterceptors(api, logout, navigate);
+  }, [navigate]);
 
   // Cargar usuario desde localStorage/token al iniciar
   useEffect(() => {

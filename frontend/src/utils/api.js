@@ -1,4 +1,5 @@
 import axios from 'axios';
+import { setupAuthInterceptors } from './authInterceptor';
 
 // Crear instancia de axios con configuración base
 const api = axios.create({

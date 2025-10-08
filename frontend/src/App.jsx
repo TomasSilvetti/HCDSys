@@ -5,6 +5,8 @@ import { lazy, Suspense } from 'react'
 import MainLayout from './components/layouts/MainLayout'
 import AdminRoute from './components/auth/AdminRoute'
 import ProtectedRoute from './components/auth/ProtectedRoute'
+import GestorRoute from './components/auth/GestorRoute'
+import AuthErrorNotification from './components/ui/AuthErrorNotification'
 
 // Pages
 const HomePage = lazy(() => import('./pages/HomePage'))
@@ -14,6 +16,7 @@ const SearchPage = lazy(() => import('./pages/search/SearchPage'))
 const UploadDocumentPage = lazy(() => import('./pages/documents/UploadDocumentPage'))
 const DocumentDetailPage = lazy(() => import('./pages/documents/DocumentDetailPage'))
 const NotFoundPage = lazy(() => import('./pages/NotFoundPage'))
+const AccessDeniedPage = lazy(() => import('./pages/AccessDeniedPage'))
 
 // Admin Pages
 const UserManagementPage = lazy(() => import('./pages/admin/UserManagementPage'))
@@ -30,6 +33,7 @@ const Loading = () => (
 function App() {
   return (
     <Suspense fallback={<Loading />}>
+      <AuthErrorNotification />
       <Routes>
         <Route path="/" element={<MainLayout />}>
           <Route index element={<HomePage />} />
@@ -37,10 +41,17 @@ function App() {
           <Route path="registro" element={<RegisterPage />} />
           <Route path="buscar" element={<SearchPage />} />
           
+          {/* Página de acceso denegado */}
+          <Route path="acceso-denegado" element={<AccessDeniedPage />} />
+          
           {/* Rutas protegidas para usuarios autenticados */}
           <Route path="documentos" element={<ProtectedRoute />}>
-            <Route path="cargar" element={<UploadDocumentPage />} />
             <Route path=":id" element={<DocumentDetailPage />} />
+          </Route>
+          
+          {/* Rutas protegidas para gestores de documentos */}
+          <Route path="documentos" element={<GestorRoute />}>
+            <Route path="cargar" element={<UploadDocumentPage />} />
           </Route>
           
           {/* Rutas de administración protegidas */}
