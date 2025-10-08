@@ -490,7 +490,7 @@
         "dependencies": [
           25
         ],
-        "status": "pending",
+        "status": "done",
         "subtasks": [
           {
             "id": 1,
@@ -498,7 +498,7 @@
             "description": "Implementar la estructura HTML y CSS del formulario con todos los campos requeridos según las especificaciones.",
             "dependencies": [],
             "details": "1. Crear componente React para el formulario\n2. Implementar campos obligatorios (título, número de expediente, tipo de documento)\n3. Implementar campos opcionales (descripción, categoría)\n4. Diseñar selectores para categoría y tipo de documento\n5. Aplicar estilos según guía de diseño del proyecto\n6. Implementar mensajes de validación visual para campos obligatorios",
-            "status": "pending",
+            "status": "done",
             "testStrategy": ""
           },
           {
@@ -509,7 +509,7 @@
               "30.1"
             ],
             "details": "1. Implementar componente de drag & drop para archivos\n2. Crear botón alternativo para seleccionar archivos del dispositivo\n3. Desarrollar la lógica para capturar el archivo seleccionado\n4. Implementar vista previa del documento según su tipo\n5. Mostrar nombre y tamaño del archivo seleccionado\n6. Permitir eliminar el archivo seleccionado antes de enviar",
-            "status": "pending",
+            "status": "done",
             "testStrategy": ""
           },
           {
@@ -520,7 +520,7 @@
               "30.2"
             ],
             "details": "1. Crear función para validar tipos de archivo permitidos (.pdf, .doc, .docx, .xls, .xlsx, .txt)\n2. Implementar validación de tamaño máximo (10MB)\n3. Mostrar mensajes de error específicos para cada tipo de validación fallida\n4. Bloquear envío del formulario si las validaciones fallan\n5. Implementar validaciones de campos obligatorios del formulario\n6. Crear función para verificar formato de número de expediente",
-            "status": "pending",
+            "status": "done",
             "testStrategy": ""
           },
           {
@@ -533,7 +533,7 @@
               "30.3"
             ],
             "details": "1. Crear componente de barra de progreso visual\n2. Implementar lógica para actualizar el progreso durante la carga\n3. Desarrollar sistema de manejo de errores durante el proceso de carga\n4. Mostrar mensajes de error específicos según el tipo de fallo\n5. Implementar redirección a vista detalle tras carga exitosa\n6. Añadir opción para cancelar la carga en proceso\n7. Crear mensaje de confirmación de carga exitosa",
-            "status": "pending",
+            "status": "done",
             "testStrategy": ""
           }
         ]
@@ -1162,7 +1162,7 @@
     ],
     "metadata": {
       "created": "2025-10-07T16:52:07.729Z",
-      "updated": "2025-10-08T00:31:19.091Z",
+      "updated": "2025-10-08T00:37:58.397Z",
       "description": "Tasks for master context"
     }
   }

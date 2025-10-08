@@ -1,4 +1,4 @@
-import { Navigate, useLocation } from 'react-router-dom';
+import { Navigate, useLocation, Outlet } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 
 /**
@@ -44,7 +44,7 @@ const ProtectedRoute = ({ children, allowedRoles = [] }) => {
   }
 
   // Si está autenticado y tiene los roles permitidos (o no hay restricción de roles), mostrar el contenido
-  return children;
+  return children || <Outlet />;
 };
 
 export default ProtectedRoute;

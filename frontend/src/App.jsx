@@ -4,12 +4,14 @@ import { lazy, Suspense } from 'react'
 // Layouts
 import MainLayout from './components/layouts/MainLayout'
 import AdminRoute from './components/auth/AdminRoute'
+import ProtectedRoute from './components/auth/ProtectedRoute'
 
 // Pages
 const HomePage = lazy(() => import('./pages/HomePage'))
 const LoginPage = lazy(() => import('./pages/auth/LoginPage'))
 const RegisterPage = lazy(() => import('./pages/auth/RegisterPage'))
 const SearchPage = lazy(() => import('./pages/search/SearchPage'))
+const UploadDocumentPage = lazy(() => import('./pages/documents/UploadDocumentPage'))
 const NotFoundPage = lazy(() => import('./pages/NotFoundPage'))
 
 // Admin Pages
@@ -33,6 +35,11 @@ function App() {
           <Route path="login" element={<LoginPage />} />
           <Route path="registro" element={<RegisterPage />} />
           <Route path="buscar" element={<SearchPage />} />
+          
+          {/* Rutas protegidas para usuarios autenticados */}
+          <Route path="documentos" element={<ProtectedRoute />}>
+            <Route path="cargar" element={<UploadDocumentPage />} />
+          </Route>
           
           {/* Rutas de administración protegidas */}
           <Route path="admin" element={<AdminRoute />}>
