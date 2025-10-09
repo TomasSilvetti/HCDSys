@@ -1,11 +1,16 @@
 import os
 import shutil
 import hashlib
+import logging
 from datetime import datetime
 from typing import List, Optional, Dict, Any
 from fastapi import APIRouter, Depends, HTTPException, status, UploadFile, File, Form, Query, BackgroundTasks
+from fastapi.responses import FileResponse
 from sqlalchemy.orm import Session, joinedload
 from sqlalchemy import or_, and_, func
+
+# Configurar logging
+logger = logging.getLogger("app.documents")
 
 from ..db import models, schemas
 from ..db.database import get_db
@@ -36,6 +41,145 @@ async def get_document_types(
     """
     tipos = db.query(models.TipoDocumento).all()
     return tipos
+
+@router.get("/diagnostics/search", response_model=dict)
+async def search_diagnostics(
+    termino: Optional[str] = Query(None, description="Término de búsqueda para diagnóstico"),
+    current_user: models.Usuario = Depends(get_current_active_user),
+    db: Session = Depends(get_db)
+):
+    """
+    Ruta de diagnóstico para verificar la funcionalidad de búsqueda.
+    Devuelve información detallada sobre el proceso de búsqueda sin ejecutar la consulta completa.
+    """
+    try:
+        logger.info(f"Diagnóstico de búsqueda - Término: {termino}")
+        
+        # Verificar si el término contiene caracteres especiales
+        special_chars = "%_[]^$.|?*+(){}\\"
+        has_special_chars = any(c in termino for c in special_chars) if termino else False
+        
+        # Crear término escapado para demostración
+        def escape_like(string):
+            if not string:
+                return string
+            return string.replace('%', '\\%').replace('_', '\\_').replace('[', '\\[').replace(']', '\\]')
+        
+        termino_escapado = escape_like(termino) if termino else None
+        
+        # Verificar permisos del usuario
+        has_full_access = check_permission(current_user, "DOCUMENT_VIEW_ALL", db)
+        has_restricted_access = check_permission(current_user, "DOCUMENT_VIEW_RESTRICTED", db)
+        
+        # Información de diagnóstico
+        diagnostico = {
+            "termino_original": termino,
+            "termino_escapado": termino_escapado,
+            "tiene_caracteres_especiales": has_special_chars,
+            "caracteres_especiales_detectados": [c for c in termino if c in special_chars] if termino else [],
+            "permisos_usuario": {
+                "acceso_completo": has_full_access,
+                "acceso_restringido": has_restricted_access,
+                "usuario_id": current_user.id,
+                "usuario_email": current_user.email,
+                "role_id": current_user.role_id
+            },
+            "configuracion_cors": {
+                "origenes_permitidos": settings.CORS_ORIGINS
+            },
+            "estado": "ok",
+            "mensaje": "Diagnóstico completado con éxito"
+        }
+        
+        # Si se proporciona un término, buscar documentos que coincidan (solo conteo)
+        if termino:
+            try:
+                # Crear consulta simplificada para verificar
+                query = db.query(func.count(models.Documento.id)).filter(models.Documento.activo == True)
+                
+                # Aplicar filtro con término escapado
+                try:
+                    query = query.filter(
+                        or_(
+                            models.Documento.titulo.ilike(f"%{termino_escapado}%"),
+                            models.Documento.numero_expediente.ilike(f"%{termino_escapado}%"),
+                            models.Documento.descripcion.ilike(f"%{termino_escapado}%")
+                        )
+                    )
+                    
+                    # Ejecutar consulta
+                    count = query.scalar()
+                    
+                    diagnostico["resultados"] = {
+                        "conteo": count,
+                        "consulta_exitosa": True
+                    }
+                except Exception as e:
+                    logger.error(f"Error en consulta ILIKE de diagnóstico: {str(e)}", exc_info=True)
+                    
+                    # Intentar con una búsqueda más simple como fallback
+                    try:
+                        query = db.query(func.count(models.Documento.id)).filter(models.Documento.activo == True)
+                        query = query.filter(
+                            or_(
+                                models.Documento.titulo.contains(termino),
+                                models.Documento.numero_expediente.contains(termino),
+                                models.Documento.descripcion.contains(termino)
+                            )
+                        )
+                        
+                        # Ejecutar consulta
+                        count = query.scalar()
+                        
+                        diagnostico["resultados"] = {
+                            "conteo": count,
+                            "consulta_exitosa": True,
+                            "metodo": "contains (fallback)",
+                            "error_ilike": str(e),
+                            "tipo_error_ilike": type(e).__name__
+                        }
+                    except Exception as e2:
+                        logger.error(f"Error en consulta contains de diagnóstico: {str(e2)}", exc_info=True)
+                        diagnostico["resultados"] = {
+                            "conteo": None,
+                            "consulta_exitosa": False,
+                            "error_ilike": str(e),
+                            "tipo_error_ilike": type(e).__name__,
+                            "error_contains": str(e2),
+                            "tipo_error_contains": type(e2).__name__
+                        }
+                        diagnostico["estado"] = "error"
+                        diagnostico["mensaje"] = "Error al ejecutar consultas de diagnóstico"
+                
+            except Exception as e:
+                logger.error(f"Error en diagnóstico al ejecutar consulta: {str(e)}", exc_info=True)
+                diagnostico["resultados"] = {
+                    "conteo": None,
+                    "consulta_exitosa": False,
+                    "error": str(e),
+                    "tipo_error": type(e).__name__
+                }
+                diagnostico["estado"] = "error"
+                diagnostico["mensaje"] = "Error al ejecutar consulta de diagnóstico"
+        
+        # Verificar si hay documentos en la base de datos
+        try:
+            total_docs = db.query(func.count(models.Documento.id)).scalar()
+            diagnostico["total_documentos"] = total_docs
+        except Exception as e:
+            diagnostico["total_documentos"] = None
+            diagnostico["error_conteo_total"] = str(e)
+        
+        return diagnostico
+        
+    except Exception as e:
+        logger.error(f"Error general en diagnóstico: {str(e)}", exc_info=True)
+        return {
+            "estado": "error",
+            "mensaje": f"Error en diagnóstico: {str(e)}",
+            "tipo_error": type(e).__name__,
+            "traceback": str(e.__traceback__)
+        }
 
 @router.get("/", response_model=schemas.PaginatedResponse)
 async def search_documents(
@@ -71,19 +215,55 @@ async def search_documents(
             status_code=status.HTTP_400_BAD_REQUEST,
             detail="Debe proporcionar al menos un criterio de búsqueda"
         )
+        
+    logger.info(f"Búsqueda de documentos - Usuario: {current_user.email} - Criterios: termino={termino}, fecha_desde={fecha_desde}, fecha_hasta={fecha_hasta}, categoria_id={categoria_id}, tipo_documento_id={tipo_documento_id}, numero_expediente={numero_expediente}, usuario_id={usuario_id}")
     
-    # Iniciar la consulta base
-    query = db.query(models.Documento).filter(models.Documento.activo == True)
+    # Iniciar la consulta base - IMPORTANTE: Primero select_from y luego los filtros
+    query = db.query(models.Documento).select_from(models.Documento)
+    
+    # Aplicar filtro base de documentos activos
+    query = query.filter(models.Documento.activo == True)
     
     # Aplicar filtros si se proporcionan
     if termino:
-        query = query.filter(
-            or_(
-                models.Documento.titulo.ilike(f"%{termino}%"),
-                models.Documento.numero_expediente.ilike(f"%{termino}%"),
-                models.Documento.descripcion.ilike(f"%{termino}%")
+        try:
+            logger.info(f"Aplicando filtro de búsqueda con término: '{termino}'")
+            # Escapar caracteres especiales en el término de búsqueda
+            # Usamos una función más robusta para escapar caracteres especiales
+            def escape_like(string):
+                if not string:
+                    return string
+                return string.replace('%', '\\%').replace('_', '\\_').replace('[', '\\[').replace(']', '\\]')
+            
+            termino_seguro = escape_like(termino)
+            logger.debug(f"Término de búsqueda escapado: '{termino_seguro}'")
+            
+            # Usamos la función de texto completo para una búsqueda más robusta
+            try:
+                query = query.filter(
+                    or_(
+                        models.Documento.titulo.ilike(f"%{termino_seguro}%"),
+                        models.Documento.numero_expediente.ilike(f"%{termino_seguro}%"),
+                        models.Documento.descripcion.ilike(f"%{termino_seguro}%")
+                    )
+                )
+            except Exception as e:
+                logger.error(f"Error en la consulta ILIKE: {str(e)}", exc_info=True)
+                # Intentar con una búsqueda más simple como fallback
+                query = query.filter(
+                    or_(
+                        models.Documento.titulo.contains(termino),
+                        models.Documento.numero_expediente.contains(termino),
+                        models.Documento.descripcion.contains(termino)
+                    )
+                )
+            logger.debug("Filtro de búsqueda aplicado correctamente")
+        except Exception as e:
+            logger.error(f"Error al aplicar filtro de término: {str(e)}", exc_info=True)
+            raise HTTPException(
+                status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+                detail=f"Error al procesar el término de búsqueda: {str(e)}"
             )
-        )
         
     # Filtro exacto por número de expediente
     if numero_expediente:
@@ -151,37 +331,55 @@ async def search_documents(
         
         if has_restricted_access:
             # El usuario puede ver documentos restringidos, pero no clasificados
-            # Usamos una forma alternativa para el filtro que no depende de .has()
+            # Obtenemos primero los IDs de documentos clasificados
             classified_docs = db.query(models.TipoDocumento.id).filter(
                 models.TipoDocumento.nombre.ilike("%clasificado%")
-            ).subquery()
+            ).all()
             
-            query = query.filter(
-                or_(
-                    models.Documento.usuario_id == current_user.id,  # Documentos propios
-                    ~models.Documento.tipo_documento_id.in_(classified_docs)  # No clasificados
+            classified_ids = [doc_id for (doc_id,) in classified_docs]
+            logger.debug(f"Documentos clasificados encontrados: {classified_ids}")
+            
+            if classified_ids:
+                query = query.filter(
+                    or_(
+                        models.Documento.usuario_id == current_user.id,  # Documentos propios
+                        ~models.Documento.tipo_documento_id.in_(classified_ids)  # No clasificados
+                    )
                 )
-            )
+            else:
+                logger.debug("No se encontraron documentos clasificados, mostrando todos los documentos")
+                query = query.filter(
+                    or_(
+                        models.Documento.usuario_id == current_user.id,  # Documentos propios
+                        True  # Si no hay documentos clasificados, mostrar todos
+                    )
+                )
         else:
             # El usuario solo puede ver documentos públicos y propios
-            # Usamos una forma alternativa para el filtro que no depende de .has()
+            # Obtenemos primero los IDs de documentos públicos
             public_docs = db.query(models.TipoDocumento.id).filter(
                 models.TipoDocumento.nombre.ilike("%público%")
-            ).subquery()
+            ).all()
             
-            query = query.filter(
-                or_(
-                    models.Documento.usuario_id == current_user.id,  # Documentos propios
-                    models.Documento.tipo_documento_id.in_(public_docs)  # Documentos públicos
+            public_ids = [doc_id for (doc_id,) in public_docs]
+            logger.debug(f"Documentos públicos encontrados: {public_ids}")
+            
+            if public_ids:
+                query = query.filter(
+                    or_(
+                        models.Documento.usuario_id == current_user.id,  # Documentos propios
+                        models.Documento.tipo_documento_id.in_(public_ids)  # Documentos públicos
+                    )
                 )
-            )
+            else:
+                logger.debug("No se encontraron documentos públicos, mostrando solo documentos propios")
+                query = query.filter(
+                    models.Documento.usuario_id == current_user.id  # Solo documentos propios
+                )
     
     # Optimizaciones para mejorar el rendimiento
     
-    # 1. Usar select_from para hacer joins explícitos y mejorar el rendimiento
-    query = query.select_from(models.Documento)
-    
-    # 2. Aplicar eager loading para evitar problemas de N+1 queries
+    # 1. Aplicar eager loading para evitar problemas de N+1 queries
     query = query.options(
         joinedload(models.Documento.categoria),
         joinedload(models.Documento.tipo_documento),
@@ -214,17 +412,46 @@ async def search_documents(
     
     # Calcular total de resultados para la paginación
     # Usar una consulta separada y optimizada solo para contar
-    count_query = db.query(func.count(models.Documento.id)).select_from(models.Documento)
+    count_query = db.query(func.count(models.Documento.id))
     
     # Aplicar los mismos filtros a la consulta de conteo
     if termino:
-        count_query = count_query.filter(
-            or_(
-                models.Documento.titulo.ilike(f"%{termino}%"),
-                models.Documento.numero_expediente.ilike(f"%{termino}%"),
-                models.Documento.descripcion.ilike(f"%{termino}%")
+        try:
+            logger.info(f"Aplicando filtro de término a consulta de conteo: '{termino}'")
+            # Usar la misma función de escape definida anteriormente
+            def escape_like(string):
+                if not string:
+                    return string
+                return string.replace('%', '\\%').replace('_', '\\_').replace('[', '\\[').replace(']', '\\]')
+            
+            termino_seguro = escape_like(termino)
+            logger.debug(f"Término de conteo escapado: '{termino_seguro}'")
+            
+            try:
+                count_query = count_query.filter(
+                    or_(
+                        models.Documento.titulo.ilike(f"%{termino_seguro}%"),
+                        models.Documento.numero_expediente.ilike(f"%{termino_seguro}%"),
+                        models.Documento.descripcion.ilike(f"%{termino_seguro}%")
+                    )
+                )
+            except Exception as e:
+                logger.error(f"Error en la consulta ILIKE de conteo: {str(e)}", exc_info=True)
+                # Intentar con una búsqueda más simple como fallback
+                count_query = count_query.filter(
+                    or_(
+                        models.Documento.titulo.contains(termino),
+                        models.Documento.numero_expediente.contains(termino),
+                        models.Documento.descripcion.contains(termino)
+                    )
+                )
+            logger.debug("Filtro de término aplicado correctamente a consulta de conteo")
+        except Exception as e:
+            logger.error(f"Error al aplicar filtro de término en consulta de conteo: {str(e)}", exc_info=True)
+            raise HTTPException(
+                status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+                detail=f"Error al procesar el término de búsqueda en consulta de conteo: {str(e)}"
             )
-        )
         
     # Filtro exacto por número de expediente
     if numero_expediente:
@@ -252,53 +479,112 @@ async def search_documents(
             # Usamos una forma alternativa para el filtro que no depende de .has()
             classified_docs = db.query(models.TipoDocumento.id).filter(
                 models.TipoDocumento.nombre.ilike("%clasificado%")
-            ).subquery()
+            ).all()
             
-            count_query = count_query.filter(
-                or_(
-                    models.Documento.usuario_id == current_user.id,
-                    ~models.Documento.tipo_documento_id.in_(classified_docs)
+            classified_ids = [doc_id for (doc_id,) in classified_docs]
+            
+            if classified_ids:
+                count_query = count_query.filter(
+                    or_(
+                        models.Documento.usuario_id == current_user.id,
+                        ~models.Documento.tipo_documento_id.in_(classified_ids)
+                    )
                 )
-            )
+            else:
+                count_query = count_query.filter(
+                    or_(
+                        models.Documento.usuario_id == current_user.id,
+                        True  # Si no hay documentos clasificados, mostrar todos
+                    )
+                )
         else:
             # Usamos una forma alternativa para el filtro que no depende de .has()
             public_docs = db.query(models.TipoDocumento.id).filter(
                 models.TipoDocumento.nombre.ilike("%público%")
-            ).subquery()
+            ).all()
             
-            count_query = count_query.filter(
-                or_(
-                    models.Documento.usuario_id == current_user.id,
-                    models.Documento.tipo_documento_id.in_(public_docs)
+            public_ids = [doc_id for (doc_id,) in public_docs]
+            
+            if public_ids:
+                count_query = count_query.filter(
+                    or_(
+                        models.Documento.usuario_id == current_user.id,
+                        models.Documento.tipo_documento_id.in_(public_ids)
+                    )
                 )
-            )
+            else:
+                count_query = count_query.filter(
+                    models.Documento.usuario_id == current_user.id  # Solo documentos propios
+                )
     
     # Obtener el conteo total
-    total_items = count_query.scalar()
-    total_pages = (total_items + page_size - 1) // page_size if total_items > 0 else 0
-    
-    # Aplicar paginación
-    skip = (page - 1) * page_size
-    documentos = query.offset(skip).limit(page_size).all()
-    
-    # Registrar la búsqueda en el historial
-    for doc in documentos:
-        historial = models.HistorialAcceso(
-            usuario_id=current_user.id,
-            documento_id=doc.id,
-            accion="busqueda",
-            detalles=f"Búsqueda: {termino if termino else 'filtrada'}, página {page}"
-        )
-        db.add(historial)
-    
     try:
-        db.commit()
+        logger.debug("Ejecutando consulta de conteo...")
+        # Registrar la consulta SQL para depuración
+        query_str = str(count_query.statement.compile(compile_kwargs={"literal_binds": True}))
+        logger.debug(f"SQL de consulta de conteo: {query_str}")
+        
+        total_items = count_query.scalar()
+        total_pages = (total_items + page_size - 1) // page_size if total_items > 0 else 0
+        logger.info(f"Búsqueda completada - Total de documentos encontrados: {total_items}, páginas: {total_pages}")
     except Exception as e:
-        db.rollback()
+        logger.error(f"Error al obtener el conteo total: {str(e)}", exc_info=True)
+        # Registrar detalles adicionales del error
+        logger.error(f"Tipo de error: {type(e).__name__}")
+        logger.error(f"Parámetros de búsqueda: termino={termino}, categoria_id={categoria_id}, tipo_documento_id={tipo_documento_id}")
+        
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            detail=f"Error al registrar la búsqueda: {str(e)}"
+            detail=f"Error al procesar la búsqueda: {str(e)}"
         )
+    
+    # Aplicar paginación
+    try:
+        logger.debug(f"Aplicando paginación: página {page}, tamaño {page_size}")
+        skip = (page - 1) * page_size
+        logger.debug(f"Saltando {skip} registros")
+        
+        # Registrar la consulta SQL para depuración
+        query_str = str(query.statement.compile(compile_kwargs={"literal_binds": True}))
+        logger.debug(f"SQL de consulta principal: {query_str}")
+        
+        documentos = query.offset(skip).limit(page_size).all()
+        logger.debug(f"Documentos recuperados: {len(documentos)}")
+        
+        # Log de IDs de documentos recuperados para depuración
+        doc_ids = [doc.id for doc in documentos]
+        logger.debug(f"IDs de documentos recuperados: {doc_ids}")
+    except Exception as e:
+        logger.error(f"Error al recuperar documentos: {str(e)}", exc_info=True)
+        # Registrar detalles adicionales del error
+        logger.error(f"Tipo de error: {type(e).__name__}")
+        logger.error(f"Parámetros de paginación: page={page}, page_size={page_size}, skip={skip if 'skip' in locals() else 'N/A'}")
+        
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f"Error al recuperar documentos: {str(e)}"
+        )
+    
+    # Registrar la búsqueda en el historial
+    try:
+        for doc in documentos:
+            historial = models.HistorialAcceso(
+                usuario_id=current_user.id,
+                documento_id=doc.id,
+                accion="busqueda",
+                detalles=f"Búsqueda: {termino if termino else 'filtrada'}, página {page}"
+            )
+            db.add(historial)
+        
+        try:
+            db.commit()
+        except Exception as e:
+            db.rollback()
+            logger.error(f"Error al registrar la búsqueda en el historial: {str(e)}", exc_info=True)
+            # Continuamos sin lanzar excepción para no interrumpir la respuesta al usuario
+    except Exception as e:
+        logger.error(f"Error al procesar el historial de búsqueda: {str(e)}", exc_info=True)
+        # Continuamos sin lanzar excepción para no interrumpir la respuesta al usuario
     
     # Construir respuesta paginada
     return {

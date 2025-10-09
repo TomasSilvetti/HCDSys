@@ -1,0 +1,4 @@
+Problema con el escape de caracteres especiales: El código intenta escapar caracteres como % y _ en el término de búsqueda (líneas 175-176), pero podría haber un problema con este proceso.
+Problema con los filtros de permisos: El código tiene una lógica compleja para filtrar documentos según los permisos del usuario (líneas 241-303), y podría haber un error en esta parte.
+Problema al registrar la búsqueda en el historial: Después de obtener los resultados, el código intenta registrar la búsqueda en el historial (líneas 480-497), y podría haber un error en esta parte.
+Problema con la estructura del documento en la base de datos: El documento con "TP" en su título podría tener algún campo nulo o malformado que causa problemas al intentar recuperarlo.

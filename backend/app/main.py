@@ -20,13 +20,27 @@ app = FastAPI(
 )
 
 # Configuración de CORS
+import logging
+cors_logger = logging.getLogger("app.cors")
+
+# Obtener orígenes permitidos
+cors_origins = settings.CORS_ORIGINS.split(",")
+cors_logger.info(f"Configurando CORS con orígenes permitidos: {cors_origins}")
+
+# Asegurar que localhost:5173 esté incluido para desarrollo
+if "http://localhost:5173" not in cors_origins:
+    cors_origins.append("http://localhost:5173")
+    cors_logger.info(f"Añadido origen http://localhost:5173 para desarrollo")
+
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=settings.CORS_ORIGINS.split(","),
+    allow_origins=cors_origins,
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+cors_logger.info(f"Middleware CORS configurado con éxito. Orígenes permitidos: {cors_origins}")
 
 # Añadir middlewares de seguridad
 # El orden es importante: primero IPBlock, luego Authentication, finalmente Authorization
