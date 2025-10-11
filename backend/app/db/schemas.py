@@ -258,6 +258,7 @@ class VersionDocumentoBase(BaseModel):
     comentario: Optional[str] = None
     cambios: Optional[str] = None
     version_anterior_id: Optional[int] = None
+    titulo_archivo: Optional[str] = None
 
 class VersionDocumentoCreate(VersionDocumentoBase):
     pass
@@ -266,6 +267,7 @@ class VersionDocumentoUpdate(BaseModel):
     comentario: Optional[str] = None
     cambios: Optional[str] = None
     es_actual: Optional[bool] = None
+    titulo_archivo: Optional[str] = None
 
 class VersionDocumentoInDB(VersionDocumentoBase):
     id: int

@@ -299,7 +299,7 @@ const DocumentDetailPage = () => {
           <h2 className="text-xl font-medium text-gray-900">Historial de versiones</h2>
         </div>
         <div className="px-6 py-5">
-          <VersionHistory documentId={id} canDownload={canDownload} canEdit={canEdit} />
+          <VersionHistory documentId={id} canDownload={canDownload} canEdit={canEdit} documentTitle={document.titulo} />
         </div>
       </div>
     </div>

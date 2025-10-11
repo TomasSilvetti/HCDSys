@@ -133,6 +133,7 @@ class VersionDocumento(Base):
     extension_archivo = Column(String, nullable=True)  # Extensión del archivo
     cambios = Column(Text, nullable=True)  # Descripción de los cambios realizados
     es_actual = Column(Boolean, default=False)  # Indica si es la versión actual del documento
+    titulo_archivo = Column(String, nullable=True)  # Título/nombre del archivo de esta versión específica
 
     # Relaciones
     documento = relationship("Documento", back_populates="versiones")

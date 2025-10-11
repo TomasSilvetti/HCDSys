@@ -355,7 +355,8 @@ class StorageService:
                     hash_archivo=file_hash,
                     tamano_archivo=len(contents),
                     extension_archivo=file_extension,
-                    es_actual=True
+                    es_actual=True,
+                    titulo_archivo=file.filename
                 )
                 
                 db.add(nueva_version)
@@ -542,7 +543,8 @@ class StorageService:
                 hash_archivo=file_hash,
                 tamano_archivo=os.path.getsize(version_file_path),
                 extension_archivo=version.extension_archivo,
-                es_actual=True
+                es_actual=True,
+                titulo_archivo=version.titulo_archivo
             )
             
             db.add(nueva_version)

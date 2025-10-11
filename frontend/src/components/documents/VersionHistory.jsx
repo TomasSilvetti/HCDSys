@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { FiDownload, FiClock, FiUser, FiRefreshCw, FiGitBranch, FiFileText, FiCheck, FiX } from 'react-icons/fi';
 import { documentService } from '../../utils/documentService';
 
-const VersionHistory = ({ documentId, canDownload, canEdit }) => {
+const VersionHistory = ({ documentId, canDownload, canEdit, documentTitle }) => {
   const [versions, setVersions] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
@@ -164,6 +164,7 @@ const VersionHistory = ({ documentId, canDownload, canEdit }) => {
     <div className="overflow-hidden">
       {/* Barra de acciones */}
       <div className="mb-4 flex justify-end">
+        {/* Botón de comparar versiones temporalmente deshabilitado
         {versions.length >= 2 && (
           <button
             onClick={handleOpenCompareModal}
@@ -172,6 +173,7 @@ const VersionHistory = ({ documentId, canDownload, canEdit }) => {
             <FiGitBranch className="mr-1" /> Comparar versiones
           </button>
         )}
+        */}
       </div>
       
       {/* Lista de versiones */}
@@ -180,15 +182,20 @@ const VersionHistory = ({ documentId, canDownload, canEdit }) => {
           <li key={version.id} className="py-4">
             <div className="flex items-center justify-between">
               <div>
-                <div className="flex items-center">
-                  <h4 className="text-lg font-medium text-gray-900">
-                    Versión {version.numero_version}
-                  </h4>
-                  {version.es_actual && (
-                    <span className="ml-2 px-2 py-0.5 bg-green-100 text-green-800 text-xs rounded-full">
-                      Actual
-                    </span>
-                  )}
+                <div>
+                  <div className="flex items-center">
+                    <h4 className="text-lg font-medium text-gray-900">
+                      Versión {version.numero_version}
+                    </h4>
+                    {version.es_actual && (
+                      <span className="ml-2 px-2 py-0.5 bg-green-100 text-green-800 text-xs rounded-full">
+                        Actual
+                      </span>
+                    )}
+                  </div>
+                  <div className="text-sm text-gray-600 mt-1">
+                    <span className="font-medium">Título del archivo:</span> {version.titulo_archivo || version.titulo || documentTitle || "Sin título"}
+                  </div>
                 </div>
                 <div className="mt-1 flex items-center text-sm text-gray-500">
                   <FiClock className="mr-1" />
@@ -474,12 +481,14 @@ const VersionHistory = ({ documentId, canDownload, canEdit }) => {
 VersionHistory.propTypes = {
   documentId: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
   canDownload: PropTypes.bool,
-  canEdit: PropTypes.bool
+  canEdit: PropTypes.bool,
+  documentTitle: PropTypes.string
 };
 
 VersionHistory.defaultProps = {
   canDownload: false,
-  canEdit: false
+  canEdit: false,
+  documentTitle: ''
 };
 
 export default VersionHistory;

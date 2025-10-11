@@ -43,7 +43,7 @@ const HeroSection = () => {
         <div className="flex justify-center mb-6">
           <img src="/images/logo.svg" alt="HCD Lules Logo" className="h-16 md:h-20" />
         </div>
-        <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold mb-4 animate-fadeIn">
+        <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold mb-4 animate-fadeIn text-black">
           Sistema de Gestión Documental Municipal
         </h1>
         <p className="text-lg md:text-xl mb-8 animate-fadeIn" style={{ animationDelay: '0.2s' }}>
