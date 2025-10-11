@@ -275,6 +275,9 @@ class StorageService:
             - Mensaje (str)
             - ID de la versión creada (int o None)
         """
+        nueva_version_id = None
+        version_file_path = None
+        
         try:
             # Verificar que el documento existe
             documento = db.query(models.Documento).filter(
@@ -304,10 +307,6 @@ class StorageService:
             if ultima_version:
                 nuevo_numero_version = ultima_version.numero_version + 1
                 version_anterior_id = ultima_version.id
-                
-                # Actualizar la versión anterior para que no sea la actual
-                ultima_version.es_actual = False
-                db.add(ultima_version)
             
             # Crear directorio para versiones si no existe
             versions_dir = os.path.join(settings.DOCUMENT_STORAGE_PATH, str(document_id), "versions")
@@ -329,66 +328,118 @@ class StorageService:
             with open(version_file_path, "wb") as buffer:
                 buffer.write(contents)
             
-            # Crear registro de la nueva versión
-            nueva_version = models.VersionDocumento(
-                documento_id=document_id,
-                numero_version=nuevo_numero_version,
-                fecha_version=datetime.utcnow(),
-                comentario=comentario,
-                cambios=cambios,
-                path_archivo=version_file_path,
-                usuario_id=user_id,
-                version_anterior_id=version_anterior_id,
-                hash_archivo=file_hash,
-                tamano_archivo=len(contents),
-                extension_archivo=file_extension,
-                es_actual=True
-            )
+            # Usar transacciones separadas para cada operación principal
+            # Transacción 1: Actualizar la versión anterior
+            if ultima_version:
+                try:
+                    # Actualizar la versión anterior para que no sea la actual
+                    ultima_version.es_actual = False
+                    db.add(ultima_version)
+                    db.commit()
+                except Exception as e:
+                    logger.error(f"Error al actualizar versión anterior: {str(e)}")
+                    # Continuar con el proceso, no es crítico
             
-            db.add(nueva_version)
-            db.commit()
-            db.refresh(nueva_version)
+            # Transacción 2: Crear nueva versión
+            try:
+                # Crear registro de la nueva versión
+                nueva_version = models.VersionDocumento(
+                    documento_id=document_id,
+                    numero_version=nuevo_numero_version,
+                    fecha_version=datetime.utcnow(),
+                    comentario=comentario,
+                    cambios=cambios,
+                    path_archivo=version_file_path,
+                    usuario_id=user_id,
+                    version_anterior_id=version_anterior_id,
+                    hash_archivo=file_hash,
+                    tamano_archivo=len(contents),
+                    extension_archivo=file_extension,
+                    es_actual=True
+                )
+                
+                db.add(nueva_version)
+                db.commit()
+                db.refresh(nueva_version)
+                nueva_version_id = nueva_version.id
+                
+                logger.info(f"Nueva versión creada con ID: {nueva_version_id}")
+            except Exception as e:
+                logger.error(f"Error al crear registro de nueva versión: {str(e)}")
+                if os.path.exists(version_file_path):
+                    try:
+                        os.remove(version_file_path)
+                    except:
+                        pass
+                raise
             
-            # Actualizar el documento principal con la información de la nueva versión
-            documento.path_archivo = version_file_path
-            documento.hash_archivo = file_hash
-            documento.tamano_archivo = len(contents)
-            documento.extension_archivo = file_extension
-            documento.fecha_modificacion = datetime.utcnow()
-            documento.fecha_ultima_verificacion = datetime.utcnow()
-            documento.estado_integridad = True
+            # Transacción 3: Actualizar documento principal
+            try:
+                # Actualizar el documento principal con la información de la nueva versión
+                documento.path_archivo = version_file_path
+                documento.hash_archivo = file_hash
+                documento.tamano_archivo = len(contents)
+                documento.extension_archivo = file_extension
+                documento.fecha_modificacion = datetime.utcnow()
+                documento.fecha_ultima_verificacion = datetime.utcnow()
+                documento.estado_integridad = True
+                
+                db.add(documento)
+                db.commit()
+            except Exception as e:
+                logger.error(f"Error al actualizar documento principal: {str(e)}")
+                # No lanzar excepción, la versión ya se creó correctamente
             
-            db.add(documento)
-            db.commit()
+            # Transacción 4: Registrar historial (no crítico)
+            try:
+                # Registrar la acción en el historial
+                historial = models.HistorialAcceso(
+                    usuario_id=user_id,
+                    documento_id=document_id,
+                    accion="nueva_version",
+                    detalles=f"Nueva versión {nuevo_numero_version} creada"
+                )
+                db.add(historial)
+                db.commit()
+            except Exception as e:
+                logger.error(f"Error al registrar historial: {str(e)}")
+                # No lanzar excepción, la versión ya se creó correctamente
             
-            # Registrar la acción en el historial
-            historial = models.HistorialAcceso(
-                usuario_id=user_id,
-                documento_id=document_id,
-                accion="nueva_version",
-                detalles=f"Nueva versión {nuevo_numero_version} creada"
-            )
-            db.add(historial)
-            db.commit()
-            
-            return True, f"Versión {nuevo_numero_version} creada correctamente", nueva_version.id
+            return True, f"Versión {nuevo_numero_version} creada correctamente", nueva_version_id
             
         except Exception as e:
             logger.error(f"Error al crear versión: {str(e)}")
-            db.rollback()
+            
+            # Si ya se creó la versión en la base de datos pero ocurrió un error posterior
+            if nueva_version_id is not None:
+                logger.warning(f"Se creó la versión con ID {nueva_version_id} pero ocurrió un error posterior")
+                return True, f"Versión creada con advertencias: {str(e)}", nueva_version_id
+            
+            # Si el archivo se guardó pero no se creó el registro en la base de datos
+            if version_file_path and os.path.exists(version_file_path):
+                try:
+                    os.remove(version_file_path)
+                    logger.info(f"Archivo temporal eliminado: {version_file_path}")
+                except Exception as cleanup_error:
+                    logger.error(f"Error al limpiar archivo temporal: {str(cleanup_error)}")
             
             # Registrar error
-            error_log = models.ErrorAlmacenamiento(
-                documento_id=document_id,
-                usuario_id=user_id,
-                tipo_error="version",
-                mensaje_error=f"Error al crear versión: {str(e)}"
-            )
-            db.add(error_log)
             try:
-                db.commit()
-            except:
                 db.rollback()
+                error_log = models.ErrorAlmacenamiento(
+                    documento_id=document_id,
+                    usuario_id=user_id,
+                    tipo_error="version",
+                    mensaje_error=f"Error al crear versión: {str(e)}"
+                )
+                db.add(error_log)
+                db.commit()
+            except Exception as log_error:
+                logger.error(f"Error al registrar error: {str(log_error)}")
+                try:
+                    db.rollback()
+                except:
+                    pass
             
             return False, f"Error al crear versión: {str(e)}", None
     

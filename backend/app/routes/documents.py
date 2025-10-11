@@ -1025,6 +1025,248 @@ async def download_document_version(
         media_type="application/octet-stream"
     )
 
+@router.post("/{documento_id}/versions", response_model=schemas.VersionDocumento)
+async def create_document_version(
+    documento_id: int,
+    archivo: UploadFile = File(...),
+    titulo: Optional[str] = Form(None),
+    numero_expediente: Optional[str] = Form(None),
+    descripcion: Optional[str] = Form(None),
+    categoria_id: Optional[int] = Form(None),
+    tipo_documento_id: Optional[int] = Form(None),
+    comentario: Optional[str] = Form(None),
+    background_tasks: BackgroundTasks = None,
+    current_user: models.Usuario = Depends(get_current_active_user),
+    db: Session = Depends(get_db)
+):
+    """
+    Crear una nueva versión de un documento existente.
+    """
+    # Verificar si el documento existe
+    documento = db.query(models.Documento).filter(
+        models.Documento.id == documento_id,
+        models.Documento.activo == True
+    ).first()
+    
+    if not documento:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Documento no encontrado"
+        )
+    
+    # Verificar permisos para editar el documento
+    is_owner = documento.usuario_id == current_user.id
+    has_permission = check_permission(current_user, "docs:edit", db)
+    
+    if not (is_owner or has_permission):
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="No tiene permisos para editar este documento"
+        )
+    
+    # Verificar tipo de documento si se proporciona
+    if tipo_documento_id:
+        tipo_documento = db.query(models.TipoDocumento).filter(
+            models.TipoDocumento.id == tipo_documento_id
+        ).first()
+        
+        if not tipo_documento:
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail="Tipo de documento no válido"
+            )
+    else:
+        # Usar el tipo de documento actual
+        tipo_documento_id = documento.tipo_documento_id
+        tipo_documento = db.query(models.TipoDocumento).filter(
+            models.TipoDocumento.id == tipo_documento_id
+        ).first()
+    
+    # Verificar extensión del archivo
+    file_extension = os.path.splitext(archivo.filename)[1].lower()
+    allowed_extensions = tipo_documento.extensiones_permitidas.split(",")
+    
+    if file_extension not in allowed_extensions:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail=f"Tipo de archivo no permitido. Extensiones permitidas: {tipo_documento.extensiones_permitidas}"
+        )
+    
+    # Verificar tamaño del archivo
+    file_size = 0
+    contents = await archivo.read()
+    file_size = len(contents)
+    await archivo.seek(0)
+    
+    if file_size > settings.MAX_UPLOAD_SIZE:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail=f"El archivo excede el tamaño máximo permitido ({settings.MAX_UPLOAD_SIZE / 1024 / 1024} MB)"
+        )
+    
+    version_id = None
+    
+    try:
+        # Crear nueva versión del documento
+        success, message, version_id = await StorageService.create_document_version(
+            archivo,
+            documento_id,
+            current_user.id,
+            db,
+            comentario
+        )
+        
+        if not success:
+            raise HTTPException(
+                status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+                detail=message
+            )
+        
+        # Actualizar metadatos del documento si se proporcionan
+        if titulo or numero_expediente or descripcion or categoria_id:
+            try:
+                if titulo:
+                    documento.titulo = titulo
+                if numero_expediente:
+                    documento.numero_expediente = numero_expediente
+                if descripcion is not None:
+                    documento.descripcion = descripcion
+                if categoria_id is not None:
+                    documento.categoria_id = categoria_id
+                
+                documento.fecha_modificacion = datetime.utcnow()
+                db.commit()
+            except Exception as metadata_error:
+                logger.error(f"Error al actualizar metadatos: {str(metadata_error)}")
+                # No lanzar excepción, la versión ya se creó correctamente
+        
+            # Obtener la versión creada con relaciones necesarias para el esquema de respuesta
+            version = db.query(models.VersionDocumento).filter(
+                models.VersionDocumento.id == version_id
+            ).first()
+            
+            if not version:
+                logger.error(f"Versión creada con ID {version_id} pero no se puede recuperar")
+                raise HTTPException(
+                    status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+                    detail=f"Versión creada pero no se puede recuperar: {message}"
+                )
+                
+            # Crear una respuesta simplificada que cumpla con el esquema
+            # Esto evita los errores de validación cuando version_siguiente es None
+            response_version = {
+                "id": version.id,
+                "documento_id": version.documento_id,
+                "numero_version": version.numero_version,
+                "fecha_version": version.fecha_version,
+                "comentario": version.comentario,
+                "cambios": version.cambios,
+                "path_archivo": version.path_archivo,
+                "usuario_id": version.usuario_id,
+                "usuario": version.usuario,
+                "hash_archivo": version.hash_archivo,
+                "tamano_archivo": version.tamano_archivo,
+                "extension_archivo": version.extension_archivo,
+                "es_actual": version.es_actual,
+                "version_anterior_id": version.version_anterior_id,
+                "version_anterior": None,
+                "version_siguiente": None,
+                "documento": documento
+            }
+            
+            # Programar verificación de integridad en segundo plano
+            if background_tasks:
+                try:
+                    from ..utils.tasks import verify_document_integrity
+                    background_tasks.add_task(verify_document_integrity, db, documento_id)
+                except Exception as bg_error:
+                    logger.error(f"Error al programar tarea en segundo plano: {str(bg_error)}")
+                    # No lanzar excepción, la versión ya se creó correctamente
+            
+            return response_version
+        
+    except HTTPException as http_ex:
+        # Re-lanzar excepciones HTTP
+        raise http_ex
+        
+    except Exception as e:
+        logger.error(f"Error al crear versión: {str(e)}")
+        
+        # Si ya se creó la versión en la base de datos pero ocurrió un error posterior
+        if version_id is not None:
+            logger.warning(f"Se creó la versión con ID {version_id} pero ocurrió un error posterior")
+            
+            # Intentar recuperar la versión creada
+            try:
+                version = db.query(models.VersionDocumento).filter(
+                    models.VersionDocumento.id == version_id
+                ).first()
+                
+                if version:
+                    # Registrar advertencia en el historial
+                    try:
+                        historial = models.HistorialAcceso(
+                            usuario_id=current_user.id,
+                            documento_id=documento_id,
+                            accion="nueva_version_con_advertencia",
+                            detalles=f"Nueva versión creada con advertencias: {str(e)}"
+                        )
+                        db.add(historial)
+                        db.commit()
+                    except:
+                        db.rollback()
+                    
+                    # Crear respuesta simplificada que cumpla con el esquema
+                    response_version = {
+                        "id": version.id,
+                        "documento_id": version.documento_id,
+                        "numero_version": version.numero_version,
+                        "fecha_version": version.fecha_version,
+                        "comentario": version.comentario,
+                        "cambios": version.cambios,
+                        "path_archivo": version.path_archivo,
+                        "usuario_id": version.usuario_id,
+                        "usuario": version.usuario,
+                        "hash_archivo": version.hash_archivo,
+                        "tamano_archivo": version.tamano_archivo,
+                        "extension_archivo": version.extension_archivo,
+                        "es_actual": version.es_actual,
+                        "version_anterior_id": version.version_anterior_id,
+                        "version_anterior": None,
+                        "version_siguiente": None,
+                        "documento": documento
+                    }
+                    
+                    # Devolver la versión creada a pesar del error
+                    return response_version
+            except Exception as recovery_error:
+                logger.error(f"Error al recuperar versión creada: {str(recovery_error)}")
+        
+        # Si llegamos aquí, es un error completo
+        try:
+            db.rollback()
+            
+            # Registrar error
+            error_log = models.ErrorAlmacenamiento(
+                documento_id=documento_id,
+                usuario_id=current_user.id,
+                tipo_error="version",
+                mensaje_error=f"Error al crear versión: {str(e)}"
+            )
+            db.add(error_log)
+            db.commit()
+        except Exception as log_error:
+            logger.error(f"Error al registrar error: {str(log_error)}")
+            try:
+                db.rollback()
+            except:
+                pass
+        
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f"Error al crear versión: {str(e)}"
+        )
+
 @router.post("/{documento_id}/versions/{version_id}/restore", response_model=schemas.Documento)
 async def restore_document_version(
     documento_id: int,

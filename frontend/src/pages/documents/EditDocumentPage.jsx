@@ -4,6 +4,8 @@ import { FiArrowLeft, FiSave, FiAlertTriangle } from 'react-icons/fi';
 import { documentService } from '../../utils/documentService';
 import { useAuth } from '../../context/AuthContext';
 import DocumentForm from '../../components/documents/DocumentForm';
+import FileUploader from '../../components/documents/FileUploader';
+import ProgressBar from '../../components/ui/ProgressBar';
 import Alert from '../../components/ui/Alert';
 
 const EditDocumentPage = () => {
@@ -23,6 +25,10 @@ const EditDocumentPage = () => {
   // Estado para las opciones de los selectores
   const [categories, setCategories] = useState([]);
   const [documentTypes, setDocumentTypes] = useState([]);
+  
+  // Estado para el archivo
+  const [file, setFile] = useState(null);
+  const [uploadProgress, setUploadProgress] = useState(0);
   
   // Estados para manejo de carga y errores
   const [loading, setLoading] = useState(true);
@@ -96,6 +102,48 @@ const EditDocumentPage = () => {
     setHasUnsavedChanges(true);
   };
   
+  // Detectar tipo de documento basado en la extensión del archivo
+  const detectDocumentType = (selectedFile) => {
+    if (!selectedFile || !documentTypes.length) return null;
+    
+    // Obtener la extensión del archivo
+    const fileExtension = selectedFile.name.split('.').pop().toLowerCase();
+    if (!fileExtension) return null;
+    
+    // Buscar un tipo de documento que permita esta extensión
+    const matchingType = documentTypes.find(type => {
+      const allowedExtensions = type.extensiones_permitidas.split(',').map(ext => ext.trim().toLowerCase());
+      return allowedExtensions.includes(`.${fileExtension}`) || allowedExtensions.includes(fileExtension);
+    });
+    
+    return matchingType ? matchingType.id : null;
+  };
+  
+  // Manejar selección de archivo
+  const handleFileChange = (selectedFile) => {
+    setFile(selectedFile);
+    
+    if (selectedFile) {
+      // Autodetectar tipo de documento
+      const detectedTypeId = detectDocumentType(selectedFile);
+      
+      if (detectedTypeId) {
+        // Solo actualizar el tipo de documento si es diferente al actual
+        if (detectedTypeId !== formData.tipo_documento_id) {
+          setFormData(prev => ({
+            ...prev,
+            tipo_documento_id: detectedTypeId
+          }));
+        }
+      } else {
+        // Si no se puede detectar el tipo, mostrar un error
+        setError('No se pudo detectar el tipo de documento para esta extensión de archivo. Por favor, seleccione otro archivo.');
+      }
+    }
+    
+    setHasUnsavedChanges(true);
+  };
+  
   // Manejar envío del formulario
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -108,11 +156,71 @@ const EditDocumentPage = () => {
     
     try {
       setSaving(true);
+      setUploadProgress(0);
       
-      // Actualizar documento en el backend
-      await documentService.updateDocument(id, formData);
+      if (file) {
+        // Si hay un archivo nuevo, crear una nueva versión del documento
+        try {
+          // Crear nueva versión del documento
+          // Solo enviamos los campos necesarios, no todo el objeto formData
+          const response = await documentService.createDocumentVersion(
+            id,
+            {
+              titulo: formData.titulo,
+              numero_expediente: formData.numero_expediente,
+              descripcion: formData.descripcion,
+              categoria_id: formData.categoria_id,
+              tipo_documento_id: formData.tipo_documento_id,
+              archivo: file
+            },
+            (progress) => setUploadProgress(progress)
+          );
+          
+          setSuccess('Documento actualizado y nueva versión creada correctamente');
+        } catch (error) {
+          console.error('Error al crear nueva versión:', error);
+          setError('Error al crear nueva versión: ' + error.message);
+          setSaving(false);
+          
+          // Verificar si realmente se creó la versión a pesar del error
+          try {
+            // Esperar un momento para que la base de datos se actualice
+            await new Promise(resolve => setTimeout(resolve, 500));
+            
+            // Intentar obtener las versiones del documento
+            const versiones = await documentService.getDocumentVersions(id);
+            
+            // Si hay versiones y la más reciente tiene fecha reciente (menos de 1 minuto)
+            if (versiones && versiones.length > 0) {
+              const ultimaVersion = versiones[0]; // Las versiones vienen ordenadas por número descendente
+              const fechaVersion = new Date(ultimaVersion.fecha_version);
+              const ahora = new Date();
+              const diferenciaMs = ahora - fechaVersion;
+              
+              // Si la versión se creó hace menos de 1 minuto, probablemente sea la que acabamos de crear
+              if (diferenciaMs < 60000) {
+                setSuccess('Se detectó que la versión se creó correctamente a pesar del error. Redirigiendo...');
+                setError('');
+                
+                // Redirigir a la vista de detalle después de un breve retraso
+                setTimeout(() => {
+                  navigate(`/documentos/${id}`);
+                }, 1500);
+                return;
+              }
+            }
+          } catch (verificationError) {
+            console.error('Error al verificar si la versión se creó:', verificationError);
+          }
+          
+          return;
+        }
+      } else {
+        // Si no hay archivo nuevo, solo actualizar metadatos
+        await documentService.updateDocument(id, formData);
+        setSuccess('Documento actualizado correctamente');
+      }
       
-      setSuccess('Documento actualizado correctamente');
       setHasUnsavedChanges(false);
       
       // Redirigir a la vista de detalle después de un breve retraso
@@ -179,6 +287,34 @@ const EditDocumentPage = () => {
             documentTypes={documentTypes}
             disabled={saving}
           />
+          
+          {/* Componente para carga de archivos */}
+          <div className="mt-6">
+            <h3 className="text-lg font-medium mb-2">Actualizar archivo (opcional)</h3>
+            <p className="text-sm text-gray-600 mb-3">
+              Si sube un nuevo archivo, se creará una nueva versión del documento. Si no sube ningún archivo, solo se actualizarán los metadatos.
+            </p>
+            <FileUploader 
+              onFileSelected={handleFileChange}
+              selectedFile={file}
+              disabled={saving}
+              allowedFileTypes={
+                formData.tipo_documento_id && documentTypes.length
+                  ? documentTypes.find(type => type.id === formData.tipo_documento_id)?.extensiones_permitidas.split(',') || []
+                  : []
+              }
+            />
+          </div>
+          
+          {/* Barra de progreso */}
+          {saving && file && (
+            <div className="my-4">
+              <ProgressBar progress={uploadProgress} />
+              <p className="text-center text-sm text-gray-600 mt-2">
+                Cargando nueva versión... {uploadProgress}%
+              </p>
+            </div>
+          )}
           
           {/* Botones de acción */}
           <div className="mt-6 flex justify-end space-x-4">

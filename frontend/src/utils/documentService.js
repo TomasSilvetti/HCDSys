@@ -287,6 +287,63 @@ export const documentService = {
     } catch (error) {
       throw handleApiError(error);
     }
+  },
+  
+  // Crear una nueva versión de un documento existente
+  createDocumentVersion: async (id, documentData, onProgressUpdate = null) => {
+    try {
+      const formData = new FormData();
+      
+      // Añadir campos del documento de manera explícita
+      // Esto asegura que los campos se añadan correctamente al FormData
+      if (documentData.titulo !== null && documentData.titulo !== undefined) {
+        formData.append('titulo', documentData.titulo);
+      }
+      
+      if (documentData.numero_expediente !== null && documentData.numero_expediente !== undefined) {
+        formData.append('numero_expediente', documentData.numero_expediente);
+      }
+      
+      if (documentData.descripcion !== null && documentData.descripcion !== undefined) {
+        formData.append('descripcion', documentData.descripcion);
+      }
+      
+      if (documentData.categoria_id !== null && documentData.categoria_id !== undefined) {
+        formData.append('categoria_id', documentData.categoria_id);
+      }
+      
+      if (documentData.tipo_documento_id !== null && documentData.tipo_documento_id !== undefined) {
+        formData.append('tipo_documento_id', documentData.tipo_documento_id);
+      }
+      
+      // Añadir el archivo (obligatorio)
+      if (documentData.archivo) {
+        formData.append('archivo', documentData.archivo);
+      } else {
+        throw new Error('El archivo es obligatorio para crear una nueva versión');
+      }
+      
+      // Configuración para seguimiento de progreso
+      const config = {
+        headers: {
+          'Content-Type': 'multipart/form-data'
+        }
+      };
+      
+      // Añadir handler de progreso si se proporciona
+      if (onProgressUpdate) {
+        config.onUploadProgress = (progressEvent) => {
+          const percentCompleted = Math.round((progressEvent.loaded * 100) / progressEvent.total);
+          onProgressUpdate(percentCompleted);
+        };
+      }
+      
+      // Llamar al endpoint para crear una nueva versión
+      const response = await api.post(`/documents/${id}/versions`, formData, config);
+      return response.data;
+    } catch (error) {
+      throw handleApiError(error);
+    }
   }
 };
 

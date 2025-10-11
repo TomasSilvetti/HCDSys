@@ -1,6 +1,6 @@
 import PropTypes from 'prop-types';
 
-const DocumentForm = ({ formData, handleChange, categories, documentTypes, disabled }) => {
+const DocumentForm = ({ formData, handleChange, categories, documentTypes, disabled, showDocumentTypeSelector = true }) => {
   return (
     <div className="space-y-4">
       {/* Campo de título */}
@@ -78,31 +78,48 @@ const DocumentForm = ({ formData, handleChange, categories, documentTypes, disab
         </select>
       </div>
       
-      {/* Selector de tipo de documento */}
-      <div>
-        <label htmlFor="tipo_documento_id" className="block text-sm font-medium text-gray-700 mb-1">
-          Tipo de documento <span className="text-red-500">*</span>
-        </label>
-        <select
-          id="tipo_documento_id"
-          name="tipo_documento_id"
-          value={formData.tipo_documento_id}
-          onChange={handleChange}
-          className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-          disabled={disabled}
-          required
-        >
-          <option value="">Seleccione un tipo de documento</option>
-          {documentTypes.map(type => (
-            <option key={type.id} value={type.id}>
-              {type.nombre} ({type.extensiones_permitidas})
-            </option>
-          ))}
-        </select>
-        <p className="text-sm text-gray-500 mt-1">
-          El tipo de documento determina qué formatos de archivo están permitidos.
-        </p>
-      </div>
+      {/* Selector de tipo de documento - solo se muestra si showDocumentTypeSelector es true */}
+      {showDocumentTypeSelector && (
+        <div>
+          <label htmlFor="tipo_documento_id" className="block text-sm font-medium text-gray-700 mb-1">
+            Tipo de documento <span className="text-red-500">*</span>
+          </label>
+          <select
+            id="tipo_documento_id"
+            name="tipo_documento_id"
+            value={formData.tipo_documento_id}
+            onChange={handleChange}
+            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+            disabled={disabled}
+            required
+          >
+            <option value="">Seleccione un tipo de documento</option>
+            {documentTypes.map(type => (
+              <option key={type.id} value={type.id}>
+                {type.nombre} ({type.extensiones_permitidas})
+              </option>
+            ))}
+          </select>
+          <p className="text-sm text-gray-500 mt-1">
+            El tipo de documento determina qué formatos de archivo están permitidos.
+          </p>
+        </div>
+      )}
+      
+      {/* Si no se muestra el selector pero hay un tipo de documento seleccionado, mostramos información */}
+      {!showDocumentTypeSelector && formData.tipo_documento_id && documentTypes.length > 0 && (
+        <div>
+          <label className="block text-sm font-medium text-gray-700 mb-1">
+            Tipo de documento
+          </label>
+          <p className="text-sm text-gray-700">
+            {documentTypes.find(type => type.id === formData.tipo_documento_id)?.nombre || 'Tipo de documento'}
+          </p>
+          <p className="text-sm text-gray-500 mt-1">
+            El tipo de documento se detecta automáticamente según la extensión del archivo.
+          </p>
+        </div>
+      )}
     </div>
   );
 };
@@ -118,13 +135,15 @@ DocumentForm.propTypes = {
   handleChange: PropTypes.func.isRequired,
   categories: PropTypes.array.isRequired,
   documentTypes: PropTypes.array.isRequired,
-  disabled: PropTypes.bool
+  disabled: PropTypes.bool,
+  showDocumentTypeSelector: PropTypes.bool
 };
 
 DocumentForm.defaultProps = {
   disabled: false,
   categories: [],
-  documentTypes: []
+  documentTypes: [],
+  showDocumentTypeSelector: true
 };
 
 export default DocumentForm;

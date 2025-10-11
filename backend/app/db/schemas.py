@@ -288,6 +288,12 @@ class VersionDocumento(VersionDocumentoInDB):
     usuario: Usuario
     version_anterior: Optional['VersionDocumentoSimple'] = None
     version_siguiente: Optional['VersionDocumentoSimple'] = None
+    
+    # Validador para asegurar que version_siguiente puede ser None
+    @validator('version_siguiente', pre=True)
+    def validate_version_siguiente(cls, v):
+        # Permitir explícitamente None como valor válido
+        return v
 
 # Esquemas de Historial de Acceso
 class HistorialAccesoBase(BaseModel):

@@ -63,9 +63,47 @@ const UploadDocumentPage = () => {
     }));
   };
   
+  // Detectar tipo de documento basado en la extensión del archivo
+  const detectDocumentType = (selectedFile) => {
+    if (!selectedFile || !documentTypes.length) return null;
+    
+    // Obtener la extensión del archivo
+    const fileExtension = selectedFile.name.split('.').pop().toLowerCase();
+    if (!fileExtension) return null;
+    
+    // Buscar un tipo de documento que permita esta extensión
+    const matchingType = documentTypes.find(type => {
+      const allowedExtensions = type.extensiones_permitidas.split(',').map(ext => ext.trim().toLowerCase());
+      return allowedExtensions.includes(`.${fileExtension}`) || allowedExtensions.includes(fileExtension);
+    });
+    
+    return matchingType ? matchingType.id : null;
+  };
+  
   // Manejar selección de archivo
   const handleFileChange = (selectedFile) => {
     setFile(selectedFile);
+    
+    if (selectedFile) {
+      // Autodetectar tipo de documento
+      const detectedTypeId = detectDocumentType(selectedFile);
+      
+      if (detectedTypeId) {
+        setFormData(prevData => ({
+          ...prevData,
+          tipo_documento_id: detectedTypeId
+        }));
+      } else {
+        // Si no se puede detectar el tipo, mostrar un error
+        setError('No se pudo detectar el tipo de documento para esta extensión de archivo. Por favor, seleccione otro archivo.');
+      }
+    } else {
+      // Si se elimina el archivo, limpiar el tipo de documento
+      setFormData(prevData => ({
+        ...prevData,
+        tipo_documento_id: ''
+      }));
+    }
   };
   
   // Manejar envío del formulario
@@ -119,13 +157,14 @@ const UploadDocumentPage = () => {
       
       <div className="bg-white rounded-lg shadow-md p-6">
         <form onSubmit={handleSubmit}>
-          {/* Componente de formulario con campos */}
+          {/* Componente de formulario con campos - sin selector de tipo de documento */}
           <DocumentForm 
             formData={formData} 
             handleChange={handleChange}
             categories={categories}
             documentTypes={documentTypes}
             disabled={loading}
+            showDocumentTypeSelector={false}
           />
           
           {/* Componente para carga de archivos */}
