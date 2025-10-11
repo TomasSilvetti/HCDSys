@@ -20,7 +20,23 @@ const SearchResults = ({
   
   // Manejar clic en documento para navegar a la vista detalle
   const handleDocumentClick = (documentId) => {
-    navigate(`/documentos/${documentId}`);
+    if (!documentId) {
+      return;
+    }
+    
+    // Asegurarnos de que el ID sea una cadena de texto
+    const formattedId = String(documentId).trim();
+    
+    if (!formattedId) {
+      return;
+    }
+    
+    navigate(`/documentos/${formattedId}`, { 
+      state: { 
+        from: 'search',
+        documentId: formattedId // Incluir el ID en el estado para mayor seguridad
+      } 
+    });
   };
   
   // Manejar cambio de ordenamiento

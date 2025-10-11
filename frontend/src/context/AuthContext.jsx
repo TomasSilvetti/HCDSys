@@ -91,7 +91,12 @@ export const AuthProvider = ({ children }) => {
   };
 
   // Valores que se proporcionarán a través del contexto
-  const userRole = currentUser?.role_id ? String(currentUser.role_id) : 'guest';
+  // Añadir logs adicionales para depurar el problema de roles
+  console.log('Datos del usuario actual:', currentUser);
+  console.log('Role ID del usuario:', currentUser?.role_id);
+  
+  // Asegurar que el role_id se convierta correctamente a string
+  const userRole = currentUser?.role_id !== undefined ? String(currentUser.role_id) : 'guest';
   
   console.log('AuthContext - Proporcionando contexto:', { 
     isAuthenticated: !!currentUser,

@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
-import { FiDownload, FiClock, FiUser, FiRefreshCw, FiGitCompare, FiFileText, FiCheck, FiX } from 'react-icons/fi';
+import { FiDownload, FiClock, FiUser, FiRefreshCw, FiGitBranch, FiFileText, FiCheck, FiX } from 'react-icons/fi';
 import { documentService } from '../../utils/documentService';
 
 const VersionHistory = ({ documentId, canDownload, canEdit }) => {
@@ -20,12 +20,18 @@ const VersionHistory = ({ documentId, canDownload, canEdit }) => {
   // Cargar versiones del documento
   useEffect(() => {
     const fetchVersions = async () => {
+      // Validar que documentId sea válido antes de hacer la petición
+      if (!documentId || documentId === 'undefined' || documentId === 'null') {
+        setError('ID de documento inválido');
+        setLoading(false);
+        return;
+      }
+
       try {
         setLoading(true);
         const data = await documentService.getDocumentVersions(documentId);
         setVersions(data || []);
       } catch (error) {
-        console.error('Error al cargar versiones:', error);
         setError('No se pudieron cargar las versiones del documento.');
       } finally {
         setLoading(false);
@@ -56,7 +62,6 @@ const VersionHistory = ({ documentId, canDownload, canEdit }) => {
       setDownloadingVersion(versionId);
       await documentService.downloadDocumentVersion(documentId, versionId);
     } catch (error) {
-      console.error('Error al descargar versión:', error);
       setError('No se pudo descargar la versión del documento.');
     } finally {
       setDownloadingVersion(null);
@@ -93,7 +98,6 @@ const VersionHistory = ({ documentId, canDownload, canEdit }) => {
       setSelectedVersion(null);
       setRestoreComment('');
     } catch (error) {
-      console.error('Error al restaurar versión:', error);
       setError('No se pudo restaurar la versión del documento.');
     } finally {
       setRestoringVersion(null);
@@ -126,7 +130,6 @@ const VersionHistory = ({ documentId, canDownload, canEdit }) => {
       
       setCompareResult(result);
     } catch (error) {
-      console.error('Error al comparar versiones:', error);
       setError('No se pudieron comparar las versiones del documento.');
     } finally {
       setComparingVersions(false);
@@ -166,7 +169,7 @@ const VersionHistory = ({ documentId, canDownload, canEdit }) => {
             onClick={handleOpenCompareModal}
             className="px-3 py-1 rounded flex items-center text-sm bg-blue-100 text-blue-800 hover:bg-blue-200 mr-2"
           >
-            <FiGitCompare className="mr-1" /> Comparar versiones
+            <FiGitBranch className="mr-1" /> Comparar versiones
           </button>
         )}
       </div>

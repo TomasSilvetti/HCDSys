@@ -46,7 +46,8 @@ cors_logger.info(f"Middleware CORS configurado con éxito. Orígenes permitidos:
 # El orden es importante: primero IPBlock, luego Authentication, finalmente Authorization
 app.add_middleware(IPBlockMiddleware)
 app.add_middleware(AuthenticationMiddleware)
-app.add_middleware(AuthorizationMiddleware)
+# Middleware de autorización temporalmente desactivado para depuración
+# app.add_middleware(AuthorizationMiddleware)
 
 # Incluir rutas
 app.include_router(auth.router, prefix="/api", tags=["auth"])

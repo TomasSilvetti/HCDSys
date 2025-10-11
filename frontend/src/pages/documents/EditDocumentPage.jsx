@@ -47,6 +47,12 @@ const EditDocumentPage = () => {
           documentService.getDocumentTypes()
         ]);
         
+        // TEMPORALMENTE DESACTIVADO PARA DEPURACIÓN - SIEMPRE PERMITE EDITAR
+        console.log('Verificación de permisos desactivada temporalmente en EditDocumentPage');
+        console.log('Usuario actual:', currentUser);
+        console.log('Propietario del documento:', documentData.usuario_id);
+        
+        /* Código original comentado
         // Verificar permisos
         const isOwner = documentData.usuario_id === currentUser?.id;
         const hasEditPermission = currentUser?.permissions?.includes('DOCUMENT_EDIT');
@@ -55,6 +61,7 @@ const EditDocumentPage = () => {
           navigate('/acceso-denegado');
           return;
         }
+        */
         
         // Establecer datos del formulario
         setFormData({

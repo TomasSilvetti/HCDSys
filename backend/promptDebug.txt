@@ -1,0 +1,1 @@
+Hola, tenemos un problema en la página X (da contexto). Necesito depurarlo. Por favor, explica con precisión cómo funciona este código y cómo se conecta. Muestra los fragmentos de código. Piensa paso a paso y hazlo muy claro para que podamos depurarlo.

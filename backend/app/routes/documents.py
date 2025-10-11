@@ -68,8 +68,8 @@ async def search_diagnostics(
         termino_escapado = escape_like(termino) if termino else None
         
         # Verificar permisos del usuario
-        has_full_access = check_permission(current_user, "DOCUMENT_VIEW_ALL", db)
-        has_restricted_access = check_permission(current_user, "DOCUMENT_VIEW_RESTRICTED", db)
+        has_full_access = check_permission(current_user, "docs:view", db)
+        has_restricted_access = check_permission(current_user, "search:restricted", db)
         
         # Información de diagnóstico
         diagnostico = {
@@ -315,7 +315,7 @@ async def search_documents(
     
     # Filtrar por permisos de acceso
     # 1. Verificar si el usuario tiene permiso de acceso a todos los documentos
-    has_full_access = check_permission(current_user, "DOCUMENT_VIEW_ALL", db)
+    has_full_access = check_permission(current_user, "docs:view", db)
     
     # 2. Si no tiene acceso completo, filtrar según restricciones
     if not has_full_access:
@@ -327,7 +327,7 @@ async def search_documents(
         # Si no existe esta estructura, se puede implementar según los requisitos específicos
         
         # Verificar si el usuario tiene permiso de acceso a documentos restringidos
-        has_restricted_access = check_permission(current_user, "DOCUMENT_VIEW_RESTRICTED", db)
+        has_restricted_access = check_permission(current_user, "search:restricted", db)
         
         if has_restricted_access:
             # El usuario puede ver documentos restringidos, pero no clasificados
@@ -627,6 +627,63 @@ async def get_document(
     
     return documento
 
+@router.get("/{documento_id}/download")
+async def download_document(
+    documento_id: int,
+    current_user: models.Usuario = Depends(get_current_active_user),
+    db: Session = Depends(get_db)
+):
+    """
+    Descargar un documento por su ID.
+    """
+    # Verificar si el documento existe
+    documento = db.query(models.Documento).filter(
+        models.Documento.id == documento_id,
+        models.Documento.activo == True
+    ).first()
+    
+    if not documento:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Documento no encontrado"
+        )
+    
+    # Verificar permisos para descargar el documento
+    is_owner = documento.usuario_id == current_user.id
+    has_permission = check_permission(current_user, "docs:download", db)
+    
+    if not (is_owner or has_permission):
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="No tiene permisos para descargar este documento"
+        )
+    
+    # Verificar que el archivo existe
+    if not os.path.exists(documento.path_archivo):
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Archivo no encontrado"
+        )
+    
+    # Registrar la acción en el historial
+    historial = models.HistorialAcceso(
+        usuario_id=current_user.id,
+        documento_id=documento_id,
+        accion="descarga",
+        detalles="Descarga del documento"
+    )
+    db.add(historial)
+    db.commit()
+    
+    # Obtener nombre original del archivo
+    filename = f"{documento.titulo}{documento.extension_archivo}"
+    
+    return FileResponse(
+        path=documento.path_archivo,
+        filename=filename,
+        media_type="application/octet-stream"
+    )
+
 @router.post("/", response_model=schemas.Documento)
 async def create_document(
     titulo: str = Form(...),
@@ -817,7 +874,7 @@ async def get_document_versions(
     
     # Verificar permisos para ver el documento
     is_owner = documento.usuario_id == current_user.id
-    has_permission = check_permission(current_user, "DOCUMENT_VIEW_ALL", db) or check_permission(current_user, "DOCUMENT_VIEW_RESTRICTED", db)
+    has_permission = check_permission(current_user, "docs:view", db) or check_permission(current_user, "search:restricted", db)
     
     if not (is_owner or has_permission):
         raise HTTPException(
@@ -866,7 +923,7 @@ async def get_document_version(
     
     # Verificar permisos para ver el documento
     is_owner = documento.usuario_id == current_user.id
-    has_permission = check_permission(current_user, "DOCUMENT_VIEW_ALL", db) or check_permission(current_user, "DOCUMENT_VIEW_RESTRICTED", db)
+    has_permission = check_permission(current_user, "docs:view", db) or check_permission(current_user, "search:restricted", db)
     
     if not (is_owner or has_permission):
         raise HTTPException(
@@ -922,7 +979,7 @@ async def download_document_version(
     
     # Verificar permisos para descargar el documento
     is_owner = documento.usuario_id == current_user.id
-    has_permission = check_permission(current_user, "DOCUMENT_DOWNLOAD", db)
+    has_permission = check_permission(current_user, "docs:download", db)
     
     if not (is_owner or has_permission):
         raise HTTPException(
@@ -993,7 +1050,7 @@ async def restore_document_version(
     
     # Verificar permisos para editar el documento
     is_owner = documento.usuario_id == current_user.id
-    has_permission = check_permission(current_user, "DOCUMENT_EDIT", db)
+    has_permission = check_permission(current_user, "docs:edit", db)
     
     if not (is_owner or has_permission):
         raise HTTPException(
@@ -1046,7 +1103,7 @@ async def compare_document_versions(
     
     # Verificar permisos para ver el documento
     is_owner = documento.usuario_id == current_user.id
-    has_permission = check_permission(current_user, "DOCUMENT_VIEW_ALL", db) or check_permission(current_user, "DOCUMENT_VIEW_RESTRICTED", db)
+    has_permission = check_permission(current_user, "docs:view", db) or check_permission(current_user, "search:restricted", db)
     
     if not (is_owner or has_permission):
         raise HTTPException(
@@ -1084,9 +1141,6 @@ async def compare_document_versions(
 async def update_document(
     documento_id: int,
     documento_update: schemas.DocumentoUpdate,
-    file: Optional[UploadFile] = None,
-    comentario: Optional[str] = Form(None),
-    cambios: Optional[str] = Form(None),
     current_user: models.Usuario = Depends(get_current_active_user),
     db: Session = Depends(get_db)
 ):
@@ -1109,7 +1163,7 @@ async def update_document(
     
     # Verificar permisos
     is_owner = documento.usuario_id == current_user.id
-    has_permission = check_permission(current_user, "DOCUMENT_EDIT", db)
+    has_permission = check_permission(current_user, "docs:edit", db)
     
     if not (is_owner or has_permission):
         raise HTTPException(
@@ -1131,45 +1185,6 @@ async def update_document(
                 detail="Ya existe un documento con ese título"
             )
     
-    # Si se proporciona un archivo, crear una nueva versión
-    if file:
-        # Verificar tipo de documento
-        tipo_documento = db.query(models.TipoDocumento).filter(
-            models.TipoDocumento.id == documento.tipo_documento_id
-        ).first()
-        
-        if not tipo_documento:
-            raise HTTPException(
-                status_code=status.HTTP_400_BAD_REQUEST,
-                detail="Tipo de documento no válido"
-            )
-        
-        # Verificar extensión del archivo
-        file_extension = os.path.splitext(file.filename)[1].lower()
-        allowed_extensions = tipo_documento.extensiones_permitidas.split(",")
-        
-        if file_extension not in allowed_extensions:
-            raise HTTPException(
-                status_code=status.HTTP_400_BAD_REQUEST,
-                detail=f"Extensión de archivo no permitida. Extensiones permitidas: {tipo_documento.extensiones_permitidas}"
-            )
-        
-        # Crear nueva versión
-        success, message, version_id = await StorageService.create_document_version(
-            file=file,
-            document_id=documento_id,
-            user_id=current_user.id,
-            db=db,
-            comentario=comentario,
-            cambios=cambios
-        )
-        
-        if not success:
-            raise HTTPException(
-                status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-                detail=message
-            )
-    
     # Actualizar campos
     if documento_update.titulo:
         documento.titulo = documento_update.titulo
@@ -1184,22 +1199,20 @@ async def update_document(
     if documento_update.activo is not None:
         documento.activo = documento_update.activo
     
-    # Actualizar fecha de modificación si no se actualizó con una nueva versión
-    if not file:
-        documento.fecha_modificacion = datetime.utcnow()
+    # Actualizar fecha de modificación
+    documento.fecha_modificacion = datetime.utcnow()
     
     db.commit()
     db.refresh(documento)
     
-    # Registrar la acción en el historial si no se registró al crear la versión
-    if not file:
-        historial = models.HistorialAcceso(
-            usuario_id=current_user.id,
-            documento_id=documento.id,
-            accion="edicion",
-            detalles="Edición de metadatos del documento"
-        )
-        db.add(historial)
-        db.commit()
+    # Registrar la acción en el historial
+    historial = models.HistorialAcceso(
+        usuario_id=current_user.id,
+        documento_id=documento.id,
+        accion="edicion",
+        detalles="Edición de metadatos del documento"
+    )
+    db.add(historial)
+    db.commit()
     
     return documento

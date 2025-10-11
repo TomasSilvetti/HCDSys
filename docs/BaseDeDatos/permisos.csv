@@ -1,0 +1,21 @@
+"id","nombre","descripcion","codigo","categoria_id","es_critico"
+1,"Gestionar usuarios","Permite crear, editar y eliminar usuarios","admin:users:manage",1,True
+2,"Gestionar roles","Permite asignar y modificar roles de usuarios","admin:roles:manage",1,True
+3,"Ver historial del sistema","Permite ver el historial completo de acciones en el sistema","admin:history:view",1,False
+4,"Gestionar permisos","Permite asignar y modificar permisos de roles","admin:permissions:manage",1,True
+5,"Configurar sistema","Permite modificar configuraciones generales del sistema","admin:system:config",1,True
+6,"Crear documentos","Permite crear nuevos documentos en el sistema","docs:create",2,False
+7,"Editar documentos","Permite editar documentos existentes","docs:edit",2,False
+8,"Eliminar documentos","Permite eliminar documentos del sistema","docs:delete",2,True
+9,"Ver documentos","Permite ver documentos en el sistema","docs:view",2,False
+10,"Descargar documentos","Permite descargar documentos del sistema","docs:download",2,False
+11,"Gestionar versiones","Permite gestionar versiones de documentos","docs:versions:manage",2,False
+12,"Ver versiones","Permite ver versiones anteriores de documentos","docs:versions:view",2,False
+13,"Gestionar categorías","Permite crear, editar y eliminar categorías de documentos","docs:categories:manage",2,False
+14,"Ver usuarios","Permite ver la lista de usuarios","users:view",3,False
+15,"Crear usuarios","Permite crear nuevos usuarios","users:create",3,True
+16,"Editar usuarios","Permite editar información de usuarios","users:edit",3,True
+17,"Desactivar usuarios","Permite desactivar cuentas de usuario","users:deactivate",3,True
+18,"Búsqueda básica","Permite realizar búsquedas básicas en el sistema","search:basic",4,False
+19,"Búsqueda avanzada","Permite realizar búsquedas avanzadas con filtros complejos","search:advanced",4,False
+20,"Ver documentos restringidos","Permite ver documentos con restricciones de acceso","search:restricted",4,True

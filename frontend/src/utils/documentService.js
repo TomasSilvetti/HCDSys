@@ -270,35 +270,18 @@ export const documentService = {
   },
   
   // Actualizar un documento existente
-  updateDocument: async (id, documentData, file = null, comentario = null, cambios = null) => {
+  updateDocument: async (id, documentData) => {
     try {
-      let response;
+      // Filtrar campos nulos o indefinidos
+      const cleanedData = {};
+      Object.keys(documentData).forEach(key => {
+        if (documentData[key] !== null && documentData[key] !== undefined) {
+          cleanedData[key] = documentData[key];
+        }
+      });
       
-      // Si hay archivo, usar FormData
-      if (file) {
-        const formData = new FormData();
-        
-        // Añadir campos del documento
-        Object.keys(documentData).forEach(key => {
-          if (documentData[key] !== null && documentData[key] !== undefined) {
-            formData.append(key, documentData[key]);
-          }
-        });
-        
-        // Añadir archivo y comentarios si existen
-        formData.append('file', file);
-        if (comentario) formData.append('comentario', comentario);
-        if (cambios) formData.append('cambios', cambios);
-        
-        response = await api.put(`/documents/${id}`, formData, {
-          headers: {
-            'Content-Type': 'multipart/form-data'
-          }
-        });
-      } else {
-        // Sin archivo, enviar como JSON normal
-        response = await api.put(`/documents/${id}`, documentData);
-      }
+      // Enviar como JSON normal - enviar directamente el objeto de datos
+      const response = await api.put(`/documents/${id}`, cleanedData);
       
       return response.data;
     } catch (error) {

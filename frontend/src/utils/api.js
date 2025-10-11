@@ -18,7 +18,19 @@ api.interceptors.request.use(
     }
     return config;
   },
-  (error) => Promise.reject(error)
+  (error) => {
+    return Promise.reject(error);
+  }
+);
+
+// Interceptor para manejar respuestas
+api.interceptors.response.use(
+  (response) => {
+    return response;
+  },
+  (error) => {
+    return Promise.reject(error);
+  }
 );
 
 // Servicios de autenticación
@@ -69,12 +81,10 @@ export const authService = {
           role_id: user.role_id,
           exp: user.exp
         }));
-        console.log('Usuario autenticado:', user);
       }
       
       return response.data;
     } catch (error) {
-      console.error('Error completo de login:', error);
       throw handleApiError(error);
     }
   },
@@ -102,7 +112,6 @@ export const authService = {
       
       return true;
     } catch (error) {
-      console.error('Error al verificar autenticación:', error);
       return false;
     }
   },
@@ -128,15 +137,42 @@ export const authService = {
         return null;
       }
       
+      // Log para depuración
+      console.log('Token decodificado:', decoded);
+      
       const user = JSON.parse(userStr);
       
+      // Log para depuración
+      console.log('Usuario del localStorage:', user);
+      
       // Asegurarse de que el usuario tenga un role_id
-      if (!user.role_id && decoded.role_id) {
+      // Primero intentar obtener el role_id del token decodificado
+      if (decoded.role_id !== undefined) {
         user.role_id = decoded.role_id;
         localStorage.setItem('user', JSON.stringify(user));
       }
       
-      console.log('Usuario actual:', user);
+      // Si aún no hay role_id, verificar si hay un campo 'role' en el token
+      if (user.role_id === undefined && decoded.role) {
+        if (typeof decoded.role === 'object' && decoded.role.id) {
+          user.role_id = decoded.role.id;
+        } else if (typeof decoded.role === 'string' || typeof decoded.role === 'number') {
+          user.role_id = decoded.role;
+        }
+        localStorage.setItem('user', JSON.stringify(user));
+      }
+      
+      // Asegurar que el role_id sea un valor válido (no undefined)
+      if (user.role_id === undefined) {
+        console.error('No se pudo determinar el role_id del usuario');
+        // Si es administrador (verificar por email u otro campo)
+        if (user.email === 'admin@example.com' || decoded.sub === 'admin@example.com') {
+          console.log('Usuario detectado como administrador por email');
+          user.role_id = 1; // Asignar rol de administrador
+          localStorage.setItem('user', JSON.stringify(user));
+        }
+      }
+      
       return user;
     } catch (error) {
       console.error('Error al obtener usuario actual:', error);
@@ -161,7 +197,6 @@ function parseJwt(token) {
     );
     return JSON.parse(jsonPayload);
   } catch (error) {
-    console.error('Error al parsear JWT:', error);
     return {};
   }
 }

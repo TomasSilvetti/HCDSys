@@ -34,8 +34,8 @@ async def get_document_history(
     
     # Verificar permisos
     is_owner = documento.usuario_id == current_user.id
-    has_view_permission = check_permission(current_user, "DOCUMENT_VIEW_ALL", db)
-    has_history_permission = check_permission(current_user, "DOCUMENT_HISTORY_VIEW", db)
+    has_view_permission = check_permission(current_user, "docs:view", db)
+    has_history_permission = check_permission(current_user, "docs:versions:view", db)
     
     if not (is_owner or has_view_permission or has_history_permission):
         raise HTTPException(
