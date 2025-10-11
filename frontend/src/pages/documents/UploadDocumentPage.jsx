@@ -80,17 +80,28 @@ const UploadDocumentPage = () => {
     return matchingType ? matchingType.id : null;
   };
   
+  // Extraer nombre de archivo sin extensión
+  const extractFileNameWithoutExtension = (fileName) => {
+    if (!fileName) return '';
+    // Eliminar la extensión del archivo
+    return fileName.split('.').slice(0, -1).join('.');
+  };
+
   // Manejar selección de archivo
   const handleFileChange = (selectedFile) => {
     setFile(selectedFile);
     
     if (selectedFile) {
+      // Extraer el título del nombre del archivo (sin extensión)
+      const fileTitle = extractFileNameWithoutExtension(selectedFile.name);
+      
       // Autodetectar tipo de documento
       const detectedTypeId = detectDocumentType(selectedFile);
       
       if (detectedTypeId) {
         setFormData(prevData => ({
           ...prevData,
+          titulo: fileTitle, // Establecer el título automáticamente
           tipo_documento_id: detectedTypeId
         }));
       } else {
@@ -98,9 +109,10 @@ const UploadDocumentPage = () => {
         setError('No se pudo detectar el tipo de documento para esta extensión de archivo. Por favor, seleccione otro archivo.');
       }
     } else {
-      // Si se elimina el archivo, limpiar el tipo de documento
+      // Si se elimina el archivo, limpiar el tipo de documento y el título
       setFormData(prevData => ({
         ...prevData,
+        titulo: '',
         tipo_documento_id: ''
       }));
     }

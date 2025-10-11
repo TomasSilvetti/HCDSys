@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 const DocumentForm = ({ formData, handleChange, categories, documentTypes, disabled, showDocumentTypeSelector = true }) => {
   return (
     <div className="space-y-4">
-      {/* Campo de título */}
+      {/* Campo de título (ahora de solo lectura) */}
       <div>
         <label htmlFor="titulo" className="block text-sm font-medium text-gray-700 mb-1">
           Título del documento <span className="text-red-500">*</span>
@@ -13,12 +13,14 @@ const DocumentForm = ({ formData, handleChange, categories, documentTypes, disab
           id="titulo"
           name="titulo"
           value={formData.titulo}
-          onChange={handleChange}
-          className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-          placeholder="Ingrese el título del documento"
-          disabled={disabled}
+          className="w-full px-3 py-2 border border-gray-300 rounded-md bg-gray-100 cursor-not-allowed"
+          placeholder="Se extraerá automáticamente del nombre del archivo"
+          disabled={true}
           required
         />
+        <p className="text-xs text-gray-500 mt-1">
+          El título se extrae automáticamente del nombre del archivo subido.
+        </p>
       </div>
       
       {/* Campo de número de expediente */}

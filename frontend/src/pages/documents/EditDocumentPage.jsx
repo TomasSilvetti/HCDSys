@@ -119,22 +119,31 @@ const EditDocumentPage = () => {
     return matchingType ? matchingType.id : null;
   };
   
+  // Extraer nombre de archivo sin extensión
+  const extractFileNameWithoutExtension = (fileName) => {
+    if (!fileName) return '';
+    // Eliminar la extensión del archivo
+    return fileName.split('.').slice(0, -1).join('.');
+  };
+
   // Manejar selección de archivo
   const handleFileChange = (selectedFile) => {
     setFile(selectedFile);
     
     if (selectedFile) {
+      // Extraer el título del nombre del archivo (sin extensión)
+      const fileTitle = extractFileNameWithoutExtension(selectedFile.name);
+      
       // Autodetectar tipo de documento
       const detectedTypeId = detectDocumentType(selectedFile);
       
       if (detectedTypeId) {
-        // Solo actualizar el tipo de documento si es diferente al actual
-        if (detectedTypeId !== formData.tipo_documento_id) {
-          setFormData(prev => ({
-            ...prev,
-            tipo_documento_id: detectedTypeId
-          }));
-        }
+        // Actualizar el tipo de documento y el título
+        setFormData(prev => ({
+          ...prev,
+          titulo: fileTitle, // Establecer el título automáticamente desde el nombre del archivo
+          tipo_documento_id: detectedTypeId
+        }));
       } else {
         // Si no se puede detectar el tipo, mostrar un error
         setError('No se pudo detectar el tipo de documento para esta extensión de archivo. Por favor, seleccione otro archivo.');
