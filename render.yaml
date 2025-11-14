@@ -5,8 +5,6 @@ services:
   - type: pserv
     name: hcdsys-db
     plan: free
-    databaseName: hcdsys
-    databaseUser: hcdsys_user
 
   # ============================================================================
   # Backend Service - Plan Gratuito con Almacenamiento Temporal
