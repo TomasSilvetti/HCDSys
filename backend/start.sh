@@ -59,7 +59,7 @@ fi
 echo "🔐 Inicializando roles y permisos..."
 python -c "
 from app.db.database import SessionLocal
-from app.utils.init_roles_and_permissions import init_roles_and_permissions
+from app.db.init_roles import init_roles_and_permissions
 
 db = SessionLocal()
 try:
