@@ -1,10 +1,20 @@
 services:
-  # PostgreSQL Database - DEBE ESTAR PRIMERO
+  # ============================================================================
+  # PostgreSQL Database - Plan Gratuito
+  # ============================================================================
   - type: pserv
     name: hcdsys-db
     plan: free
+    databaseName: hcdsys
+    databaseUser: hcdsys_user
 
-  # Backend Service
+  # ============================================================================
+  # Backend Service - Plan Gratuito con Almacenamiento Temporal
+  # ============================================================================
+  # NOTA: Esta configuración usa almacenamiento temporal (/tmp)
+  # Los archivos se PIERDEN al reiniciar el servicio
+  # Para producción, actualizar a plan "starter" ($7/mes) y agregar disco persistente
+  # ============================================================================
   - type: web
     name: hcdsys-backend
     env: docker
@@ -29,27 +39,42 @@ services:
         generateValue: true
       - key: ACCESS_TOKEN_EXPIRE_MINUTES
         value: "30"
+      # ALMACENAMIENTO TEMPORAL - Los archivos se pierden al reiniciar
       - key: DOCUMENT_STORAGE_PATH
-        value: /app/storage/documents
+        value: /tmp/documents
       - key: LOG_LEVEL
         value: INFO
       - key: RATE_LIMIT_ENABLED
         value: "true"
       - key: RATE_LIMIT_PER_MINUTE
         value: "60"
+      # IMPORTANTE: Actualizar con tu URL de Vercel después del deploy
       - key: CORS_ORIGINS
         value: "https://your-vercel-app.vercel.app"
-    disk:
-      name: hcdsys-storage
-      mountPath: /app/storage
-      sizeGB: 1
+    
+    # ========================================================================
+    # DISCO PERSISTENTE - DESHABILITADO (No disponible en plan free)
+    # ========================================================================
+    # Para habilitar cuando actualices a plan "starter":
+    # 1. Cambiar "plan: free" a "plan: starter"
+    # 2. Descomentar las siguientes líneas:
+    # disk:
+    #   name: hcdsys-storage
+    #   mountPath: /app/storage
+    #   sizeGB: 1
+    # 3. Cambiar DOCUMENT_STORAGE_PATH a "/app/storage/documents"
+    # ========================================================================
 
-  # Frontend Static Service (Opcional - puedes usar Vercel para el frontend)
-  - type: web
+  # ============================================================================
+  # Frontend Static Service (OPCIONAL - Recomendado usar Vercel)
+  # ============================================================================
+  # Este servicio es opcional. Vercel ofrece mejor rendimiento para frontends.
+  # Si usas Vercel, puedes eliminar esta sección completa.
+  # ============================================================================
+  - type: static
     name: hcdsys-frontend
-    plan: free
     buildCommand: cd frontend && npm ci && npm run build
     staticPublishPath: ./frontend/dist
     envVars:
       - key: VITE_API_URL
-        sync: false
+        value: https://hcdsys-backend.onrender.com

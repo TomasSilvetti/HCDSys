@@ -22,7 +22,10 @@ COPY . .
 RUN chmod +x start.sh
 
 # Crear directorios necesarios
-RUN mkdir -p /app/storage/documents /app/logs
+# /tmp/documents: almacenamiento temporal (se pierde al reiniciar)
+# /app/logs: logs de la aplicación
+RUN mkdir -p /tmp/documents /app/logs && \
+    chmod 777 /tmp/documents
 
 # Exponer el puerto
 EXPOSE 8000
