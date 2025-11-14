@@ -1,0 +1,57 @@
+services:
+  # Backend Service
+  - type: web
+    name: hcdsys-backend
+    env: docker
+    plan: free
+    dockerfilePath: ./backend/Dockerfile
+    dockerContext: ./backend
+    healthCheckPath: /api/health
+    envVars:
+      - key: DATABASE_URL
+        fromDatabase:
+          name: hcdsys-db
+          property: connectionString
+      - key: API_PORT
+        value: 8000
+      - key: API_HOST
+        value: 0.0.0.0
+      - key: DEBUG
+        value: False
+      - key: ENVIRONMENT
+        value: production
+      - key: SECRET_KEY
+        generateValue: true
+      - key: ACCESS_TOKEN_EXPIRE_MINUTES
+        value: 30
+      - key: DOCUMENT_STORAGE_PATH
+        value: /app/storage/documents
+      - key: CORS_ORIGINS
+        value: https://hcdsys-backend.onrender.com
+      - key: LOG_LEVEL
+        value: INFO
+      - key: RATE_LIMIT_ENABLED
+        value: true
+      - key: RATE_LIMIT_PER_MINUTE
+        value: 60
+    disk:
+      name: hcdsys-storage
+      mountPath: /app/storage
+      sizeGB: 1
+
+  # PostgreSQL Database
+  - type: pserv
+    name: hcdsys-db
+    plan: free
+    databaseName: hcdsys_prod
+    user: hcdsys_user
+
+  # Frontend Static Service (Opcional - puedes usar Vercel para el frontend)
+  - type: web
+    name: hcdsys-frontend
+    plan: free
+    buildCommand: cd frontend && npm ci && npm run build
+    publishPath: ./frontend/dist
+    envVars:
+      - key: VITE_API_URL
+        value: https://hcdsys-backend.onrender.com

@@ -18,4 +18,7 @@ export default defineConfig({
       '@styles': '/src/styles',
     },
   },
+  define: {
+    __APP_ENV__: JSON.stringify(process.env.NODE_ENV),
+  },
 })
