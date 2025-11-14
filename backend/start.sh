@@ -76,33 +76,21 @@ echo "👤 Verificando usuario admin..."
 python -c "
 from app.db.database import SessionLocal
 from app.services.user_service import UserService
-from app.schemas.user import UserCreate
-from app.db.models import Role
 
 db = SessionLocal()
 try:
-    # Verificar si ya existe un admin
-    admin_role = db.query(Role).filter(Role.name == 'Administrador').first()
-    if admin_role:
-        from app.db.models import User
-        admin_exists = db.query(User).filter(User.role_id == admin_role.id).first()
-        
-        if not admin_exists:
-            # Crear usuario admin
-            user_service = UserService(db)
-            admin_data = UserCreate(
-                username='admin',
-                email='admin@hcdsys.com',
-                password='Admin123!',
-                full_name='Administrador del Sistema',
-                role_id=admin_role.id
-            )
-            user_service.create_user(admin_data)
-            print('✅ Usuario admin creado')
-        else:
-            print('✅ Usuario admin ya existe')
-    else:
-        print('⚠️  Rol de Administrador no encontrado')
+    # Crear servicio de usuario
+    user_service = UserService(db)
+    
+    # Intentar crear usuario admin (el método maneja si ya existe)
+    user_service.create_admin_user(
+        email='admin@hcdsys.com',
+        password='Admin123!',
+        nombre='Administrador',
+        apellido='del Sistema',
+        dni='00000000'
+    )
+    print('✅ Usuario admin verificado/creado')
 except Exception as e:
     print(f'⚠️  Advertencia al crear admin: {e}')
 finally:
