@@ -18,11 +18,14 @@ RUN pip install --no-cache-dir -r requirements.txt
 # Copiar el código de la aplicación
 COPY . .
 
+# Dar permisos de ejecución al script de inicio
+RUN chmod +x start.sh
+
 # Crear directorios necesarios
 RUN mkdir -p /app/storage/documents /app/logs
 
 # Exponer el puerto
 EXPOSE 8000
 
-# Iniciar Gunicorn sin migraciones
-CMD gunicorn -c gunicorn_config.py app.main:app
+# Iniciar usando el script de inicio
+CMD ["./start.sh"]
