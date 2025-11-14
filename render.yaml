@@ -65,16 +65,4 @@ services:
     # 3. Cambiar DOCUMENT_STORAGE_PATH a "/app/storage/documents"
     # ========================================================================
 
-  # ============================================================================
-  # Frontend Static Service (OPCIONAL - Recomendado usar Vercel)
-  # ============================================================================
-  # Este servicio es opcional. Vercel ofrece mejor rendimiento para frontends.
-  # Si usas Vercel, puedes eliminar esta sección completa.
-  # ============================================================================
-  - type: static
-    name: hcdsys-frontend
-    buildCommand: cd frontend && npm ci && npm run build
-    staticPublishPath: ./frontend/dist
-    envVars:
-      - key: VITE_API_URL
-        value: https://hcdsys-backend.onrender.com
+  
