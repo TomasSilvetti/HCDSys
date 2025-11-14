@@ -62,7 +62,21 @@ app.include_router(websockets.router, prefix="/api")
 @app.get("/api/health")
 def health_check():
     """Endpoint para verificar el estado de la API"""
-    return {"status": "ok", "version": app.version}
+    try:
+        # Verificar conexión básica a la base de datos
+        db = next(get_db())
+        db.execute("SELECT 1")
+        db.close()
+        db_status = "connected"
+    except Exception as e:
+        db_status = f"error: {str(e)[:50]}"
+
+    return {
+        "status": "ok",
+        "version": app.version,
+        "database": db_status,
+        "environment": settings.ENVIRONMENT
+    }
 
 @app.exception_handler(HTTPException)
 async def http_exception_handler(request, exc):

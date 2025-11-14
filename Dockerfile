@@ -25,5 +25,5 @@ RUN mkdir -p /app/storage/documents /app/logs
 # Exponer el puerto
 EXPOSE 8000
 
-# Iniciar Gunicorn sin migraciones
-CMD gunicorn -c gunicorn_config.py app.main:app
+# Iniciar Gunicorn con el archivo de configuración correcto
+CMD gunicorn -c backend/gunicorn_config.py backend.app.main:app
