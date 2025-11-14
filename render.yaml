@@ -3,9 +3,6 @@ services:
   - type: pserv
     name: hcdsys-db
     plan: free
-    databaseName: hcdsys_prod
-    user: hcdsys_user
-    ipAllowList: []
 
   # Backend Service
   - type: web
@@ -52,7 +49,7 @@ services:
     name: hcdsys-frontend
     plan: free
     buildCommand: cd frontend && npm ci && npm run build
-    publishPath: ./frontend/dist
+    staticPublishPath: ./frontend/dist
     envVars:
       - key: VITE_API_URL
         sync: false

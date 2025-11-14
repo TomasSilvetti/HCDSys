@@ -1,7 +1,7 @@
 # Configuración de la base de datos
-DB_NAME=hcdsys_prod
+DB_NAME=hcd_sys_produccion
 DB_USER=hcdsys_user
-DB_PASSWORD=StrongPassword123!
+DB_PASSWORD=VwiAQPQOoeMD1Rt1awB68AqMnE3JI4bH
 
 # Configuración de seguridad
 SECRET_KEY=a8e7d6c5b4a3f2e1d0c9b8a7f6e5d4c3b2a1f0e9
